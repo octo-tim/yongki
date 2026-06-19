@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getStatusConfig } from "@/lib/status-config";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { WorkLogPanel } from "@/components/worklog-panel";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -11,11 +12,17 @@ type StepAgg = { type: string; group: string; name: string; order: number; total
 export default async function DashboardPage() {
   const statusCfg = await getStatusConfig();
 
-  const [grouped, total, stepAll, stepDone] = await Promise.all([
+  const [grouped, total, stepAll, stepDone, users, projectsForSelect, workLogs] = await Promise.all([
     prisma.project.groupBy({ by: ["status"], _count: { _all: true } }),
     prisma.project.count(),
     prisma.projectStep.groupBy({ by: ["type", "group", "name", "order"], _count: { _all: true } }),
-    prisma.projectStep.groupBy({ by: ["type", "group", "name", "order"], where: { done: true }, _count: { _all: true } }),
+    prisma.projectStep.groupBy({ by: ["type", "group", "name", "order"], where: { OR: [{ doneAt: { not: null } }, { staff: { not: null } }] }, _count: { _all: true } }),
+    prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.project.findMany({ orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
+    prisma.workLog.findMany({
+      orderBy: { createdAt: "desc" }, take: 100,
+      include: { assignee: { select: { id: true, name: true } }, project: { select: { id: true, productName: true } } },
+    }),
   ]);
 
   const countMap = Object.fromEntries(grouped.map((g) => [g.status, g._count._all]));
@@ -57,6 +64,22 @@ export default async function DashboardPage() {
             </Link>
           ))}
         </div>
+      </section>
+
+      {/* 진행업무 */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold text-muted-foreground">진행업무 (담당자 · 프로젝트 · 진행내역)</h2>
+        <Card>
+          <CardContent className="p-4">
+            <WorkLogPanel
+              users={users}
+              projects={projectsForSelect}
+              logs={workLogs as any}
+              sortable
+              showProject
+            />
+          </CardContent>
+        </Card>
       </section>
 
       {/* 단계별 현황 */}

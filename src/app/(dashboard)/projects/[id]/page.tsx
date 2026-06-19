@@ -7,6 +7,7 @@ import { StatusBadge } from "@/components/status-badge";
 import { getStatusConfig } from "@/lib/status-config";
 import { StepBoard } from "@/components/step-board";
 import { NotePanel } from "@/components/note-panel";
+import { WorkLogPanel } from "@/components/worklog-panel";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
@@ -23,12 +24,14 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
       files: { orderBy: { createdAt: "desc" } },
       notes: { orderBy: { createdAt: "desc" }, include: { author: true } },
+      workLogs: { orderBy: { createdAt: "desc" }, include: { assignee: { select: { id: true, name: true } } } },
       memos: { orderBy: { createdAt: "desc" }, include: { author: true } },
       logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: true } },
     },
   });
   if (!p) notFound();
   const statusCfg = await getStatusConfig();
+  const users = await prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } });
 
   const boardSteps = p.steps.map((s) => ({
     id: s.id, type: s.type, group: s.group, name: s.name, order: s.order,
@@ -89,7 +92,15 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             </CardContent>
           </Card>
 
-          {/* 3. 특이사항 (작성자·작성일별 다중 입력) */}
+          {/* 3. 진행업무내역 */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">진행업무내역</CardTitle></CardHeader>
+            <CardContent>
+              <WorkLogPanel users={users} fixedProjectId={p.id} logs={p.workLogs as any} />
+            </CardContent>
+          </Card>
+
+          {/* 4. 특이사항 (작성자·작성일별 다중 입력) */}
           <Card>
             <CardHeader><CardTitle className="text-base">특이사항</CardTitle></CardHeader>
             <CardContent>

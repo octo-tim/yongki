@@ -65,6 +65,7 @@ model User {
   managedProjects Project[] @relation("ProjectManager")
   memos           ProjectMemo[]
   notes           ProjectNote[]
+  workLogs        WorkLog[]    @relation("WorkLogAssignee")
   logs            ProjectLog[]
 
   @@map("users")
@@ -141,6 +142,7 @@ model Project {
   files ProjectFile[]
   memos ProjectMemo[]
   notes ProjectNote[]
+  workLogs WorkLog[]
   logs  ProjectLog[]
 
   createdAt DateTime @default(now())
@@ -213,6 +215,20 @@ model ProjectNote {
 
   @@index([projectId])
   @@map("project_notes")
+}
+
+model WorkLog {
+  id         String   @id @default(cuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assigneeId String?
+  assignee   User?    @relation("WorkLogAssignee", fields: [assigneeId], references: [id])
+  content    String   // 진행내역
+  createdAt  DateTime @default(now())
+
+  @@index([projectId])
+  @@index([assigneeId])
+  @@map("work_logs")
 }
 
 // 8. 프로젝트 로그 (이력)
