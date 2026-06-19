@@ -3,42 +3,47 @@ import { prisma } from "@/lib/prisma";
 import { getStatusConfig } from "@/lib/status-config";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WorkLogPanel } from "@/components/worklog-panel";
+import { DailyDateNav } from "@/components/daily-date-nav";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-type StepAgg = { type: string; group: string; name: string; order: number; total: number; done: number };
-
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: { date?: string } }) {
   const statusCfg = await getStatusConfig();
 
-  const [grouped, total, stepAll, stepDone, users, projectsForSelect, workLogs] = await Promise.all([
+  // 선택일 (기본: 오늘, KST 기준)
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
+  const dateStr = searchParams.date && /^\d{4}-\d{2}-\d{2}$/.test(searchParams.date) ? searchParams.date : today;
+  const dayStart = new Date(`${dateStr}T00:00:00.000Z`);
+  const dayEnd = new Date(dayStart.getTime() + 86400000);
+
+  const [grouped, total, users, activeProjects, workLogs, dailySteps] = await Promise.all([
     prisma.project.groupBy({ by: ["status"], _count: { _all: true } }),
     prisma.project.count(),
-    prisma.projectStep.groupBy({ by: ["type", "group", "name", "order"], _count: { _all: true } }),
-    prisma.projectStep.groupBy({ by: ["type", "group", "name", "order"], where: { OR: [{ doneAt: { not: null } }, { staff: { not: null } }] }, _count: { _all: true } }),
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
-    prisma.project.findMany({ orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
+    // 진행업무 등록용 프로젝트: 진행중만
+    prisma.project.findMany({ where: { status: "IN_PROGRESS" }, orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
     prisma.workLog.findMany({
       orderBy: { createdAt: "desc" }, take: 100,
       include: { assignee: { select: { id: true, name: true } }, project: { select: { id: true, productName: true } } },
+    }),
+    // 선택일에 일자가 잡힌 단계들 (일별 진행내역)
+    prisma.projectStep.findMany({
+      where: { doneAt: { gte: dayStart, lt: dayEnd } },
+      include: { project: { select: { id: true, productName: true, status: true } } },
+      orderBy: [{ projectId: "asc" }, { type: "asc" }, { order: "asc" }],
     }),
   ]);
 
   const countMap = Object.fromEntries(grouped.map((g) => [g.status, g._count._all]));
 
-  // 단계별 집계 — 전체 프로젝트 대비 각 단계 완료 건수 (type · order 순)
-  const doneMap = new Map(stepDone.map((s) => [`${s.type}|${s.group}|${s.name}|${s.order}`, s._count._all]));
-  const steps: StepAgg[] = stepAll
-    .map((s) => ({
-      type: s.type, group: s.group, name: s.name, order: s.order,
-      total: s._count._all,
-      done: doneMap.get(`${s.type}|${s.group}|${s.name}|${s.order}`) ?? 0,
-    }))
-    .sort((a, b) => (a.type === b.type ? a.order - b.order : a.type === "PRODUCTION" ? -1 : 1));
-
-  const prod = steps.filter((s) => s.type === "PRODUCTION");
-  const ship = steps.filter((s) => s.type === "SHIPPING");
+  // 일별 진행내역: 프로젝트별 묶기
+  const byProject: { project: any; steps: any[] }[] = [];
+  for (const s of dailySteps) {
+    let row = byProject.find((x) => x.project.id === s.projectId);
+    if (!row) { row = { project: s.project, steps: [] }; byProject.push(row); }
+    row.steps.push(s);
+  }
 
   return (
     <div className="space-y-6 p-6">
@@ -71,71 +76,44 @@ export default async function DashboardPage() {
         <h2 className="text-sm font-semibold text-muted-foreground">진행업무 (담당자 · 프로젝트 · 진행내역)</h2>
         <Card>
           <CardContent className="p-4">
-            <WorkLogPanel
-              users={users}
-              projects={projectsForSelect}
-              logs={workLogs as any}
-              sortable
-              showProject
-            />
+            <WorkLogPanel users={users} projects={activeProjects} logs={workLogs as any} sortable showProject />
           </CardContent>
         </Card>
       </section>
 
-      {/* 단계별 현황 */}
+      {/* 일별 진행내역 */}
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-muted-foreground">단계별 현황 (전체 {total}건 중 각 단계 완료 건수)</h2>
-        <div className="grid gap-6 md:grid-cols-2">
-          <StepCard title="제작일정 관리" steps={prod} accent="bg-blue-500" total={total} />
-          <StepCard title="출고관리" steps={ship} accent="bg-emerald-500" total={total} />
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold text-muted-foreground">일별 진행내역 (선택일에 진행된 일정 · 프로젝트별)</h2>
+          <DailyDateNav value={dateStr} />
         </div>
+        <Card>
+          <CardContent className="space-y-3 p-4">
+            {byProject.length === 0 && (
+              <p className="py-6 text-center text-sm text-muted-foreground">{dateStr}에 진행된 일정이 없습니다.</p>
+            )}
+            {byProject.map(({ project, steps }) => (
+              <div key={project.id} className="rounded-lg border p-3">
+                <div className="mb-2 flex flex-wrap items-center gap-2">
+                  <Link href={`/projects/${project.id}`} className="font-semibold hover:underline">{project.productName}</Link>
+                  <span className={cn("rounded-full border px-2 py-0.5 text-[11px] font-medium", statusCfg.style[project.status as keyof typeof statusCfg.style])}>
+                    {statusCfg.label[project.status as keyof typeof statusCfg.label]}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {steps.map((s) => (
+                    <span key={s.id} className={cn("inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs",
+                      s.type === "PRODUCTION" ? "border-blue-200 bg-blue-50" : "border-emerald-200 bg-emerald-50")}>
+                      <span className="font-medium">{s.group !== s.name ? `${s.group} › ${s.name}` : s.name}</span>
+                      {s.staff && <span className="text-muted-foreground">· {s.staff}</span>}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       </section>
     </div>
-  );
-}
-
-function StepCard({ title, steps, accent, total }: { title: string; steps: StepAgg[]; accent: string; total: number }) {
-  // 2단계 그룹 단위로 묶기 (순서 보존). 단일 단계 그룹(group===name)은 헤더 없이 표시.
-  const groups: { group: string; rows: StepAgg[]; multi: boolean }[] = [];
-  for (const s of steps) {
-    let g = groups.find((x) => x.group === s.group);
-    if (!g) { g = { group: s.group, rows: [], multi: false }; groups.push(g); }
-    g.rows.push(s);
-  }
-  for (const g of groups) g.multi = g.rows.length > 1 || g.rows[0].name !== g.group;
-
-  return (
-    <Card>
-      <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
-      <CardContent className="space-y-3">
-        {steps.length === 0 && <p className="text-sm text-muted-foreground">단계 데이터가 없습니다.</p>}
-        {groups.map((g) => (
-          <div key={g.group} className={cn(g.multi && "rounded-md border bg-muted/20 p-2")}>
-            {g.multi && (
-              <div className="mb-2 px-0.5 text-xs font-semibold text-muted-foreground">{g.group}</div>
-            )}
-            <div className="space-y-2.5">
-              {g.rows.map((s) => {
-                const base = total || s.total || 1;
-                const pct = Math.round((s.done / base) * 100);
-                return (
-                  <div key={`${s.name}-${s.order}`} className="space-y-1">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className={cn(g.multi && "text-muted-foreground")}>{s.name}</span>
-                      <span className="tabular-nums text-muted-foreground">
-                        <span className="font-semibold text-foreground">{s.done}</span> / {base}
-                      </span>
-                    </div>
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                      <div className={cn("h-full rounded-full", accent)} style={{ width: `${pct}%` }} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
   );
 }
