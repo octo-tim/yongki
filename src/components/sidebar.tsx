@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Settings } from "lucide-react";
+import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Settings, BarChart3 } from "lucide-react";
 
 const baseNav = [
   { href: "/dashboard", label: "대시보드", icon: LayoutDashboard },
@@ -11,6 +11,7 @@ const baseNav = [
   { href: "/projects/new", label: "프로젝트 등록", icon: PlusCircle },
   { href: "/clients", label: "업체 관리", icon: Building2 },
   { href: "/factories", label: "공장 관리", icon: Factory },
+  { href: "/stats", label: "통계", icon: BarChart3 },
 ];
 
 const adminNav = [
