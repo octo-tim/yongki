@@ -23,6 +23,11 @@ enum StepType {
   SHIPPING   // 출고 타임라인
 }
 
+enum PaymentType {
+  DEPOSIT // 계약금
+  BALANCE // 잔금
+}
+
 // 상태 표시 설정 (라벨/색상/순서) — enum 값별 1행
 model StatusSetting {
   id        String        @id @default(cuid())
@@ -143,6 +148,7 @@ model Project {
   memos ProjectMemo[]
   notes ProjectNote[]
   workLogs WorkLog[]
+  payments Payment[]
   logs  ProjectLog[]
 
   createdAt DateTime @default(now())
@@ -229,6 +235,21 @@ model WorkLog {
   @@index([projectId])
   @@index([assigneeId])
   @@map("work_logs")
+}
+
+model Payment {
+  id         String      @id @default(cuid())
+  projectId  String
+  project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type       PaymentType // 계약금 / 잔금
+  amount     Decimal     @db.Decimal(14, 2)
+  receivedAt DateTime    // 수령일
+  memo       String?
+  createdAt  DateTime    @default(now())
+
+  @@index([projectId])
+  @@index([receivedAt])
+  @@map("payments")
 }
 
 // 8. 프로젝트 로그 (이력)

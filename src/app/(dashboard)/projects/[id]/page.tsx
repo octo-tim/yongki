@@ -8,6 +8,7 @@ import { getStatusConfig } from "@/lib/status-config";
 import { StepBoard } from "@/components/step-board";
 import { NotePanel } from "@/components/note-panel";
 import { WorkLogPanel } from "@/components/worklog-panel";
+import { PaymentPanel } from "@/components/payment-panel";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
@@ -25,6 +26,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       files: { orderBy: { createdAt: "desc" } },
       notes: { orderBy: { createdAt: "desc" }, include: { author: true } },
       workLogs: { orderBy: { createdAt: "desc" }, include: { assignee: { select: { id: true, name: true } } } },
+      payments: { orderBy: { receivedAt: "desc" } },
       memos: { orderBy: { createdAt: "desc" }, include: { author: true } },
       logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: true } },
     },
@@ -110,6 +112,13 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
         </div>
 
         <div className="space-y-6">
+          <Card>
+            <CardHeader><CardTitle className="text-base">수금 내역</CardTitle></CardHeader>
+            <CardContent>
+              <PaymentPanel projectId={p.id} payments={p.payments as any} />
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader><CardTitle className="text-base">메모</CardTitle></CardHeader>
             <CardContent>
