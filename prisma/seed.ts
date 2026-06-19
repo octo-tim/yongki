@@ -36,6 +36,12 @@ async function main() {
 
   const data = seedData as Seed[];
 
+  // 기존 프로젝트/마스터 데이터 초기화 (관리자·기본 직원 계정은 보존)
+  await prisma.project.deleteMany();   // steps/files/memos/logs 자동 cascade 삭제
+  await prisma.client.deleteMany();
+  await prisma.factory.deleteMany();
+  await prisma.user.deleteMany({ where: { role: "STAFF", email: { not: "staff@example.com" } } });
+
   // 2. 업체 / 공장 / 담당자 추출
   const clientNames = [...new Set(data.map((p) => p.clientName).filter(Boolean))] as string[];
   const factoryNames = [...new Set(data.map((p) => p.factoryName).filter(Boolean))] as string[];
