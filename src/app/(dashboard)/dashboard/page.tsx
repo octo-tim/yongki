@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-type StepAgg = { type: string; name: string; order: number; total: number; done: number };
+type StepAgg = { type: string; group: string; name: string; order: number; total: number; done: number };
 
 export default async function DashboardPage() {
   const statusCfg = await getStatusConfig();
@@ -14,19 +14,19 @@ export default async function DashboardPage() {
   const [grouped, total, stepAll, stepDone] = await Promise.all([
     prisma.project.groupBy({ by: ["status"], _count: { _all: true } }),
     prisma.project.count(),
-    prisma.projectStep.groupBy({ by: ["type", "name", "order"], _count: { _all: true } }),
-    prisma.projectStep.groupBy({ by: ["type", "name", "order"], where: { done: true }, _count: { _all: true } }),
+    prisma.projectStep.groupBy({ by: ["type", "group", "name", "order"], _count: { _all: true } }),
+    prisma.projectStep.groupBy({ by: ["type", "group", "name", "order"], where: { done: true }, _count: { _all: true } }),
   ]);
 
   const countMap = Object.fromEntries(grouped.map((g) => [g.status, g._count._all]));
 
-  // 단계별 집계 (제작/출고, order 순)
-  const doneMap = new Map(stepDone.map((s) => [`${s.type}|${s.name}|${s.order}`, s._count._all]));
+  // 단계별 집계 — 전체 프로젝트 대비 각 단계 완료 건수 (type · order 순)
+  const doneMap = new Map(stepDone.map((s) => [`${s.type}|${s.group}|${s.name}|${s.order}`, s._count._all]));
   const steps: StepAgg[] = stepAll
     .map((s) => ({
-      type: s.type, name: s.name, order: s.order,
+      type: s.type, group: s.group, name: s.name, order: s.order,
       total: s._count._all,
-      done: doneMap.get(`${s.type}|${s.name}|${s.order}`) ?? 0,
+      done: doneMap.get(`${s.type}|${s.group}|${s.name}|${s.order}`) ?? 0,
     }))
     .sort((a, b) => (a.type === b.type ? a.order - b.order : a.type === "PRODUCTION" ? -1 : 1));
 
@@ -61,10 +61,10 @@ export default async function DashboardPage() {
 
       {/* 단계별 현황 */}
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-muted-foreground">단계별 현황 (각 단계 완료 프로젝트 수)</h2>
+        <h2 className="text-sm font-semibold text-muted-foreground">단계별 현황 (전체 {total}건 중 각 단계 완료 건수)</h2>
         <div className="grid gap-6 md:grid-cols-2">
-          <StepCard title="제작 단계" steps={prod} accent="bg-blue-500" total={total} />
-          <StepCard title="출고 단계" steps={ship} accent="bg-emerald-500" total={total} />
+          <StepCard title="제작일정 관리" steps={prod} accent="bg-blue-500" total={total} />
+          <StepCard title="출고관리" steps={ship} accent="bg-emerald-500" total={total} />
         </div>
       </section>
     </div>
@@ -72,28 +72,46 @@ export default async function DashboardPage() {
 }
 
 function StepCard({ title, steps, accent, total }: { title: string; steps: StepAgg[]; accent: string; total: number }) {
+  // 2단계 그룹 단위로 묶기 (순서 보존). 단일 단계 그룹(group===name)은 헤더 없이 표시.
+  const groups: { group: string; rows: StepAgg[]; multi: boolean }[] = [];
+  for (const s of steps) {
+    let g = groups.find((x) => x.group === s.group);
+    if (!g) { g = { group: s.group, rows: [], multi: false }; groups.push(g); }
+    g.rows.push(s);
+  }
+  for (const g of groups) g.multi = g.rows.length > 1 || g.rows[0].name !== g.group;
+
   return (
     <Card>
       <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
       <CardContent className="space-y-3">
         {steps.length === 0 && <p className="text-sm text-muted-foreground">단계 데이터가 없습니다.</p>}
-        {steps.map((s) => {
-          const base = s.total || total || 1;
-          const pct = Math.round((s.done / base) * 100);
-          return (
-            <div key={`${s.type}-${s.name}-${s.order}`} className="space-y-1">
-              <div className="flex items-center justify-between text-sm">
-                <span>{s.name}</span>
-                <span className="tabular-nums text-muted-foreground">
-                  <span className="font-semibold text-foreground">{s.done}</span> / {s.total}
-                </span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                <div className={cn("h-full rounded-full", accent)} style={{ width: `${pct}%` }} />
-              </div>
+        {groups.map((g) => (
+          <div key={g.group} className={cn(g.multi && "rounded-md border bg-muted/20 p-2")}>
+            {g.multi && (
+              <div className="mb-2 px-0.5 text-xs font-semibold text-muted-foreground">{g.group}</div>
+            )}
+            <div className="space-y-2.5">
+              {g.rows.map((s) => {
+                const base = total || s.total || 1;
+                const pct = Math.round((s.done / base) * 100);
+                return (
+                  <div key={`${s.name}-${s.order}`} className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className={cn(g.multi && "text-muted-foreground")}>{s.name}</span>
+                      <span className="tabular-nums text-muted-foreground">
+                        <span className="font-semibold text-foreground">{s.done}</span> / {base}
+                      </span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                      <div className={cn("h-full rounded-full", accent)} style={{ width: `${pct}%` }} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
+          </div>
+        ))}
       </CardContent>
     </Card>
   );
