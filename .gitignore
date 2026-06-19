@@ -4,3 +4,5 @@ node_modules
 public/uploads/*
 !public/uploads/.gitkeep
 *.log
+Icon
+.DS_Store
