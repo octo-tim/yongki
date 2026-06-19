@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,8 +11,8 @@ import { Pencil, Trash2, X, Check } from "lucide-react";
 type Entity = { id: string; [k: string]: any };
 type FieldDef = { key: string; label: string; placeholder?: string };
 
-export function EntityManager({ endpoint, fields, rows, countKey }: {
-  endpoint: string; fields: FieldDef[]; rows: Entity[]; countKey?: string;
+export function EntityManager({ endpoint, fields, rows, countKey, linkBase }: {
+  endpoint: string; fields: FieldDef[]; rows: Entity[]; countKey?: string; linkBase?: string;
 }) {
   const router = useRouter();
   const empty = Object.fromEntries(fields.map((f) => [f.key, ""]));
@@ -63,11 +64,13 @@ export function EntityManager({ endpoint, fields, rows, countKey }: {
             {rows.length === 0 && <TableRow><TableCell colSpan={fields.length + 2} className="py-8 text-center text-muted-foreground">데이터가 없습니다.</TableCell></TableRow>}
             {rows.map((r) => (
               <TableRow key={r.id}>
-                {fields.map((f) => (
+                {fields.map((f, fi) => (
                   <TableCell key={f.key}>
                     {editId === r.id
                       ? <Input value={editForm[f.key] ?? ""} onChange={(e) => setEditForm((s) => ({ ...s, [f.key]: e.target.value }))} className="h-8 w-40" />
-                      : (r[f.key] ?? "-")}
+                      : (fi === 0 && linkBase
+                          ? <Link href={`${linkBase}/${r.id}`} className="font-medium text-primary hover:underline">{r[f.key] ?? "-"}</Link>
+                          : (r[f.key] ?? "-"))}
                   </TableCell>
                 ))}
                 {countKey && <TableCell className="text-right text-muted-foreground">{r._count?.[countKey] ?? 0}</TableCell>}
