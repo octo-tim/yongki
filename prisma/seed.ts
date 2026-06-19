@@ -21,12 +21,12 @@ async function main() {
   console.log("🌱 시드 시작");
 
   // 1. 사용자
-  const adminPw = await bcrypt.hash("admin1234", 10);
+  const adminPw = await bcrypt.hash("2345", 10);
   const staffPw = await bcrypt.hash("staff1234", 10);
   const admin = await prisma.user.upsert({
-    where: { email: "admin@example.com" },
-    update: {},
-    create: { email: "admin@example.com", name: "관리자", password: adminPw, role: "ADMIN" },
+    where: { email: "관리자" },
+    update: { password: adminPw, name: "관리자", role: "ADMIN" },
+    create: { email: "관리자", name: "관리자", password: adminPw, role: "ADMIN" },
   });
   await prisma.user.upsert({
     where: { email: "staff@example.com" },

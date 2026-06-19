@@ -10,8 +10,8 @@ import { Package } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@example.com");
-  const [password, setPassword] = useState("admin1234");
+  const [email, setEmail] = useState("관리자");
+  const [password, setPassword] = useState("2345");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -22,7 +22,7 @@ export default function LoginPage() {
     const res = await signIn("credentials", { email, password, redirect: false });
     setLoading(false);
     if (res?.error) {
-      setError("이메일 또는 비밀번호가 올바르지 않습니다.");
+      setError("아이디 또는 비밀번호가 올바르지 않습니다.");
       return;
     }
     router.push("/dashboard");
@@ -42,8 +42,8 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">이메일</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Label htmlFor="email">아이디</Label>
+              <Input id="email" type="text" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">비밀번호</Label>
@@ -54,7 +54,7 @@ export default function LoginPage() {
               {loading ? "로그인 중..." : "로그인"}
             </Button>
             <p className="text-center text-xs text-muted-foreground">
-              테스트 계정: admin@example.com / admin1234
+              관리자 계정: 관리자 / 2345
             </p>
           </form>
         </CardContent>
