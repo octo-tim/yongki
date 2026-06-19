@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/status-badge";
 import { getStatusConfig } from "@/lib/status-config";
 import { StepBoard } from "@/components/step-board";
+import { NotePanel } from "@/components/note-panel";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
@@ -21,6 +22,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       client: true, factory: true, manager: true,
       steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
       files: { orderBy: { createdAt: "desc" } },
+      notes: { orderBy: { createdAt: "desc" }, include: { author: true } },
       memos: { orderBy: { createdAt: "desc" }, include: { author: true } },
       logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: true } },
     },
@@ -42,10 +44,6 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     ["업체명", p.client?.name ?? "-"],
     ["공장명", p.factory?.name ?? "-"],
     ["관리책임자", p.manager?.name ?? "-"],
-    ["완성예정일", fmtDate(p.expectedCompletionDate)],
-    ["생산완료일", fmtDate(p.productionCompleteDate)],
-    ["한국도착일", fmtDate(p.koreaArrivalDate)],
-    ["고객인도일", fmtDate(p.customerDeliveryDate)],
   ];
 
   return (
@@ -67,18 +65,12 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          <Card>
-            <CardHeader><CardTitle className="text-base">진행 단계</CardTitle></CardHeader>
-            <CardContent>
-              <StepBoard projectId={p.id} steps={boardSteps} />
-            </CardContent>
-          </Card>
-
+          {/* 1. 기본 정보 (맨 위) */}
           <Card>
             <CardHeader><CardTitle className="text-base">기본 정보</CardTitle></CardHeader>
             <CardContent>
               {p.productPhoto && <img src={p.productPhoto} alt="제품" className="mb-4 h-32 rounded border object-cover" />}
-              <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm md:grid-cols-3">
+              <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm md:grid-cols-4">
                 {info.map(([k, v]) => (
                   <div key={k}>
                     <dt className="text-xs text-muted-foreground">{k}</dt>
@@ -86,12 +78,22 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
                   </div>
                 ))}
               </dl>
-              {p.note && (
-                <div className="mt-4 rounded-md bg-muted/50 p-3 text-sm">
-                  <div className="mb-1 text-xs text-muted-foreground">특이사항</div>
-                  <p className="whitespace-pre-wrap">{p.note}</p>
-                </div>
-              )}
+            </CardContent>
+          </Card>
+
+          {/* 2. 진행 단계 */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">진행 단계</CardTitle></CardHeader>
+            <CardContent>
+              <StepBoard projectId={p.id} steps={boardSteps} />
+            </CardContent>
+          </Card>
+
+          {/* 3. 특이사항 (작성자·작성일별 다중 입력) */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">특이사항</CardTitle></CardHeader>
+            <CardContent>
+              <NotePanel projectId={p.id} notes={p.notes as any} />
             </CardContent>
           </Card>
         </div>

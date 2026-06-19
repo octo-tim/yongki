@@ -73,6 +73,7 @@ async function main() {
   // 4. 프로젝트 + 단계
   const projectRows: any[] = [];
   const stepRows: any[] = [];
+  const noteRows: any[] = [];
   const logRows: any[] = [];
 
   for (const p of data) {
@@ -101,10 +102,12 @@ async function main() {
       status: p.sheetStatus, // 상태 수동: 시트값 그대로
     });
     logRows.push({ projectId: id, actorId: admin.id, action: "CREATE", message: "시드 데이터 등록" });
+    if (p.note) noteRows.push({ projectId: id, authorId: admin.id, content: p.note, createdAt: d(p.orderDate) ?? new Date() });
   }
 
   await chunkInsert(projectRows, 300, (b) => prisma.project.createMany({ data: b }));
   await chunkInsert(stepRows, 1000, (b) => prisma.projectStep.createMany({ data: b }));
+  await chunkInsert(noteRows, 500, (b) => prisma.projectNote.createMany({ data: b }));
   await chunkInsert(logRows, 500, (b) => prisma.projectLog.createMany({ data: b }));
 
   const total = await prisma.project.count();
