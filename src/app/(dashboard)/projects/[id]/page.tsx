@@ -5,6 +5,7 @@ import { recomputeProject } from "@/lib/recompute";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/status-badge";
+import { getStatusConfig } from "@/lib/status-config";
 import { Timeline } from "@/components/timeline";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
@@ -27,6 +28,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     },
   });
   if (!p) notFound();
+  const statusCfg = await getStatusConfig();
 
   const prodSteps = p.steps.filter((s) => s.type === "PRODUCTION").map((s) => ({ ...s, doneAt: s.doneAt as any }));
   const shipSteps = p.steps.filter((s) => s.type === "SHIPPING").map((s) => ({ ...s, doneAt: s.doneAt as any }));
@@ -53,7 +55,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           <div className="flex items-center gap-2">
             <Link href="/projects" className="text-sm text-muted-foreground hover:underline">프로젝트</Link>
             <span className="text-muted-foreground">/</span>
-            <StatusBadge status={p.status} />
+            <StatusBadge status={p.status} label={statusCfg.label[p.status]} colorClass={statusCfg.style[p.status]} />
           </div>
           <h1 className="text-2xl font-bold">{p.productName}</h1>
         </div>

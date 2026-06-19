@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { recomputeAll } from "@/lib/recompute";
-import { ALL_STATUSES, STATUS_LABEL, STATUS_STYLE } from "@/lib/status";
+import { getStatusConfig } from "@/lib/status-config";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/status-badge";
 import { DateNav } from "@/components/date-nav";
@@ -19,6 +19,7 @@ const ACTION_LABEL: Record<string, string> = {
 
 export default async function DashboardPage({ searchParams }: { searchParams: { date?: string } }) {
   await recomputeAll();
+  const statusCfg = await getStatusConfig();
 
   const today = kstDateStr(new Date());
   const date = searchParams?.date && /^\d{4}-\d{2}-\d{2}$/.test(searchParams.date) ? searchParams.date : today;
@@ -54,12 +55,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
       </div>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-        {ALL_STATUSES.map((s) => (
+        {statusCfg.order.map((s) => (
           <Link key={s} href={`/projects?status=${s}`}>
             <Card className="transition-shadow hover:shadow-md">
               <CardContent className="p-4">
-                <div className={cn("mb-2 inline-flex rounded-full border px-2 py-0.5 text-xs font-medium", STATUS_STYLE[s])}>
-                  {STATUS_LABEL[s]}
+                <div className={cn("mb-2 inline-flex rounded-full border px-2 py-0.5 text-xs font-medium", statusCfg.style[s])}>
+                  {statusCfg.label[s]}
                 </div>
                 <div className="text-2xl font-bold">{countMap[s] ?? 0}</div>
               </CardContent>

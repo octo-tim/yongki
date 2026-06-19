@@ -7,5 +7,6 @@ export const config = {
     "/clients/:path*",
     "/factories/:path*",
     "/users/:path*",
+    "/admin/:path*",
   ],
 };

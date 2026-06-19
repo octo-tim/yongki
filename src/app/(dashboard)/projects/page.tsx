@@ -2,7 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { recomputeAll } from "@/lib/recompute";
 import { Prisma, type ProjectStatus } from "@prisma/client";
-import { ALL_STATUSES, STATUS_LABEL } from "@/lib/status";
+import { ALL_STATUSES } from "@/lib/status";
+import { getStatusConfig } from "@/lib/status-config";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -19,6 +20,7 @@ export default async function ProjectsPage({
   searchParams: { status?: string; q?: string };
 }) {
   await recomputeAll();
+  const statusCfg = await getStatusConfig();
 
   const status = searchParams.status as ProjectStatus | undefined;
   const q = searchParams.q?.trim();
@@ -71,10 +73,10 @@ export default async function ProjectsPage({
         <Link href="/projects">
           <span className={`rounded-full border px-3 py-1 text-xs ${!status ? "bg-primary text-primary-foreground" : "bg-background"}`}>전체</span>
         </Link>
-        {ALL_STATUSES.map((s) => (
+        {statusCfg.order.map((s) => (
           <Link key={s} href={`/projects?status=${s}${q ? `&q=${q}` : ""}`}>
             <span className={`rounded-full border px-3 py-1 text-xs ${status === s ? "bg-primary text-primary-foreground" : "bg-background"}`}>
-              {STATUS_LABEL[s]}
+              {statusCfg.label[s]}
             </span>
           </Link>
         ))}
@@ -100,7 +102,7 @@ export default async function ProjectsPage({
             )}
             {projects.map((p) => (
               <TableRow key={p.id} className="cursor-pointer">
-                <TableCell><StatusBadge status={p.status} /></TableCell>
+                <TableCell><StatusBadge status={p.status} label={statusCfg.label[p.status]} colorClass={statusCfg.style[p.status]} /></TableCell>
                 <TableCell className="whitespace-nowrap">{fmtDate(p.orderDate)}</TableCell>
                 <TableCell className="max-w-xs">
                   <Link href={`/projects/${p.id}`} className="font-medium hover:underline">{p.productName}</Link>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Users } from "lucide-react";
+import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Users, SlidersHorizontal, ListChecks } from "lucide-react";
 
 const baseNav = [
   { href: "/dashboard", label: "대시보드", icon: LayoutDashboard },
@@ -13,11 +13,15 @@ const baseNav = [
   { href: "/factories", label: "공장 관리", icon: Factory },
 ];
 
+const adminNav = [
+  { href: "/users", label: "사용자 관리", icon: Users },
+  { href: "/admin/statuses", label: "상태 관리", icon: SlidersHorizontal },
+  { href: "/admin/steps", label: "단계 관리", icon: ListChecks },
+];
+
 export function Sidebar({ userName, userRole }: { userName?: string | null; userRole?: string }) {
   const pathname = usePathname();
-  const nav = userRole === "ADMIN"
-    ? [...baseNav, { href: "/users", label: "사용자 관리", icon: Users }]
-    : baseNav;
+  const nav = userRole === "ADMIN" ? [...baseNav, ...adminNav] : baseNav;
   return (
     <aside className="flex w-60 shrink-0 flex-col border-r bg-card">
       <div className="flex h-14 items-center gap-2 border-b px-5">

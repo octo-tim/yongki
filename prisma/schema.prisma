@@ -23,6 +23,29 @@ enum StepType {
   SHIPPING   // 출고 타임라인
 }
 
+// 상태 표시 설정 (라벨/색상/순서) — enum 값별 1행
+model StatusSetting {
+  id        String        @id @default(cuid())
+  key       ProjectStatus @unique
+  label     String
+  color     String        // 팔레트 키 (blue, amber, emerald ...)
+  sortOrder Int           @default(0)
+
+  @@map("status_settings")
+}
+
+// 단계(제작/출고 하위업무) 템플릿 — 신규 프로젝트 생성 시 사용
+model StepTemplate {
+  id        String   @id @default(cuid())
+  type      StepType
+  name      String
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("step_templates")
+}
+
 enum UserRole {
   ADMIN
   STAFF

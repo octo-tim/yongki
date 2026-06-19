@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { computeStatus } from "@/lib/status";
-import { defaultSteps } from "@/lib/steps";
+import { getNewProjectSteps } from "@/lib/step-templates";
 
 const toDate = (v: any) => (v ? new Date(v) : null);
 
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
   const project = await prisma.project.create({
     data: {
       ...data, status,
-      steps: { create: defaultSteps() },
+      steps: { create: await getNewProjectSteps() },
       logs: { create: { actorId: (session.user as any).id, action: "CREATE", message: "프로젝트 등록" } },
     },
   });
