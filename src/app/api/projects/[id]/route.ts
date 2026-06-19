@@ -26,6 +26,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     factoryId: b.factoryId || null,
     managerId: b.managerId || null,
     manualHold: !!b.manualHold,
+    manualStatus: b.manualStatus || null,
     factoryOrderDate: toDate(b.factoryOrderDate),
     expectedCompletionDate: toDate(b.expectedCompletionDate),
     productionCompleteDate: toDate(b.productionCompleteDate),

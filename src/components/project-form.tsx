@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toDateInput } from "@/lib/utils";
+import { STATUS_LABEL, ALL_STATUSES } from "@/lib/status";
 
 type Option = { id: string; name: string };
 export type ProjectFormData = {
@@ -15,6 +16,7 @@ export type ProjectFormData = {
   quantity?: number | null; deposit?: any; balance?: any; note?: string | null;
   clientId?: string | null; factoryId?: string | null; managerId?: string | null;
   manualHold?: boolean;
+  manualStatus?: string | null;
   factoryOrderDate?: string | null; expectedCompletionDate?: string | null; productionCompleteDate?: string | null;
   warehouseInDate?: string | null; inspectionDate?: string | null; shipOutDate?: string | null;
   koreaArrivalDate?: string | null; customerDeliveryDate?: string | null;
@@ -41,6 +43,7 @@ export function ProjectForm({
     factoryId: initial?.factoryId ?? "",
     managerId: initial?.managerId ?? "",
     manualHold: initial?.manualHold ?? false,
+    manualStatus: initial?.manualStatus ?? "",
     factoryOrderDate: toDateInput(initial?.factoryOrderDate),
     expectedCompletionDate: toDateInput(initial?.expectedCompletionDate),
     productionCompleteDate: toDateInput(initial?.productionCompleteDate),
@@ -75,6 +78,7 @@ export function ProjectForm({
       quantity: form.quantity ? Number(form.quantity) : null,
       deposit: form.deposit ? Number(form.deposit) : null,
       balance: form.balance ? Number(form.balance) : null,
+      manualStatus: form.manualStatus || null,
     };
     const url = mode === "create" ? "/api/projects" : `/api/projects/${initial.id}`;
     const method = mode === "create" ? "POST" : "PATCH";
@@ -147,10 +151,16 @@ export function ProjectForm({
       <Card>
         <CardHeader><CardTitle className="text-base">기타</CardTitle></CardHeader>
         <CardContent className="space-y-4">
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={!!form.manualHold} onChange={(e) => set("manualHold", e.target.checked)} />
-            제작보류로 표시 (자동 상태 계산 시 완료/출고대기 등 상위 조건이 없으면 보류로 처리)
-          </label>
+          <Field label="상태 (수동 지정)">
+            <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+              value={form.manualStatus ?? ""} onChange={(e) => set("manualStatus", e.target.value)}>
+              <option value="">자동 계산 (날짜 기준)</option>
+              {ALL_STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
+            </select>
+            <p className="pt-1 text-xs text-muted-foreground">
+              상태를 직접 선택하면 해당 값으로 고정됩니다. &lsquo;자동 계산&rsquo;을 선택하면 날짜(생산완료·출고·인도 등)에 따라 자동으로 결정됩니다.
+            </p>
+          </Field>
           <Field label="특이사항"><Textarea value={form.note ?? ""} onChange={(e) => set("note", e.target.value)} rows={3} /></Field>
         </CardContent>
       </Card>

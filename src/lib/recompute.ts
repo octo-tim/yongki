@@ -6,6 +6,7 @@ export async function recomputeProject(projectId: string, actorId?: string) {
   const p = await prisma.project.findUnique({ where: { id: projectId } });
   if (!p) return null;
   const next = computeStatus({
+    manualStatus: p.manualStatus,
     manualHold: p.manualHold,
     expectedCompletionDate: p.expectedCompletionDate,
     productionCompleteDate: p.productionCompleteDate,
@@ -24,7 +25,7 @@ export async function recomputeProject(projectId: string, actorId?: string) {
 
 // 전체 프로젝트 상태 일괄 재계산 (대시보드/목록 진입 시 지연 상태 갱신용)
 export async function recomputeAll() {
-  const list = await prisma.project.findMany({ select: { id: true, status: true, manualHold: true, expectedCompletionDate: true, productionCompleteDate: true, shipOutDate: true, koreaArrivalDate: true, customerDeliveryDate: true } });
+  const list = await prisma.project.findMany({ select: { id: true, status: true, manualStatus: true, manualHold: true, expectedCompletionDate: true, productionCompleteDate: true, shipOutDate: true, koreaArrivalDate: true, customerDeliveryDate: true } });
   const updates = [];
   for (const p of list) {
     const next = computeStatus(p);

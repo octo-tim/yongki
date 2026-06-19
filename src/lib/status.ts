@@ -25,6 +25,7 @@ export const ALL_STATUSES: ProjectStatus[] = [
 ];
 
 export interface StatusInput {
+  manualStatus?: ProjectStatus | string | null;
   manualHold: boolean;
   expectedCompletionDate?: Date | string | null;
   productionCompleteDate?: Date | string | null;
@@ -36,7 +37,8 @@ export interface StatusInput {
 const has = (v?: Date | string | null) => v !== null && v !== undefined && v !== "";
 
 /**
- * 상태 자동 계산 규칙 (명세 순서 그대로 평가)
+ * 상태 계산 규칙
+ *  0. 수동 지정(manualStatus)이 있으면 → 그 값 (자동계산보다 우선)
  *  1. 고객인도일 있으면 → 완료
  *  2. 한국도착일 있고 고객인도일 없으면 → 인도대기
  *  3. 생산완료일 있고 출고일 없으면 → 출고대기
@@ -45,6 +47,7 @@ const has = (v?: Date | string | null) => v !== null && v !== undefined && v !==
  *  6. 그 외 → 진행중
  */
 export function computeStatus(p: StatusInput, today: Date = new Date()): ProjectStatus {
+  if (p.manualStatus) return p.manualStatus as ProjectStatus;
   if (has(p.customerDeliveryDate)) return "DONE";
   if (has(p.koreaArrivalDate)) return "AWAITING_DELIVERY";
   if (has(p.productionCompleteDate) && !has(p.shipOutDate)) return "READY_TO_SHIP";

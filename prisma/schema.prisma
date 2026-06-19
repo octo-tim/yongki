@@ -88,8 +88,9 @@ model Project {
   balance     Decimal?  @db.Decimal(14, 2) // 잔금
   note        String?              // 특이사항
 
-  status     ProjectStatus @default(IN_PROGRESS)
-  manualHold Boolean       @default(false) // 사용자가 제작보류로 설정
+  status       ProjectStatus  @default(IN_PROGRESS)
+  manualStatus ProjectStatus? // 사용자가 수동 지정한 상태 (있으면 자동계산보다 우선)
+  manualHold   Boolean        @default(false) // 사용자가 제작보류로 설정
 
   // 제작 일정
   factoryOrderDate       DateTime? // 공장 주문일자
