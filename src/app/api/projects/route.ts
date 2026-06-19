@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { computeStatus } from "@/lib/status";
 import { getNewProjectSteps } from "@/lib/step-templates";
 
 const toDate = (v: any) => (v ? new Date(v) : null);
@@ -13,6 +12,7 @@ export async function POST(req: NextRequest) {
   const b = await req.json();
   if (!b.productName) return NextResponse.json({ error: "상품명 필수" }, { status: 400 });
 
+  const status = b.status || "IN_PROGRESS"; // 상태 수동 지정 (기본 진행중)
   const data = {
     productName: b.productName,
     orderNo: b.orderNo || null,
@@ -25,18 +25,8 @@ export async function POST(req: NextRequest) {
     clientId: b.clientId || null,
     factoryId: b.factoryId || null,
     managerId: b.managerId || null,
-    manualHold: !!b.manualHold,
-    manualStatus: b.manualStatus || null,
-    factoryOrderDate: toDate(b.factoryOrderDate),
-    expectedCompletionDate: toDate(b.expectedCompletionDate),
-    productionCompleteDate: toDate(b.productionCompleteDate),
-    warehouseInDate: toDate(b.warehouseInDate),
-    inspectionDate: toDate(b.inspectionDate),
-    shipOutDate: toDate(b.shipOutDate),
-    koreaArrivalDate: toDate(b.koreaArrivalDate),
-    customerDeliveryDate: toDate(b.customerDeliveryDate),
+    manualHold: status === "ON_HOLD",
   };
-  const status = computeStatus(data);
 
   const project = await prisma.project.create({
     data: {

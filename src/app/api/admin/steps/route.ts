@@ -16,9 +16,10 @@ export async function POST(req: NextRequest) {
   const b = await req.json();
   const type = b.type === "SHIPPING" ? "SHIPPING" : "PRODUCTION";
   const name = (b.name ?? "").trim();
+  const group = (b.group ?? name).trim() || name;
   if (!name) return NextResponse.json({ error: "단계명은 필수입니다." }, { status: 400 });
   const last = await prisma.stepTemplate.findFirst({ where: { type: type as any }, orderBy: { order: "desc" } });
   const order = (last?.order ?? -1) + 1;
-  const t = await prisma.stepTemplate.create({ data: { type: type as any, name, order, active: true } });
+  const t = await prisma.stepTemplate.create({ data: { type: type as any, group, name, order, active: true } });
   return NextResponse.json(t);
 }

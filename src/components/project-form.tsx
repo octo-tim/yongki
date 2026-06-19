@@ -15,11 +15,7 @@ export type ProjectFormData = {
   orderDate?: string | null; orderNo?: string | null; productName?: string;
   quantity?: number | null; deposit?: any; balance?: any; note?: string | null;
   clientId?: string | null; factoryId?: string | null; managerId?: string | null;
-  manualHold?: boolean;
-  manualStatus?: string | null;
-  factoryOrderDate?: string | null; expectedCompletionDate?: string | null; productionCompleteDate?: string | null;
-  warehouseInDate?: string | null; inspectionDate?: string | null; shipOutDate?: string | null;
-  koreaArrivalDate?: string | null; customerDeliveryDate?: string | null;
+  status?: string;
   productPhoto?: string | null;
 };
 
@@ -42,16 +38,7 @@ export function ProjectForm({
     clientId: initial?.clientId ?? "",
     factoryId: initial?.factoryId ?? "",
     managerId: initial?.managerId ?? "",
-    manualHold: initial?.manualHold ?? false,
-    manualStatus: initial?.manualStatus ?? "",
-    factoryOrderDate: toDateInput(initial?.factoryOrderDate),
-    expectedCompletionDate: toDateInput(initial?.expectedCompletionDate),
-    productionCompleteDate: toDateInput(initial?.productionCompleteDate),
-    warehouseInDate: toDateInput(initial?.warehouseInDate),
-    inspectionDate: toDateInput(initial?.inspectionDate),
-    shipOutDate: toDateInput(initial?.shipOutDate),
-    koreaArrivalDate: toDateInput(initial?.koreaArrivalDate),
-    customerDeliveryDate: toDateInput(initial?.customerDeliveryDate),
+    status: initial?.status ?? "IN_PROGRESS",
     productPhoto: initial?.productPhoto ?? "",
   });
 
@@ -63,10 +50,7 @@ export function ProjectForm({
     const fd = new FormData();
     fd.append("file", file);
     const res = await fetch("/api/upload", { method: "POST", body: fd });
-    if (res.ok) {
-      const data = await res.json();
-      set("productPhoto", data.path);
-    }
+    if (res.ok) { const data = await res.json(); set("productPhoto", data.path); }
   }
 
   async function submit(e: React.FormEvent) {
@@ -78,7 +62,7 @@ export function ProjectForm({
       quantity: form.quantity ? Number(form.quantity) : null,
       deposit: form.deposit ? Number(form.deposit) : null,
       balance: form.balance ? Number(form.balance) : null,
-      manualStatus: form.manualStatus || null,
+      status: form.status || "IN_PROGRESS",
     };
     const url = mode === "create" ? "/api/projects" : `/api/projects/${initial.id}`;
     const method = mode === "create" ? "POST" : "PATCH";
@@ -119,6 +103,12 @@ export function ProjectForm({
               {managers.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </Field>
+          <Field label="상태">
+            <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+              value={form.status ?? "IN_PROGRESS"} onChange={(e) => set("status", e.target.value)}>
+              {ALL_STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
+            </select>
+          </Field>
           <Field label="제품사진">
             <div className="space-y-2">
               <Input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadPhoto(e.target.files[0])} />
@@ -129,39 +119,14 @@ export function ProjectForm({
       </Card>
 
       <Card>
-        <CardHeader><CardTitle className="text-base">제작 일정</CardTitle></CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-3">
-          <Field label="공장 주문일자"><Input type="date" value={form.factoryOrderDate ?? ""} onChange={(e) => set("factoryOrderDate", e.target.value)} /></Field>
-          <Field label="완성 예정일"><Input type="date" value={form.expectedCompletionDate ?? ""} onChange={(e) => set("expectedCompletionDate", e.target.value)} /></Field>
-          <Field label="생산 완료일"><Input type="date" value={form.productionCompleteDate ?? ""} onChange={(e) => set("productionCompleteDate", e.target.value)} /></Field>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader><CardTitle className="text-base">출고 일정</CardTitle></CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-3">
-          <Field label="창고 입고일"><Input type="date" value={form.warehouseInDate ?? ""} onChange={(e) => set("warehouseInDate", e.target.value)} /></Field>
-          <Field label="검품일"><Input type="date" value={form.inspectionDate ?? ""} onChange={(e) => set("inspectionDate", e.target.value)} /></Field>
-          <Field label="출고일"><Input type="date" value={form.shipOutDate ?? ""} onChange={(e) => set("shipOutDate", e.target.value)} /></Field>
-          <Field label="한국 도착일"><Input type="date" value={form.koreaArrivalDate ?? ""} onChange={(e) => set("koreaArrivalDate", e.target.value)} /></Field>
-          <Field label="고객 인도일"><Input type="date" value={form.customerDeliveryDate ?? ""} onChange={(e) => set("customerDeliveryDate", e.target.value)} /></Field>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader><CardTitle className="text-base">기타</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
-          <Field label="상태 (수동 지정)">
-            <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-              value={form.manualStatus ?? ""} onChange={(e) => set("manualStatus", e.target.value)}>
-              <option value="">자동 계산 (날짜 기준)</option>
-              {ALL_STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
-            </select>
-            <p className="pt-1 text-xs text-muted-foreground">
-              상태를 직접 선택하면 해당 값으로 고정됩니다. &lsquo;자동 계산&rsquo;을 선택하면 날짜(생산완료·출고·인도 등)에 따라 자동으로 결정됩니다.
-            </p>
+        <CardHeader><CardTitle className="text-base">특이사항</CardTitle></CardHeader>
+        <CardContent>
+          <Field label="메모">
+            <Textarea value={form.note ?? ""} onChange={(e) => set("note", e.target.value)} rows={3} />
           </Field>
-          <Field label="특이사항"><Textarea value={form.note ?? ""} onChange={(e) => set("note", e.target.value)} rows={3} /></Field>
+          <p className="pt-2 text-xs text-muted-foreground">
+            제작·출고 단계의 일자/직원은 저장 후 상세 화면의 &lsquo;진행 단계&rsquo;에서 입력합니다.
+          </p>
         </CardContent>
       </Card>
 

@@ -38,6 +38,7 @@ model StatusSetting {
 model StepTemplate {
   id        String   @id @default(cuid())
   type      StepType
+  group     String   @default("")
   name      String
   order     Int      @default(0)
   active    Boolean  @default(true)
@@ -154,11 +155,13 @@ model ProjectStep {
   id        String    @id @default(cuid())
   projectId String
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  type      StepType  // 제작 / 출고
-  name      String    // 공장 주문, 파일 수령 ...
+  type      StepType  // 제작일정관리(PRODUCTION) / 출고관리(SHIPPING)
+  group     String    @default("") // 2단계: 공장주문일자/완성예정일/제작확인/창고입고...
+  name      String    // 3단계(leaf): 파일수령/생산완료/검품 ...
   order     Int       // 정렬 순서
   done      Boolean   @default(false)
   doneAt    DateTime? // 완료 일자
+  staff     String?   // 담당 직원 (자유 입력)
   note      String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

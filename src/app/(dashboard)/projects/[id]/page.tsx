@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { recomputeProject } from "@/lib/recompute";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/status-badge";
 import { getStatusConfig } from "@/lib/status-config";
-import { Timeline } from "@/components/timeline";
+import { StepBoard } from "@/components/step-board";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
@@ -16,7 +15,6 @@ import { Pencil } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function ProjectDetailPage({ params }: { params: { id: string } }) {
-  await recomputeProject(params.id);
   const p = await prisma.project.findUnique({
     where: { id: params.id },
     include: {
@@ -30,8 +28,10 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
   if (!p) notFound();
   const statusCfg = await getStatusConfig();
 
-  const prodSteps = p.steps.filter((s) => s.type === "PRODUCTION").map((s) => ({ ...s, doneAt: s.doneAt as any }));
-  const shipSteps = p.steps.filter((s) => s.type === "SHIPPING").map((s) => ({ ...s, doneAt: s.doneAt as any }));
+  const boardSteps = p.steps.map((s) => ({
+    id: s.id, type: s.type, group: s.group, name: s.name, order: s.order,
+    done: s.done, doneAt: s.doneAt as any, staff: s.staff,
+  }));
 
   const info: [string, string][] = [
     ["주문번호", p.orderNo ?? "-"],
@@ -68,10 +68,9 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           <Card>
-            <CardHeader><CardTitle className="text-base">진행 타임라인</CardTitle></CardHeader>
-            <CardContent className="grid gap-8 md:grid-cols-2">
-              <Timeline projectId={p.id} title="제작 단계" steps={prodSteps} accent="bg-blue-500" />
-              <Timeline projectId={p.id} title="출고 단계" steps={shipSteps} accent="bg-emerald-500" />
+            <CardHeader><CardTitle className="text-base">진행 단계</CardTitle></CardHeader>
+            <CardContent>
+              <StepBoard projectId={p.id} steps={boardSteps} />
             </CardContent>
           </Card>
 

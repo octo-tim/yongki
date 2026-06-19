@@ -16,6 +16,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const b = await req.json();
   const data: Record<string, any> = {};
   if (typeof b.name === "string" && b.name.trim()) data.name = b.name.trim();
+  if (typeof b.group === "string" && b.group.trim()) data.group = b.group.trim();
   if (typeof b.order === "number") data.order = b.order;
   if (typeof b.active === "boolean") data.active = b.active;
   const t = await prisma.stepTemplate.update({ where: { id: params.id }, data });

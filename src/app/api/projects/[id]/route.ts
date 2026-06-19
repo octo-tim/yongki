@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { computeStatus } from "@/lib/status";
 
 const toDate = (v: any) => (v ? new Date(v) : null);
 
@@ -13,6 +12,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const prev = await prisma.project.findUnique({ where: { id: params.id } });
   if (!prev) return NextResponse.json({ error: "not found" }, { status: 404 });
 
+  const status = b.status || prev.status; // 상태 수동 지정
   const data = {
     productName: b.productName ?? prev.productName,
     orderNo: b.orderNo ?? null,
@@ -25,20 +25,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     clientId: b.clientId || null,
     factoryId: b.factoryId || null,
     managerId: b.managerId || null,
-    manualHold: !!b.manualHold,
-    manualStatus: b.manualStatus || null,
-    factoryOrderDate: toDate(b.factoryOrderDate),
-    expectedCompletionDate: toDate(b.expectedCompletionDate),
-    productionCompleteDate: toDate(b.productionCompleteDate),
-    warehouseInDate: toDate(b.warehouseInDate),
-    inspectionDate: toDate(b.inspectionDate),
-    shipOutDate: toDate(b.shipOutDate),
-    koreaArrivalDate: toDate(b.koreaArrivalDate),
-    customerDeliveryDate: toDate(b.customerDeliveryDate),
+    manualHold: status === "ON_HOLD",
+    status,
   };
-  const status = computeStatus(data);
+  // 일정/출고 날짜 컬럼(factoryOrderDate 등)은 단계(steps)에서 관리하므로 여기서 덮어쓰지 않음
 
-  const project = await prisma.project.update({ where: { id: params.id }, data: { ...data, status } });
+  const project = await prisma.project.update({ where: { id: params.id }, data });
 
   const logs: any[] = [{ projectId: params.id, actorId: (session.user as any).id, action: "UPDATE", message: "프로젝트 수정" }];
   if (status !== prev.status) logs.push({ projectId: params.id, actorId: (session.user as any).id, action: "STATUS_CHANGE", message: `상태 변경: ${prev.status} → ${status}` });

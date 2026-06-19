@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProjectForm } from "@/components/project-form";
-import { Timeline } from "@/components/timeline";
+import { StepBoard } from "@/components/step-board";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
@@ -19,8 +19,10 @@ export default async function EditProjectPage({ params }: { params: { id: string
   if (!project) notFound();
 
   const { steps, ...projectFields } = project as any;
-  const prodSteps = steps.filter((s: any) => s.type === "PRODUCTION").map((s: any) => ({ ...s, doneAt: s.doneAt as any }));
-  const shipSteps = steps.filter((s: any) => s.type === "SHIPPING").map((s: any) => ({ ...s, doneAt: s.doneAt as any }));
+  const boardSteps = steps.map((s: any) => ({
+    id: s.id, type: s.type, group: s.group, name: s.name, order: s.order,
+    done: s.done, doneAt: s.doneAt as any, staff: s.staff,
+  }));
 
   return (
     <div className="space-y-4 p-6">
@@ -29,11 +31,10 @@ export default async function EditProjectPage({ params }: { params: { id: string
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">제작 / 출고 단계</CardTitle>
+          <CardTitle className="text-base">진행 단계 (일자 · 직원)</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-8 md:grid-cols-2">
-          <Timeline projectId={project.id} title="제작 단계" steps={prodSteps} accent="bg-blue-500" />
-          <Timeline projectId={project.id} title="출고 단계" steps={shipSteps} accent="bg-emerald-500" />
+        <CardContent>
+          <StepBoard projectId={project.id} steps={boardSteps} />
         </CardContent>
       </Card>
     </div>

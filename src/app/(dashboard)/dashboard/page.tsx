@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { recomputeAll } from "@/lib/recompute";
 import { getStatusConfig } from "@/lib/status-config";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -10,7 +9,6 @@ export const dynamic = "force-dynamic";
 type StepAgg = { type: string; name: string; order: number; total: number; done: number };
 
 export default async function DashboardPage() {
-  await recomputeAll();
   const statusCfg = await getStatusConfig();
 
   const [grouped, total, stepAll, stepDone] = await Promise.all([

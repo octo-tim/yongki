@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { recomputeAll } from "@/lib/recompute";
 import { Prisma, type ProjectStatus } from "@prisma/client";
 import { ALL_STATUSES } from "@/lib/status";
 import { getStatusConfig } from "@/lib/status-config";
@@ -19,7 +18,6 @@ export default async function ProjectsPage({
 }: {
   searchParams: { status?: string; q?: string };
 }) {
-  await recomputeAll();
   const statusCfg = await getStatusConfig();
 
   const status = searchParams.status as ProjectStatus | undefined;
