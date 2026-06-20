@@ -1,11 +1,10 @@
 import ExcelJS from "exceljs";
 import { STATUS_LABEL } from "@/lib/status";
-import type { ProjectStatus } from "@/lib/status";
 
 type Row = {
   orderDate: Date | null; orderNo: string | null; productName: string;
   quantity: number | null; deposit: any; balance: any;
-  status: ProjectStatus;
+  status: string;
   clientName?: string | null; factoryName?: string | null; managerName?: string | null;
   factoryOrderDate: Date | null; expectedCompletionDate: Date | null; productionCompleteDate: Date | null;
   warehouseInDate: Date | null; inspectionDate: Date | null; shipOutDate: Date | null;
