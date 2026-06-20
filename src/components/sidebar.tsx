@@ -1,9 +1,10 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Settings, BarChart3, Wallet } from "lucide-react";
+import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Settings, BarChart3, Wallet, ChevronLeft, ChevronRight } from "lucide-react";
 
 const baseNav = [
   { href: "/dashboard", label: "대시보드", icon: LayoutDashboard },
@@ -22,13 +23,35 @@ const adminNav = [
 export function Sidebar({ userName, userRole }: { userName?: string | null; userRole?: string }) {
   const pathname = usePathname();
   const nav = userRole === "ADMIN" ? [...baseNav, ...adminNav] : baseNav;
+
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("sidebar-collapsed") === "1") setCollapsed(true);
+  }, []);
+  function toggle() {
+    setCollapsed((c) => {
+      const next = !c;
+      localStorage.setItem("sidebar-collapsed", next ? "1" : "0");
+      return next;
+    });
+  }
+
   return (
-    <aside className="flex w-60 shrink-0 flex-col border-r bg-card">
-      <div className="flex h-14 items-center gap-2 border-b px-5">
-        <Package className="h-5 w-5 text-primary" />
-        <span className="font-semibold">용기 제작관리</span>
+    <aside className={cn("flex shrink-0 flex-col border-r bg-card transition-all duration-200", collapsed ? "w-16" : "w-60")}>
+      <div className={cn("flex h-14 items-center border-b", collapsed ? "justify-center px-2" : "justify-between px-4")}>
+        {!collapsed && (
+          <div className="flex items-center gap-2 overflow-hidden">
+            <Package className="h-5 w-5 shrink-0 text-primary" />
+            <span className="truncate font-semibold">용기 제작관리</span>
+          </div>
+        )}
+        <button onClick={toggle} title={collapsed ? "사이드바 펼치기" : "사이드바 접기"}
+          className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        </button>
       </div>
-      <nav className="flex-1 space-y-1 p-3">
+
+      <nav className={cn("flex-1 space-y-1 p-3", collapsed && "px-2")}>
         {nav.map((item) => {
           const active = item.href === "/projects"
             ? pathname === "/projects" || (pathname.startsWith("/projects/") && pathname !== "/projects/new")
@@ -38,24 +61,31 @@ export function Sidebar({ userName, userRole }: { userName?: string | null; user
             <Link
               key={item.href}
               href={item.href}
+              title={collapsed ? item.label : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                "flex items-center rounded-md py-2 text-sm font-medium transition-colors",
+                collapsed ? "justify-center px-2" : "gap-3 px-3",
                 active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground"
               )}
             >
-              <Icon className="h-4 w-4" />
-              {item.label}
+              <Icon className="h-4 w-4 shrink-0" />
+              {!collapsed && <span className="truncate">{item.label}</span>}
             </Link>
           );
         })}
       </nav>
-      <div className="border-t p-3">
-        <div className="px-3 py-2 text-xs text-muted-foreground">{userName ?? "사용자"}</div>
+
+      <div className={cn("border-t p-3", collapsed && "px-2")}>
+        {!collapsed && <div className="px-3 py-2 text-xs text-muted-foreground truncate">{userName ?? "사용자"}</div>}
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          title={collapsed ? "로그아웃" : undefined}
+          className={cn(
+            "flex w-full items-center rounded-md py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
+            collapsed ? "justify-center px-2" : "gap-3 px-3"
+          )}
         >
-          <LogOut className="h-4 w-4" /> 로그아웃
+          <LogOut className="h-4 w-4 shrink-0" /> {!collapsed && "로그아웃"}
         </button>
       </div>
     </aside>
