@@ -58,3 +58,20 @@ export function statusFromSteps(steps: { name: string; done: boolean }[]): strin
 export function defaultSteps(): StepDef[] {
   return CANON_STEPS.map((s) => ({ ...s }));
 }
+
+// 그룹핑용: 가장 멀리 완료된 단계명 (완료된 단계 없으면 null)
+export function furthestStep(steps: { name: string; done: boolean }[]): string | null {
+  const done = new Set(steps.filter((s) => s.done).map((s) => s.name));
+  for (let i = STEP_ORDER.length - 1; i >= 0; i--) {
+    if (done.has(STEP_ORDER[i])) return STEP_ORDER[i];
+  }
+  return null;
+}
+
+// 단계별 그룹 표시 순서 (시작전 + 각 단계)
+export const STEP_BUCKETS: string[] = ["시작전", ...STEP_ORDER];
+
+// 단계명 → 상태 그룹
+export function statusOfStep(name: string): string {
+  return STEP_STATUS[name] ?? "준비";
+}
