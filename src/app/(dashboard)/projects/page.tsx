@@ -12,7 +12,7 @@ import { Download, PlusCircle, Search } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export default async function ProjectsPage({ searchParams }: { searchParams: { q?: string } }) {
+export default async function ProjectsPage({ searchParams }: { searchParams: { q?: string; step?: string } }) {
   const statusCfg = await getStatusConfig();
   const q = searchParams.q?.trim();
 
@@ -38,7 +38,9 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
     const arr = groups.get(key);
     if (arr) arr.push(p); else groups.set(key, [p]);
   }
-  const buckets = STEP_BUCKETS.filter((b) => (groups.get(b)?.length ?? 0) > 0);
+  const allBuckets = STEP_BUCKETS.filter((b) => (groups.get(b)?.length ?? 0) > 0);
+  const selected = searchParams.step && allBuckets.includes(searchParams.step) ? searchParams.step : null;
+  const renderBuckets = selected ? [selected] : allBuckets;
 
   const exportQs = new URLSearchParams();
   if (q) exportQs.set("q", q);
@@ -48,7 +50,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">프로젝트 목록</h1>
-          <p className="text-sm text-muted-foreground">단계별 · 총 {projects.length}건</p>
+          <p className="text-sm text-muted-foreground">{selected ? `단계 '${selected}'` : "전체"} · {(selected ? groups.get(selected)!.length : projects.length)}건</p>
         </div>
         <div className="flex gap-2">
           <Button asChild variant="outline">
@@ -64,16 +66,21 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
           <Input name="q" defaultValue={q} placeholder="상품명·주문번호·업체·공장" className="w-72 pl-8" />
         </div>
         <Button type="submit" variant="secondary">검색</Button>
-        {q && <Button asChild variant="ghost"><Link href="/projects">초기화</Link></Button>}
+        {selected && <input type="hidden" name="step" value={selected} />}
+        {(q || selected) && <Button asChild variant="ghost"><Link href="/projects">초기화</Link></Button>}
       </form>
 
-      {/* 단계 바로가기 */}
+      {/* 단계 필터: 전체 + 단계별 */}
       <div className="flex flex-wrap gap-1.5">
-        {buckets.map((b) => (
-          <a key={b} href={`#step-${encodeURIComponent(b)}`}
-            className={cn("rounded-full border px-2.5 py-1 text-xs", statusCfg.style[statusOfStep(b)] ?? "")}>
+        <Link href={`/projects${q ? `?q=${encodeURIComponent(q)}` : ""}`}
+          className={cn("rounded-full border px-2.5 py-1 text-xs", !selected ? "bg-primary text-primary-foreground" : "bg-background")}>
+          전체 <span className="opacity-70">{projects.length}</span>
+        </Link>
+        {allBuckets.map((b) => (
+          <Link key={b} href={`/projects?step=${encodeURIComponent(b)}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
+            className={cn("rounded-full border px-2.5 py-1 text-xs", selected === b ? "bg-primary text-primary-foreground" : (statusCfg.style[statusOfStep(b)] ?? ""))}>
             {b} <span className="opacity-70">{groups.get(b)!.length}</span>
-          </a>
+          </Link>
         ))}
       </div>
 
@@ -81,7 +88,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
         <Card><div className="py-12 text-center text-muted-foreground">프로젝트가 없습니다.</div></Card>
       )}
 
-      {buckets.map((b) => {
+      {renderBuckets.map((b) => {
         const rows = groups.get(b)!;
         const st = statusOfStep(b);
         return (
