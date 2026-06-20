@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export default async function TasksPage() {
   const [users, activeProjects, tasks] = await Promise.all([
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
-    prisma.project.findMany({ where: { status: "IN_PROGRESS" }, orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
+    prisma.project.findMany({ where: { status: "진행중" }, orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
     prisma.workLog.findMany({
       orderBy: { createdAt: "desc" },
       include: {

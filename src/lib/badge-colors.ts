@@ -1,5 +1,3 @@
-import type { ProjectStatus } from "@prisma/client";
-
 // Tailwind 안전(literal) 팔레트 — 상태 색상 선택지 (클라이언트/서버 공용, 서버 의존성 없음)
 export const BADGE_COLORS: Record<string, string> = {
   blue: "bg-blue-100 text-blue-700 border-blue-200",
@@ -18,11 +16,9 @@ export const BADGE_COLORS: Record<string, string> = {
 
 export const BADGE_COLOR_KEYS = Object.keys(BADGE_COLORS);
 
-export const DEFAULT_STATUS_COLOR: Record<ProjectStatus, string> = {
-  IN_PROGRESS: "blue",
-  ON_HOLD: "zinc",
-  READY_TO_SHIP: "amber",
-  DONE: "emerald",
-  DELAYED: "red",
-  AWAITING_DELIVERY: "violet",
+export const DEFAULT_STATUS_COLOR: Record<string, string> = {
+  준비: "slate",
+  진행중: "blue",
+  출고대기: "amber",
+  완료: "emerald",
 };

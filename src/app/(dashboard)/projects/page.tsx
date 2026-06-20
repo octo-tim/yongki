@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { Prisma, type ProjectStatus } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import type { ProjectStatus } from "@/lib/status";
 import { ALL_STATUSES } from "@/lib/status";
 import { getStatusConfig } from "@/lib/status-config";
 import { Button } from "@/components/ui/button";

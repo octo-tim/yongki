@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { STEP_TO_PROJECT_DATE } from "@/lib/steps";
+import { recomputeProjectStatus } from "@/lib/recompute";
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
@@ -28,6 +29,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (col) {
     await prisma.project.update({ where: { id: params.id }, data: { [col]: step.doneAt } as any });
   }
+
+  // 단계 진행에서 프로젝트 상태(준비/진행중/출고대기/완료) 자동 갱신
+  await recomputeProjectStatus(params.id, (session.user as any).id);
 
   await prisma.projectLog.create({
     data: {

@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   const b = await req.json();
   if (!b.productName) return NextResponse.json({ error: "상품명 필수" }, { status: 400 });
 
-  const status = b.status || "IN_PROGRESS"; // 상태 수동 지정 (기본 진행중)
+  const status = b.status || "준비"; // 신규는 준비 (단계 진행에 따라 자동 변경)
   const data = {
     productName: b.productName,
     orderNo: b.orderNo || null,
@@ -29,7 +29,6 @@ export async function POST(req: NextRequest) {
     clientId: b.clientId || null,
     factoryId: b.factoryId || null,
     managerId: b.managerId || null,
-    manualHold: status === "ON_HOLD",
   };
 
   const project = await prisma.project.create({

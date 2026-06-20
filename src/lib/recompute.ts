@@ -1,19 +1,14 @@
 import { prisma } from "@/lib/prisma";
-import { computeStatus } from "@/lib/status";
+import { statusFromSteps } from "@/lib/steps";
 
-// 단일 프로젝트의 상태를 재계산하고 변경 시 DB 반영 + 로그
-export async function recomputeProject(projectId: string, actorId?: string) {
-  const p = await prisma.project.findUnique({ where: { id: projectId } });
+// 단일 프로젝트 상태를 단계 진행에서 재계산하고 변경 시 DB 반영
+export async function recomputeProjectStatus(projectId: string, actorId?: string) {
+  const [p, steps] = await Promise.all([
+    prisma.project.findUnique({ where: { id: projectId }, select: { status: true } }),
+    prisma.projectStep.findMany({ where: { projectId }, select: { name: true, done: true } }),
+  ]);
   if (!p) return null;
-  const next = computeStatus({
-    manualStatus: p.manualStatus,
-    manualHold: p.manualHold,
-    expectedCompletionDate: p.expectedCompletionDate,
-    productionCompleteDate: p.productionCompleteDate,
-    shipOutDate: p.shipOutDate,
-    koreaArrivalDate: p.koreaArrivalDate,
-    customerDeliveryDate: p.customerDeliveryDate,
-  });
+  const next = statusFromSteps(steps);
   if (next !== p.status) {
     await prisma.project.update({ where: { id: projectId }, data: { status: next } });
     await prisma.projectLog.create({
@@ -23,12 +18,12 @@ export async function recomputeProject(projectId: string, actorId?: string) {
   return next;
 }
 
-// 전체 프로젝트 상태 일괄 재계산 (대시보드/목록 진입 시 지연 상태 갱신용)
+// 전체 프로젝트 상태 일괄 재계산
 export async function recomputeAll() {
-  const list = await prisma.project.findMany({ select: { id: true, status: true, manualStatus: true, manualHold: true, expectedCompletionDate: true, productionCompleteDate: true, shipOutDate: true, koreaArrivalDate: true, customerDeliveryDate: true } });
+  const list = await prisma.project.findMany({ select: { id: true, status: true, steps: { select: { name: true, done: true } } } });
   const updates = [];
   for (const p of list) {
-    const next = computeStatus(p);
+    const next = statusFromSteps(p.steps);
     if (next !== p.status) updates.push(prisma.project.update({ where: { id: p.id }, data: { status: next } }));
   }
   if (updates.length) await prisma.$transaction(updates);

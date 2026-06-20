@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import { STATUS_LABEL, STATUS_STYLE, ALL_STATUSES } from "@/lib/status";
-import type { ProjectStatus } from "@prisma/client";
+import type { ProjectStatus } from "@/lib/status";
 import { BADGE_COLORS, DEFAULT_STATUS_COLOR } from "@/lib/badge-colors";
 
 export type StatusConfig = {

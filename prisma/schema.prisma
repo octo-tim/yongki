@@ -9,15 +9,6 @@ datasource db {
 }
 
 // 프로젝트 상태 (자동 계산 + 수동 보류)
-enum ProjectStatus {
-  IN_PROGRESS   // 진행중
-  ON_HOLD       // 제작보류
-  READY_TO_SHIP // 출고대기
-  DONE          // 완료
-  DELAYED       // 지연
-  AWAITING_DELIVERY // 인도대기
-}
-
 enum StepType {
   PRODUCTION // 제작 타임라인
   SHIPPING   // 출고 타임라인
@@ -157,9 +148,9 @@ model Project {
   importantNote  String?              // 제품제작 중요사항
   note        String?              // 특이사항
 
-  status       ProjectStatus  @default(IN_PROGRESS)
-  manualStatus ProjectStatus? // 사용자가 수동 지정한 상태 (있으면 자동계산보다 우선)
-  manualHold   Boolean        @default(false) // 사용자가 제작보류로 설정
+  status       String  @default("준비")  // 단계 진행에서 자동 도출 (준비/진행중/출고대기/완료)
+  manualStatus String? // (미사용) 과거 수동 지정값 호환용
+  manualHold   Boolean @default(false) // (미사용) 과거 호환용
 
   // 제작 일정
   factoryOrderDate       DateTime? // 공장 주문일자

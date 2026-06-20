@@ -4,7 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { buildProjectsWorkbook } from "@/lib/excel";
 import { ALL_STATUSES } from "@/lib/status";
-import { Prisma, type ProjectStatus } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import type { ProjectStatus } from "@/lib/status";
 
 export const dynamic = "force-dynamic";
 

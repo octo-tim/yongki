@@ -29,7 +29,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if ("clientId" in b) data.clientId = b.clientId || null;
   if ("factoryId" in b) data.factoryId = b.factoryId || null;
   if ("managerId" in b) data.managerId = b.managerId || null;
-  if (b.status) { data.status = status; data.manualHold = status === "ON_HOLD"; }
+  if (b.status) { data.status = status; }
   // 일정/출고 날짜 컬럼(factoryOrderDate 등)은 단계(steps)에서 관리하므로 여기서 덮어쓰지 않음
 
   const project = await prisma.project.update({ where: { id: params.id }, data });

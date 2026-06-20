@@ -43,7 +43,7 @@ export function ProjectForm({
     clientId: initial?.clientId ?? "",
     factoryId: initial?.factoryId ?? "",
     managerId: initial?.managerId ?? "",
-    status: initial?.status ?? "IN_PROGRESS",
+    status: initial?.status ?? "준비",
     productPhoto: initial?.productPhoto ?? "",
   });
 
@@ -67,7 +67,7 @@ export function ProjectForm({
       quantity: form.quantity ? Number(form.quantity) : null,
       deposit: form.deposit ? Number(form.deposit) : null,
       balance: form.balance ? Number(form.balance) : null,
-      status: form.status || "IN_PROGRESS",
+      status: form.status || "준비",
     };
     const url = mode === "create" ? "/api/projects" : `/api/projects/${initial.id}`;
     const method = mode === "create" ? "POST" : "PATCH";
@@ -123,7 +123,7 @@ export function ProjectForm({
           </Field>
           <Field label="상태">
             <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-              value={form.status ?? "IN_PROGRESS"} onChange={(e) => set("status", e.target.value)}>
+              value={form.status ?? "준비"} onChange={(e) => set("status", e.target.value)}>
               {ALL_STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
             </select>
           </Field>

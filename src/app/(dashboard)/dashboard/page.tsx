@@ -26,7 +26,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   const [attnRaw, total, users, activeProjects, allTasks, dailySteps, clients, recentMeetings, factories, workRequests, projectsForSelect] = await Promise.all([
     // 주의 필요 후보: 완료가 아닌 프로젝트 + 최근 완료 단계 1건(정체 판단용)
     prisma.project.findMany({
-      where: { status: { not: "DONE" } },
+      where: { status: { not: "완료" } },
       select: {
         id: true, productName: true, status: true, orderDate: true,
         expectedCompletionDate: true, shipOutDate: true, koreaArrivalDate: true, customerDeliveryDate: true,
@@ -36,7 +36,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     }),
     prisma.project.count(),
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
-    prisma.project.findMany({ where: { status: "IN_PROGRESS" }, orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
+    prisma.project.findMany({ where: { status: "진행중" }, orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
     // 업무현황: 전체 업무 (클라이언트에서 상태·담당자·날짜 필터)
     prisma.workLog.findMany({
       orderBy: { createdAt: "desc" }, take: 300,
@@ -90,7 +90,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
       a = { ...base(p), reason: `출고 후 ${shipDays}일 미인도`, sev: "red", sort: 900 + shipDays };
     } else if (ecdOver != null && ecdOver <= 0 && ecdOver >= -7) {
       a = { ...base(p), reason: `완성예정일 임박 (D${ecdOver === 0 ? "-day" : ecdOver})`, sev: "amber", sort: 500 + (7 + ecdOver) };
-    } else if (p.status === "IN_PROGRESS") {
+    } else if (p.status === "진행중") {
       const stall = lastDoneDays != null ? lastDoneDays : dnum(p.orderDate);
       if (stall != null && stall >= 14) a = { ...base(p), reason: `${stall}일째 진척 없음`, sev: "amber", sort: 200 + Math.min(stall, 99) };
     }

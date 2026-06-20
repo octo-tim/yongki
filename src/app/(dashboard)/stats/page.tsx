@@ -27,8 +27,8 @@ export default async function StatsPage() {
   ]);
 
   const total = projects.length;
-  const cntDone = projects.filter((p: any) => p.status === "DONE").length;
-  const cntProg = projects.filter((p: any) => p.status === "IN_PROGRESS").length;
+  const cntDone = projects.filter((p: any) => p.status === "완료").length;
+  const cntProg = projects.filter((p: any) => p.status === "진행중").length;
   const totalQty = projects.reduce((a: number, p: any) => a + (p.quantity ?? 0), 0);
   const completionRate = total ? Math.round((cntDone / total) * 100) : 0;
 
@@ -93,8 +93,8 @@ export default async function StatsPage() {
       let r = m.get(key);
       if (!r) { r = { key, count: 0, quantity: 0, done: 0, inProgress: 0 }; m.set(key, r); }
       r.count++; r.quantity += p.quantity ?? 0;
-      if (p.status === "DONE") r.done++;
-      if (p.status === "IN_PROGRESS") r.inProgress++;
+      if (p.status === "완료") r.done++;
+      if (p.status === "진행중") r.inProgress++;
     }
     const arr = [...m.values()];
     return sortByCount ? arr.sort((a, b) => b.count - a.count) : arr.sort((a, b) => a.key.localeCompare(b.key, "ko"));
@@ -105,7 +105,7 @@ export default async function StatsPage() {
     manager: aggregate((p) => p.manager?.name),
     status: statusCfg.order.map((s: string) => {
       const rows = (projects as any[]).filter((p) => p.status === s);
-      return { key: statusCfg.label[s], count: rows.length, quantity: rows.reduce((a, p) => a + (p.quantity ?? 0), 0), done: s === "DONE" ? rows.length : 0, inProgress: s === "IN_PROGRESS" ? rows.length : 0 };
+      return { key: statusCfg.label[s], count: rows.length, quantity: rows.reduce((a, p) => a + (p.quantity ?? 0), 0), done: s === "완료" ? rows.length : 0, inProgress: s === "진행중" ? rows.length : 0 };
     }).filter((r) => r.count > 0),
     month: aggregate((p) => p.orderDate ? `${new Date(p.orderDate).getFullYear()}-${String(new Date(p.orderDate).getMonth() + 1).padStart(2, "0")}` : "미상", false),
   };

@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 import { STATUS_LABEL } from "@/lib/status";
-import type { ProjectStatus } from "@prisma/client";
+import type { ProjectStatus } from "@/lib/status";
 
 type Row = {
   orderDate: Date | null; orderNo: string | null; productName: string;
