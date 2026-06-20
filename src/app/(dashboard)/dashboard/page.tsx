@@ -4,42 +4,38 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getStatusConfig } from "@/lib/status-config";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { WorkLogPanel } from "@/components/worklog-panel";
+import { DashboardTasks } from "@/components/dashboard-tasks";
 import { MeetingPanel } from "@/components/meeting-panel";
 import { DailyDateNav } from "@/components/daily-date-nav";
-import { WORK_STATUS } from "@/lib/work-status";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage({ searchParams }: { searchParams: { date?: string; wdate?: string } }) {
+export default async function DashboardPage({ searchParams }: { searchParams: { date?: string } }) {
   const session = await getServerSession(authOptions);
   const myId = (session?.user as any)?.id as string | undefined;
-  const myName = session?.user?.name ?? "나";
   const statusCfg = await getStatusConfig();
 
-  // 선택일 (기본: 오늘, KST 기준)
+  // 선택일 (기본: 오늘, KST 기준) — 일별 진행내역용
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
   const dateStr = searchParams.date && /^\d{4}-\d{2}-\d{2}$/.test(searchParams.date) ? searchParams.date : today;
   const dayStart = new Date(`${dateStr}T00:00:00.000Z`);
   const dayEnd = new Date(dayStart.getTime() + 86400000);
 
-  // 내 업무현황 선택일
-  const wdateStr = searchParams.wdate && /^\d{4}-\d{2}-\d{2}$/.test(searchParams.wdate) ? searchParams.wdate : today;
-  const wStart = new Date(`${wdateStr}T00:00:00.000Z`);
-  const wEnd = new Date(wStart.getTime() + 86400000);
-
-  const [grouped, total, users, activeProjects, workLogs, dailySteps, clients, recentMeetings, myTasks] = await Promise.all([
+  const [grouped, total, users, activeProjects, allTasks, dailySteps, clients, recentMeetings] = await Promise.all([
     prisma.project.groupBy({ by: ["status"], _count: { _all: true } }),
     prisma.project.count(),
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
-    // 진행업무 등록용 프로젝트: 진행중만
     prisma.project.findMany({ where: { status: "IN_PROGRESS" }, orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
+    // 업무현황: 전체 업무 (클라이언트에서 상태·담당자·날짜 필터)
     prisma.workLog.findMany({
-      orderBy: { createdAt: "desc" }, take: 100,
-      include: { assignee: { select: { id: true, name: true } }, project: { select: { id: true, productName: true } } },
+      orderBy: { createdAt: "desc" }, take: 300,
+      include: {
+        assignee: { select: { id: true, name: true } },
+        creator: { select: { id: true, name: true } },
+        project: { select: { id: true, productName: true } },
+      },
     }),
-    // 선택일에 일자가 잡힌 단계들 (일별 진행내역)
     prisma.projectStep.findMany({
       where: { doneAt: { gte: dayStart, lt: dayEnd } },
       include: { project: { select: { id: true, productName: true, status: true } } },
@@ -49,18 +45,6 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     prisma.meeting.findMany({
       orderBy: { meetingDate: "desc" }, take: 4,
       include: { client: { select: { id: true, name: true } }, project: { select: { id: true, productName: true } }, createdBy: { select: { name: true } } },
-    }),
-    // 내 업무현황: 로그인 사용자의 업무 중 선택일에 진행되는(기간 포함) 업무
-    prisma.workLog.findMany({
-      where: {
-        assigneeId: myId ?? "__none__",
-        AND: [
-          { OR: [{ startDate: null }, { startDate: { lt: wEnd } }] },
-          { OR: [{ endDate: null }, { endDate: { gte: wStart } }] },
-        ],
-      },
-      include: { project: { select: { id: true, productName: true } } },
-      orderBy: { createdAt: "desc" },
     }),
   ]);
 
@@ -81,37 +65,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
         <p className="text-sm text-muted-foreground">전체 {total}건의 제작 프로젝트 현황</p>
       </div>
 
-      {/* 내 업무현황 (로그인 사용자 · 상태별 · 날짜선택) */}
+      {/* 업무현황 (상태·담당자·날짜 필터 + 업무추가) */}
       <section className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold text-muted-foreground">내 업무현황 — {myName} ({wdateStr} 기준)</h2>
-          <DailyDateNav value={wdateStr} param="wdate" />
-        </div>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {WORK_STATUS.map((s) => {
-            const rows = (myTasks as any[]).filter((t) => t.status === s.key);
-            return (
-              <Card key={s.key}>
-                <CardContent className="p-3">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className={cn("rounded-full border px-2 py-0.5 text-xs font-medium", s.cls)}>{s.label}</span>
-                    <span className="text-lg font-bold tabular-nums">{rows.length}</span>
-                  </div>
-                  <div className="space-y-1">
-                    {rows.length === 0 && <p className="text-xs text-muted-foreground">없음</p>}
-                    {rows.slice(0, 6).map((t) => (
-                      <Link key={t.id} href={t.project ? `/projects/${t.project.id}` : "/tasks"} className="block rounded border px-2 py-1 text-xs hover:bg-accent">
-                        <span className="font-medium">{t.project?.productName ?? "프로젝트 미지정"}</span>
-                        <span className="block truncate text-muted-foreground">{t.content}</span>
-                      </Link>
-                    ))}
-                    {rows.length > 6 && <p className="text-[11px] text-muted-foreground">외 {rows.length - 6}건</p>}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+        <h2 className="text-sm font-semibold text-muted-foreground">업무현황</h2>
+        <Card>
+          <CardContent className="p-4">
+            <DashboardTasks users={users} projects={activeProjects} tasks={allTasks as any} currentUserId={myId} />
+          </CardContent>
+        </Card>
       </section>
 
       {/* 상태별 현황 */}
@@ -131,16 +92,6 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
             </Link>
           ))}
         </div>
-      </section>
-
-      {/* 진행업무 */}
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-muted-foreground">진행업무 (담당자 · 프로젝트 · 진행내역)</h2>
-        <Card>
-          <CardContent className="p-4">
-            <WorkLogPanel users={users} projects={activeProjects} logs={workLogs as any} sortable showProject />
-          </CardContent>
-        </Card>
       </section>
 
       {/* 회의록 (최근 3개) */}
