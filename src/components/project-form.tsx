@@ -14,6 +14,7 @@ export type ProjectFormData = {
   id?: string;
   orderDate?: string | null; orderNo?: string | null; productName?: string;
   quantity?: number | null; deposit?: any; balance?: any; note?: string | null;
+  depositMethod?: string | null; balanceMethod?: string | null; factoryAccount?: string | null; importantNote?: string | null;
   clientId?: string | null; factoryId?: string | null; managerId?: string | null;
   status?: string;
   productPhoto?: string | null;
@@ -34,6 +35,10 @@ export function ProjectForm({
     quantity: initial?.quantity ?? undefined,
     deposit: initial?.deposit ? Number(initial.deposit) : undefined,
     balance: initial?.balance ? Number(initial.balance) : undefined,
+    depositMethod: initial?.depositMethod ?? "",
+    balanceMethod: initial?.balanceMethod ?? "",
+    factoryAccount: initial?.factoryAccount ?? "",
+    importantNote: initial?.importantNote ?? "",
     note: initial?.note ?? "",
     clientId: initial?.clientId ?? "",
     factoryId: initial?.factoryId ?? "",
@@ -85,6 +90,19 @@ export function ProjectForm({
           <Field label="수량"><Input type="number" value={form.quantity ?? ""} onChange={(e) => set("quantity", e.target.value === "" ? null : Number(e.target.value))} /></Field>
           <Field label="계약금"><Input type="number" value={form.deposit ?? ""} onChange={(e) => set("deposit", e.target.value === "" ? null : Number(e.target.value))} /></Field>
           <Field label="잔금"><Input type="number" value={form.balance ?? ""} onChange={(e) => set("balance", e.target.value === "" ? null : Number(e.target.value))} /></Field>
+          <Field label="계약금 결재방식">
+            <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.depositMethod ?? ""} onChange={(e) => set("depositMethod", e.target.value)}>
+              <option value="">선택 안함</option>
+              {["현금","계좌이체","위챗","스프","카드"].map((m) => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </Field>
+          <Field label="잔금 결재방식">
+            <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.balanceMethod ?? ""} onChange={(e) => set("balanceMethod", e.target.value)}>
+              <option value="">선택 안함</option>
+              {["현금","계좌이체","위챗","스프","카드"].map((m) => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </Field>
+          <Field label="공장 결재계좌"><Input value={form.factoryAccount ?? ""} onChange={(e) => set("factoryAccount", e.target.value)} placeholder="계좌/지급처" /></Field>
           <Field label="업체명">
             <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.clientId ?? ""} onChange={(e) => set("clientId", e.target.value)}>
               <option value="">선택 안함</option>
@@ -121,6 +139,9 @@ export function ProjectForm({
       <Card>
         <CardHeader><CardTitle className="text-base">특이사항</CardTitle></CardHeader>
         <CardContent>
+          <Field label="제품제작 중요사항">
+            <Textarea value={form.importantNote ?? ""} onChange={(e) => set("importantNote", e.target.value)} rows={3} placeholder="색상 기준, 인쇄 주의, 포장 사양 등" />
+          </Field>
           <Field label="메모">
             <Textarea value={form.note ?? ""} onChange={(e) => set("note", e.target.value)} rows={3} />
           </Field>

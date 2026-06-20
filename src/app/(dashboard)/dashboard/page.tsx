@@ -22,7 +22,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   const dayStart = new Date(`${dateStr}T00:00:00.000Z`);
   const dayEnd = new Date(dayStart.getTime() + 86400000);
 
-  const [attnRaw, total, users, activeProjects, allTasks, dailySteps, clients, recentMeetings] = await Promise.all([
+  const [attnRaw, total, users, activeProjects, allTasks, dailySteps, clients, recentMeetings, factories] = await Promise.all([
     // 주의 필요 후보: 완료가 아닌 프로젝트 + 최근 완료 단계 1건(정체 판단용)
     prisma.project.findMany({
       where: { status: { not: "DONE" } },
@@ -53,8 +53,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.meeting.findMany({
       orderBy: { meetingDate: "desc" }, take: 4,
-      include: { client: { select: { id: true, name: true } }, project: { select: { id: true, productName: true } }, createdBy: { select: { name: true } } },
+      include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, project: { select: { id: true, productName: true } }, createdBy: { select: { name: true } }, files: true },
     }),
+    prisma.factory.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
   ]);
 
   // 주의 필요 프로젝트 판정 (KST 오늘 기준)
@@ -151,7 +152,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
         <h2 className="text-sm font-semibold text-muted-foreground">회의록 (최근 3개)</h2>
         <Card>
           <CardContent className="p-4">
-            <MeetingPanel clients={clients} projects={activeProjects} meetings={recentMeetings as any} limit={3} />
+            <MeetingPanel clients={clients} factories={factories} projects={activeProjects} meetings={recentMeetings as any} limit={3} />
           </CardContent>
         </Card>
       </section>

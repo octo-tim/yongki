@@ -112,6 +112,7 @@ model Factory {
   updatedAt   DateTime @updatedAt
 
   projects Project[]
+  meetings Meeting[]
 
   @@map("factories")
 }
@@ -126,6 +127,10 @@ model Project {
   quantity    Int?                 // 수량
   deposit     Decimal?  @db.Decimal(14, 2) // 계약금
   balance     Decimal?  @db.Decimal(14, 2) // 잔금
+  depositMethod  String?              // 계약금 결재방식
+  balanceMethod  String?              // 잔금 결재방식
+  factoryAccount String?              // 공장 결재계좌
+  importantNote  String?              // 제품제작 중요사항
   note        String?              // 특이사항
 
   status       ProjectStatus  @default(IN_PROGRESS)
@@ -281,17 +286,32 @@ model Meeting {
   title       String
   content     String
   meetingDate DateTime
-  clientId    String?     // 외부회의 거래처
+  clientId    String?     // 외부회의 대상: 업체
   client      Client?     @relation(fields: [clientId], references: [id])
+  factoryId   String?     // 외부회의 대상: 공장
+  factory     Factory?    @relation(fields: [factoryId], references: [id])
   projectId   String?     // 선택: 프로젝트 연결
   project     Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
   createdById String?
   createdBy   User?       @relation("MeetingCreator", fields: [createdById], references: [id])
+  files       MeetingFile[]
   createdAt   DateTime    @default(now())
 
   @@index([meetingDate])
   @@index([projectId])
   @@map("meetings")
+}
+
+model MeetingFile {
+  id        String   @id @default(cuid())
+  meetingId String
+  meeting   Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  name      String
+  path      String
+  createdAt DateTime @default(now())
+
+  @@index([meetingId])
+  @@map("meeting_files")
 }
 
 model ClientRequest {

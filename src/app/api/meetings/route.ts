@@ -6,20 +6,24 @@ import { prisma } from "@/lib/prisma";
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const { type, title, content, meetingDate, clientId, projectId } = await req.json();
+  const { type, title, content, meetingDate, clientId, factoryId, projectId, files } = await req.json();
   const t = type === "EXTERNAL" ? "EXTERNAL" : "INTERNAL";
   if (!title?.trim()) return NextResponse.json({ error: "회의 제목을 입력하세요." }, { status: 400 });
   if (!content?.trim()) return NextResponse.json({ error: "회의 내용을 입력하세요." }, { status: 400 });
   if (!meetingDate) return NextResponse.json({ error: "회의 일자를 선택하세요." }, { status: 400 });
-  if (t === "EXTERNAL" && !clientId) return NextResponse.json({ error: "외부회의는 거래처를 지정하세요." }, { status: 400 });
+  if (t === "EXTERNAL" && !clientId && !factoryId) return NextResponse.json({ error: "외부회의는 업체 또는 공장을 지정하세요." }, { status: 400 });
 
   const meeting = await prisma.meeting.create({
     data: {
       type: t, title: title.trim(), content: content.trim(),
       meetingDate: new Date(meetingDate),
-      clientId: t === "EXTERNAL" ? clientId : null,
+      clientId: t === "EXTERNAL" ? (clientId || null) : null,
+      factoryId: t === "EXTERNAL" ? (factoryId || null) : null,
       projectId: projectId || null,
       createdById: (session.user as any).id,
+      files: Array.isArray(files) && files.length
+        ? { create: files.filter((f: any) => f?.path).map((f: any) => ({ name: f.name || "첨부파일", path: f.path })) }
+        : undefined,
     },
   });
   return NextResponse.json(meeting);

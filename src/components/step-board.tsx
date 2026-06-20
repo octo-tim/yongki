@@ -134,7 +134,7 @@ function StepTable({ title, steps, accent, onPatch, busy }: {
             </tr>
             {/* 직원 행 */}
             <tr>
-              <th className={cn("sticky left-0 z-10 border border-slate-200 px-2 py-1 text-xs font-semibold", c.label)}>직원</th>
+              <th className={cn("sticky left-0 z-10 border border-slate-200 px-2 py-1 text-xs font-semibold", c.label)}>확인직원</th>
               {steps.map((s) => (
                 <StaffCell key={s.id} step={s} fillBg={c.fill} busy={busy === s.id} onPatch={onPatch} />
               ))}
