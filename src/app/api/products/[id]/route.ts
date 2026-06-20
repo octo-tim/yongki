@@ -14,6 +14,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if ("code" in b) data.code = b.code || null;
   if ("supplyPrice" in b) data.supplyPrice = num(b.supplyPrice);
   if ("salesPrice" in b) data.salesPrice = num(b.salesPrice);
+  if ("supplyCurrency" in b) data.supplyCurrency = b.supplyCurrency || "RMB";
+  if ("salesCurrency" in b) data.salesCurrency = b.salesCurrency || "RMB";
+  if ("exchangeRate" in b) data.exchangeRate = num(b.exchangeRate);
   if ("quantity" in b) data.quantity = num(b.quantity);
   if ("note" in b) data.note = b.note || null;
   if ("projectId" in b) data.projectId = b.projectId || null;

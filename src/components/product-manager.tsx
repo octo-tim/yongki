@@ -93,7 +93,7 @@ export function ProductManager({ products, projects, factories, clients }: {
             <Field label="공급단가 (공장)"><Input type="number" value={form.supplyPrice} onChange={(e) => setF("supplyPrice", e.target.value)} /></Field>
             <Field label="판매단가 (업체)"><Input type="number" value={form.salesPrice} onChange={(e) => setF("salesPrice", e.target.value)} /></Field>
             <Field label="비고"><Input value={form.note} onChange={(e) => setF("note", e.target.value)} /></Field>
-            <Field label="프로젝트"><SearchableSelect options={projects} value={form.projectId} onChange={(v) => setF("projectId", v)} /></Field>
+            <Field label="프로젝트"><SearchableSelect options={projects} value={form.projectId} onChange={(v) => { const pr = projects.find((o) => o.id === v); setForm((f) => ({ ...f, projectId: v, name: pr ? pr.name : f.name })); }} /></Field>
             <Field label="구매처 (공장)"><SearchableSelect options={factories} value={form.factoryId} onChange={(v) => setF("factoryId", v)} /></Field>
             <Field label="판매처 (업체)"><SearchableSelect options={clients} value={form.clientId} onChange={(v) => setF("clientId", v)} /></Field>
           </div>

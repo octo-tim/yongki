@@ -16,7 +16,7 @@ import { ProgressPhotoGrid } from "@/components/progress-photo-grid";
 import { RequestPanel } from "@/components/request-panel";
 import { WorkRequestPanel } from "@/components/work-request-panel";
 import { PaymentManager } from "@/components/payment-manager";
-import { ProjectEntityPicker } from "@/components/project-entity-picker";
+import { ProductInfoPanel } from "@/components/product-info-panel";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
@@ -39,6 +39,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       progressPhotos: { orderBy: { createdAt: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } } } },
       workRequests: { orderBy: { requestDate: "desc" }, include: { requester: { select: { name: true } }, assignee: { select: { id: true, name: true } }, client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, updates: { orderBy: { progressDate: "asc" }, include: { createdBy: { select: { name: true } } } } } },
       payments: { orderBy: { receivedAt: "desc" } },
+      products: { orderBy: { createdAt: "asc" } },
       memos: { orderBy: { createdAt: "desc" }, include: { author: true } },
       logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: true } },
     },
@@ -62,8 +63,8 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     ["주문번호", p.orderNo ?? "-"],
     ["주문일자", fmtDate(p.orderDate)],
     ["수량", fmtMoney(p.quantity)],
-    ["업체명", p.client?.name ?? "-"],
-    ["공장명", p.factory?.name ?? "-"],
+    ["판매처", p.client?.name ?? "-"],
+    ["구매처", p.factory?.name ?? "-"],
     ["관리책임자", p.manager?.name ?? "-"],
   ];
   // 판매처(업체)/구매처(공장) 표시 필드
@@ -77,6 +78,16 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     ["연락처", p.factory.phone], ["위챗ID", p.factory.wechat], ["이메일", p.factory.email],
     ["주소", p.factory.address], ["계좌", p.factory.account], ["결제조건", p.factory.paymentTerms],
   ] : [];
+
+  // 제품정보(상품관리 연동) + 결재관리 전체금액 계산
+  const prod = p.products[0] ?? null;
+  const qty = prod?.quantity ?? 0;
+  const salesUnitRmb = prod ? (prod.salesCurrency === "RMB" ? Number(prod.salesPrice ?? 0) : Number(prod.salesPrice ?? 0) * Number(prod.exchangeRate ?? 0)) : 0;
+  const paymentTotals = {
+    salesTotal: qty * salesUnitRmb,
+    purchaseTotal: qty * Number(prod?.supplyPrice ?? 0),
+    purchaseCurrency: prod?.supplyCurrency ?? "RMB",
+  };
 
   return (
     <div className="space-y-6 p-6">
@@ -110,6 +121,20 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
                   </div>
                 ))}
               </dl>
+            </CardContent>
+          </Card>
+
+          {/* 2. 제품정보 (상품관리 연동) */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">제품정보</CardTitle></CardHeader>
+            <CardContent>
+              <ProductInfoPanel
+                projectId={p.id}
+                projectName={p.productName}
+                factoryId={p.factoryId}
+                clientId={p.clientId}
+                product={prod as any}
+              />
             </CardContent>
           </Card>
 
@@ -183,7 +208,6 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           <Card>
             <CardHeader><CardTitle className="text-base">판매처 정보 (업체)</CardTitle></CardHeader>
             <CardContent className="space-y-3">
-              <ProjectEntityPicker projectId={p.id} field="clientId" value={p.clientId} options={clients} />
               {p.client ? (
                 <dl className="space-y-1.5 text-sm">
                   <div className="flex items-center justify-between border-b pb-1.5">
@@ -197,7 +221,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
                     </div>
                   ))}
                 </dl>
-              ) : <p className="text-sm text-muted-foreground">판매처를 선택하세요.</p>}
+              ) : <p className="text-sm text-muted-foreground">수정 화면에서 판매처를 선택하세요.</p>}
             </CardContent>
           </Card>
 
@@ -205,7 +229,6 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           <Card>
             <CardHeader><CardTitle className="text-base">구매처 정보 (공장)</CardTitle></CardHeader>
             <CardContent className="space-y-3">
-              <ProjectEntityPicker projectId={p.id} field="factoryId" value={p.factoryId} options={factories} />
               {p.factory ? (
                 <dl className="space-y-1.5 text-sm">
                   <div className="flex items-center justify-between border-b pb-1.5">
@@ -219,7 +242,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
                     </div>
                   ))}
                 </dl>
-              ) : <p className="text-sm text-muted-foreground">구매처를 선택하세요.</p>}
+              ) : <p className="text-sm text-muted-foreground">수정 화면에서 구매처를 선택하세요.</p>}
             </CardContent>
           </Card>
 
@@ -227,7 +250,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           <Card>
             <CardHeader><CardTitle className="text-base">결재관리</CardTitle></CardHeader>
             <CardContent>
-              <PaymentManager projectId={p.id} payments={p.payments as any} />
+              <PaymentManager projectId={p.id} payments={p.payments as any} totals={paymentTotals} />
             </CardContent>
           </Card>
 

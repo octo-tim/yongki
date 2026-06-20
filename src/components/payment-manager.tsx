@@ -16,7 +16,10 @@ function rowFrom(p?: Pay): Row {
   return { amount: p?.amount != null ? String(Number(p.amount)) : "", receivedAt: dInput(p?.receivedAt), method: p?.method ?? "", memo: p?.memo ?? "" };
 }
 
-export function PaymentManager({ projectId, payments }: { projectId: string; payments: Pay[] }) {
+export function PaymentManager({ projectId, payments, totals }: {
+  projectId: string; payments: Pay[];
+  totals?: { salesTotal: number; purchaseTotal: number; purchaseCurrency: string };
+}) {
   const router = useRouter();
   const find = (side: string, type: string) => payments.find((p) => p.side === side && p.type === type);
   const init: Record<string, Row> = {};
@@ -45,16 +48,27 @@ export function PaymentManager({ projectId, payments }: { projectId: string; pay
 
   return (
     <div className="space-y-4">
-      {([["SALES", "판매", "업체"], ["PURCHASE", "구매", "공장"]] as const).map(([side, ko, who]) => (
+      {([["SALES", "판매", "업체"], ["PURCHASE", "구매", "공장"]] as const).map(([side, ko, who]) => {
+        const totalAmt = side === "SALES" ? totals?.salesTotal : totals?.purchaseTotal;
+        const totalCcy = side === "SALES" ? "RMB" : (totals?.purchaseCurrency ?? "RMB");
+        const paid = ["DEPOSIT", "BALANCE"].reduce((a, t) => a + (Number(rows[`${side}_${t}`].amount) || 0), 0);
+        return (
         <div key={side} className="rounded-lg border">
           <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2">
             <div className="flex items-center gap-2">
               <span className={`rounded px-1.5 py-0.5 text-xs font-semibold ${side === "SALES" ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700"}`}>{ko}</span>
-              <span className="text-xs text-muted-foreground">({who}) 합계 {fmtMoney(sideTotal(side))}원</span>
+              <span className="text-xs text-muted-foreground">({who})</span>
             </div>
             <Button size="sm" variant="outline" onClick={() => saveSide(side)} disabled={busy}>
               {savedMsg === side ? "저장됨 ✓" : "저장"}
             </Button>
+          </div>
+          {/* 전체금액 (제품정보 자동 반영) */}
+          <div className="flex items-center justify-between border-b px-3 py-2 text-sm">
+            <span className="font-semibold">전체금액</span>
+            <span className="text-base font-bold">{totalAmt != null ? `${fmtMoney(totalAmt)} ${totalCcy}` : "-"}
+              <span className="ml-2 text-xs font-normal text-muted-foreground">결재합 {fmtMoney(paid)}</span>
+            </span>
           </div>
           <div className="divide-y">
             {([["DEPOSIT", "계약금"], ["BALANCE", "잔금"]] as const).map(([type, tko]) => {
@@ -84,7 +98,8 @@ export function PaymentManager({ projectId, payments }: { projectId: string; pay
             })}
           </div>
         </div>
-      ))}
+        );
+      })}
       <p className="text-xs text-muted-foreground">금액·결재일·방법·비고를 입력한 뒤 각 구분의 ‘저장’을 누르세요.</p>
     </div>
   );
