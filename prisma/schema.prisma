@@ -106,6 +106,7 @@ model Client {
   meetings Meeting[]
   progressPhotos ProgressPhoto[]
   workRequests WorkRequest[]
+  products Product[]
 
   @@map("clients")
 }
@@ -133,6 +134,7 @@ model Factory {
   meetings Meeting[]
   progressPhotos ProgressPhoto[]
   workRequests WorkRequest[]
+  products Product[]
 
   @@map("factories")
 }
@@ -188,6 +190,7 @@ model Project {
   progressPhotos ProgressPhoto[]
   workRequests WorkRequest[]
   logs  ProjectLog[]
+  products Product[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -424,4 +427,30 @@ model ProjectLog {
 
   @@index([projectId])
   @@map("project_logs")
+}
+
+// 상품 (공급/판매 단가 관리)
+model Product {
+  id          String   @id @default(cuid())
+  name        String   // 상품명
+  code        String?  // 상품코드
+  supplyPrice Decimal? @db.Decimal(14, 2) // 공급단가 (공장 → 당사)
+  salesPrice  Decimal? @db.Decimal(14, 2) // 판매단가 (당사 → 업체)
+  quantity    Int? // 수량
+  note        String? // 비고
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  factoryId String?
+  factory   Factory? @relation(fields: [factoryId], references: [id], onDelete: SetNull)
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([factoryId])
+  @@index([clientId])
+  @@map("products")
 }
