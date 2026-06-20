@@ -15,7 +15,7 @@ const d = (v: Date | null) => (v ? new Date(v).toISOString().slice(0, 10) : "");
 
 export async function buildProjectsWorkbook(rows: Row[]): Promise<Buffer> {
   const wb = new ExcelJS.Workbook();
-  wb.creator = "제작관리";
+  wb.creator = "Cosmepack";
   const ws = wb.addWorksheet("프로젝트");
 
   ws.columns = [

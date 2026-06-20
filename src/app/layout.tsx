@@ -3,8 +3,8 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "용기 제작관리",
-  description: "화장품 용기 제작관리 시스템",
+  title: "Cosmepack",
+  description: "Cosmepack - 화장품 용기 제작관리 시스템",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

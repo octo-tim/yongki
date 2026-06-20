@@ -36,7 +36,7 @@ export default function LoginPage() {
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Package className="h-6 w-6" />
           </div>
-          <CardTitle className="text-xl">용기 제작관리</CardTitle>
+          <CardTitle className="text-xl">Cosmepack</CardTitle>
           <CardDescription>로그인하여 시작하세요</CardDescription>
         </CardHeader>
         <CardContent>

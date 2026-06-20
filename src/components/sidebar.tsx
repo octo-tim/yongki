@@ -45,7 +45,7 @@ export function Sidebar({ userName, userRole }: { userName?: string | null; user
         {!collapsed && (
           <div className="flex items-center gap-2 overflow-hidden">
             <Package className="h-5 w-5 shrink-0 text-primary" />
-            <span className="truncate font-semibold">용기 제작관리</span>
+            <span className="truncate font-semibold">Cosmepack</span>
           </div>
         )}
         <button onClick={toggle} title={collapsed ? "사이드바 펼치기" : "사이드바 접기"}
