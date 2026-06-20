@@ -71,6 +71,7 @@ model User {
   memos           ProjectMemo[]
   notes           ProjectNote[]
   workLogs        WorkLog[]    @relation("WorkLogAssignee")
+  createdWorkLogs WorkLog[]    @relation("WorkLogCreator")
   logs            ProjectLog[]
 
   @@map("users")
@@ -223,14 +224,26 @@ model ProjectNote {
   @@map("project_notes")
 }
 
+enum WorkStatus {
+  TODO  // 예정
+  DOING // 진행중
+  DONE  // 완료
+  HOLD  // 보류
+}
+
 model WorkLog {
-  id         String   @id @default(cuid())
+  id         String     @id @default(cuid())
   projectId  String
-  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
   assigneeId String?
-  assignee   User?    @relation("WorkLogAssignee", fields: [assigneeId], references: [id])
-  content    String   // 진행내역
-  createdAt  DateTime @default(now())
+  assignee   User?      @relation("WorkLogAssignee", fields: [assigneeId], references: [id])
+  creatorId  String?
+  creator    User?      @relation("WorkLogCreator", fields: [creatorId], references: [id])
+  content    String     // 진행내역
+  status     WorkStatus @default(DOING)
+  startDate  DateTime?  // 시작일
+  endDate    DateTime?  // 종료일
+  createdAt  DateTime   @default(now())
 
   @@index([projectId])
   @@index([assigneeId])

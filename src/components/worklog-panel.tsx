@@ -5,10 +5,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { fmtDate } from "@/lib/utils";
+import { WORK_STATUS_MAP } from "@/lib/work-status";
 import { Trash2 } from "lucide-react";
 
 type WorkLog = {
-  id: string; content: string; createdAt: string | Date;
+  id: string; content: string; createdAt: string | Date; status?: string;
   assignee?: { id: string; name: string } | null;
   project?: { id: string; productName: string } | null;
 };
@@ -117,6 +118,9 @@ export function WorkLogPanel({
           <div key={l.id} className="group rounded-md border p-3 text-sm">
             <div className="mb-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                {l.status && WORK_STATUS_MAP[l.status] && (
+                  <span className={`rounded-full border px-1.5 py-0.5 text-[11px] font-medium ${WORK_STATUS_MAP[l.status].cls}`}>{WORK_STATUS_MAP[l.status].label}</span>
+                )}
                 <span className="rounded bg-accent px-1.5 py-0.5 font-medium text-foreground">{l.assignee?.name ?? "미지정"}</span>
                 {showProject && l.project && (
                   <Link href={`/projects/${l.project.id}`} className="font-medium text-foreground hover:underline">{l.project.productName}</Link>
