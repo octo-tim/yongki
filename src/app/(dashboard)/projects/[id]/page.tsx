@@ -82,9 +82,12 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
   // 제품정보(상품관리 연동) + 결재관리 전체금액 계산
   const prod = p.products[0] ?? null;
   const qty = prod?.quantity ?? 0;
-  const salesUnitRmb = prod ? (prod.salesCurrency === "RMB" ? Number(prod.salesPrice ?? 0) : Number(prod.salesPrice ?? 0) * Number(prod.exchangeRate ?? 0)) : 0;
+  const salesRmb = prod ? (prod.salesCurrency === "RMB" ? Number(prod.salesPrice ?? 0) : Number(prod.salesPrice ?? 0) * Number(prod.exchangeRate ?? 0)) : 0;
+  const salesConverted = !!prod && (prod.salesCurrency === "RMB" || Number(prod.exchangeRate ?? 0) > 0);
+  const salesUnit = salesConverted ? salesRmb : Number(prod?.salesPrice ?? 0);
   const paymentTotals = {
-    salesTotal: qty * salesUnitRmb,
+    salesTotal: qty * salesUnit,
+    salesCurrency: salesConverted ? "RMB" : (prod?.salesCurrency ?? "RMB"),
     purchaseTotal: qty * Number(prod?.supplyPrice ?? 0),
     purchaseCurrency: prod?.supplyCurrency ?? "RMB",
   };

@@ -18,7 +18,7 @@ function rowFrom(p?: Pay): Row {
 
 export function PaymentManager({ projectId, payments, totals }: {
   projectId: string; payments: Pay[];
-  totals?: { salesTotal: number; purchaseTotal: number; purchaseCurrency: string };
+  totals?: { salesTotal: number; salesCurrency: string; purchaseTotal: number; purchaseCurrency: string };
 }) {
   const router = useRouter();
   const find = (side: string, type: string) => payments.find((p) => p.side === side && p.type === type);
@@ -50,7 +50,7 @@ export function PaymentManager({ projectId, payments, totals }: {
     <div className="space-y-4">
       {([["SALES", "판매", "업체"], ["PURCHASE", "구매", "공장"]] as const).map(([side, ko, who]) => {
         const totalAmt = side === "SALES" ? totals?.salesTotal : totals?.purchaseTotal;
-        const totalCcy = side === "SALES" ? "RMB" : (totals?.purchaseCurrency ?? "RMB");
+        const totalCcy = side === "SALES" ? (totals?.salesCurrency ?? "RMB") : (totals?.purchaseCurrency ?? "RMB");
         const paid = ["DEPOSIT", "BALANCE"].reduce((a, t) => a + (Number(rows[`${side}_${t}`].amount) || 0), 0);
         return (
         <div key={side} className="rounded-lg border">

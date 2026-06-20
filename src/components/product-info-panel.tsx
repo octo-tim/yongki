@@ -32,7 +32,11 @@ export function ProductInfoPanel({ projectId, projectName, factoryId, clientId, 
   const [saved, setSaved] = useState(false);
 
   const salesRmb = salesCurrency === "RMB" ? n(salesPrice) : n(salesPrice) * n(exchangeRate);
-  const salesTotal = n(quantity) * salesRmb;
+  const hasRate = n(exchangeRate) > 0;
+  const salesConverted = salesCurrency === "RMB" || hasRate; // RMB 환산 여부
+  const salesUnitShown = salesConverted ? salesRmb : n(salesPrice);
+  const salesCcy = salesConverted ? "RMB" : salesCurrency;
+  const salesTotal = n(quantity) * salesUnitShown;
   const purchaseTotal = n(quantity) * n(supplyPrice);
 
   async function save() {
@@ -96,9 +100,10 @@ export function ProductInfoPanel({ projectId, projectName, factoryId, clientId, 
 
       {/* 변환/합계 요약 */}
       <div className="rounded-md border bg-muted/30 p-2.5 text-xs">
-        <div className="flex justify-between"><span className="text-muted-foreground">판매단가(RMB 환산)</span><span className="font-medium">{fmtMoney(salesRmb)} RMB</span></div>
-        <div className="mt-1 flex justify-between"><span className="text-muted-foreground">판매 전체금액</span><span className="font-semibold text-blue-700">{fmtMoney(salesTotal)} RMB</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">판매단가{salesConverted && salesCurrency !== "RMB" ? "(RMB 환산)" : ""}</span><span className="font-medium">{fmtMoney(salesUnitShown)} {salesCcy}</span></div>
+        <div className="mt-1 flex justify-between"><span className="text-muted-foreground">판매 전체금액</span><span className="font-semibold text-blue-700">{fmtMoney(salesTotal)} {salesCcy}</span></div>
         <div className="mt-1 flex justify-between"><span className="text-muted-foreground">구매 전체금액</span><span className="font-semibold text-orange-700">{fmtMoney(purchaseTotal)} {supplyCurrency}</span></div>
+        {!salesConverted && <p className="mt-1 text-[11px] text-muted-foreground">※ 환율 미입력 — 판매금액을 {salesCurrency}로 표시 (환율 입력 시 RMB 환산)</p>}
       </div>
 
       <div className="flex items-center justify-end gap-2">
