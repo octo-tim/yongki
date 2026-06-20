@@ -84,6 +84,7 @@ export default async function ProjectsPage({
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-14 px-2"></TableHead>
               <TableHead>상태</TableHead>
               <TableHead>주문일</TableHead>
               <TableHead>상품명</TableHead>
@@ -96,10 +97,17 @@ export default async function ProjectsPage({
           </TableHeader>
           <TableBody>
             {projects.length === 0 && (
-              <TableRow><TableCell colSpan={8} className="py-10 text-center text-muted-foreground">프로젝트가 없습니다.</TableCell></TableRow>
+              <TableRow><TableCell colSpan={9} className="py-10 text-center text-muted-foreground">프로젝트가 없습니다.</TableCell></TableRow>
             )}
             {projects.map((p) => (
               <TableRow key={p.id} className="cursor-pointer">
+                <TableCell className="px-2">
+                  {p.productPhoto ? (
+                    <img src={p.productPhoto} alt="" className="h-10 w-10 rounded-md border object-cover" />
+                  ) : (
+                    <div className="h-10 w-10 rounded-md border border-dashed bg-muted/30" />
+                  )}
+                </TableCell>
                 <TableCell><StatusBadge status={p.status} label={statusCfg.label[p.status]} colorClass={statusCfg.style[p.status]} /></TableCell>
                 <TableCell className="whitespace-nowrap">{fmtDate(p.orderDate)}</TableCell>
                 <TableCell className="max-w-xs">
