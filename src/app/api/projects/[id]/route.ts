@@ -17,6 +17,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if ("productName" in b) data.productName = b.productName ?? prev.productName;
   if ("orderNo" in b) data.orderNo = b.orderNo || null;
   if ("orderDate" in b) data.orderDate = toDate(b.orderDate);
+  if ("shipRequestDate" in b) data.shipRequestDate = toDate(b.shipRequestDate);
   if ("quantity" in b) data.quantity = b.quantity ?? null;
   if ("deposit" in b) data.deposit = b.deposit ?? null;
   if ("balance" in b) data.balance = b.balance ?? null;

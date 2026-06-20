@@ -12,7 +12,7 @@ import { STATUS_LABEL, ALL_STATUSES } from "@/lib/status";
 type Option = { id: string; name: string };
 export type ProjectFormData = {
   id?: string;
-  orderDate?: string | null; orderNo?: string | null; productName?: string;
+  orderDate?: string | null; shipRequestDate?: string | null; orderNo?: string | null; productName?: string;
   quantity?: number | null; deposit?: any; balance?: any; note?: string | null;
   depositMethod?: string | null; balanceMethod?: string | null; factoryAccount?: string | null; importantNote?: string | null;
   clientId?: string | null; factoryId?: string | null; managerId?: string | null;
@@ -30,6 +30,7 @@ export function ProjectForm({
   const [err, setErr] = useState("");
   const [form, setForm] = useState<ProjectFormData>({
     orderDate: toDateInput(initial?.orderDate),
+    shipRequestDate: toDateInput(initial?.shipRequestDate),
     orderNo: initial?.orderNo ?? "",
     productName: initial?.productName ?? "",
     quantity: initial?.quantity ?? undefined,
@@ -87,6 +88,7 @@ export function ProjectForm({
           <Field label="상품명 *"><Input value={form.productName ?? ""} onChange={(e) => set("productName", e.target.value)} required /></Field>
           <Field label="주문번호"><Input value={form.orderNo ?? ""} onChange={(e) => set("orderNo", e.target.value)} /></Field>
           <Field label="주문일자"><Input type="date" value={form.orderDate ?? ""} onChange={(e) => set("orderDate", e.target.value)} /></Field>
+          <Field label="출고요청일"><Input type="date" value={form.shipRequestDate ?? ""} onChange={(e) => set("shipRequestDate", e.target.value)} /></Field>
           <Field label="수량"><Input type="number" value={form.quantity ?? ""} onChange={(e) => set("quantity", e.target.value === "" ? null : Number(e.target.value))} /></Field>
           <Field label="판매처 (업체)">
             <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.clientId ?? ""} onChange={(e) => set("clientId", e.target.value)}>

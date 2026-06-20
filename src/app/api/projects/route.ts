@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
     productName: b.productName,
     orderNo: b.orderNo || null,
     orderDate: toDate(b.orderDate),
+    shipRequestDate: toDate(b.shipRequestDate),
     quantity: b.quantity ?? null,
     deposit: b.deposit ?? null,
     balance: b.balance ?? null,

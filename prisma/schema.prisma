@@ -143,6 +143,7 @@ model Factory {
 model Project {
   id          String   @id @default(cuid())
   orderDate   DateTime?            // 주문일자
+  shipRequestDate DateTime?        // 출고요청일
   orderNo     String?              // 주문번호
   productName String                // 상품명
   productPhoto String?             // 제품사진 (업로드 경로)

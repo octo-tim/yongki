@@ -20,7 +20,7 @@ import { ProductInfoPanel } from "@/components/product-info-panel";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
-import { fmtDate, fmtMoney } from "@/lib/utils";
+import { fmtDate } from "@/lib/utils";
 import { Pencil } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -62,9 +62,9 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
   const info: [string, string][] = [
     ["주문번호", p.orderNo ?? "-"],
     ["주문일자", fmtDate(p.orderDate)],
-    ["수량", fmtMoney(p.quantity)],
-    ["판매처", p.client?.name ?? "-"],
-    ["구매처", p.factory?.name ?? "-"],
+    ["출고요청일", fmtDate(p.shipRequestDate)],
+    ["구매처(공장)", p.factory?.name ?? "-"],
+    ["주문업체(업체)", p.client?.name ?? "-"],
     ["관리책임자", p.manager?.name ?? "-"],
   ];
   // 판매처(업체)/구매처(공장) 표시 필드
@@ -141,6 +141,14 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             </CardContent>
           </Card>
 
+          {/* 3. 결재관리 (제품정보와 연계) */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">결재관리</CardTitle></CardHeader>
+            <CardContent>
+              <PaymentManager projectId={p.id} payments={p.payments as any} totals={paymentTotals} />
+            </CardContent>
+          </Card>
+
           {/* 제품제작 중요사항 */}
           <Card>
             <CardHeader><CardTitle className="text-base">제품제작 중요사항</CardTitle></CardHeader>
@@ -209,7 +217,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
         <div className="space-y-6">
           {/* 판매처(업체) 정보 */}
           <Card>
-            <CardHeader><CardTitle className="text-base">판매처 정보 (업체)</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">주문업체 정보</CardTitle></CardHeader>
             <CardContent className="space-y-3">
               {p.client ? (
                 <dl className="space-y-1.5 text-sm">
@@ -230,7 +238,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
 
           {/* 구매처(공장) 정보 */}
           <Card>
-            <CardHeader><CardTitle className="text-base">구매처 정보 (공장)</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">구매처 정보</CardTitle></CardHeader>
             <CardContent className="space-y-3">
               {p.factory ? (
                 <dl className="space-y-1.5 text-sm">
@@ -246,14 +254,6 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
                   ))}
                 </dl>
               ) : <p className="text-sm text-muted-foreground">수정 화면에서 구매처를 선택하세요.</p>}
-            </CardContent>
-          </Card>
-
-          {/* 결재관리 (판매/구매 × 계약금/잔금) */}
-          <Card>
-            <CardHeader><CardTitle className="text-base">결재관리</CardTitle></CardHeader>
-            <CardContent>
-              <PaymentManager projectId={p.id} payments={p.payments as any} totals={paymentTotals} />
             </CardContent>
           </Card>
 
