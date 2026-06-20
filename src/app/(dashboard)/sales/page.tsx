@@ -39,14 +39,14 @@ export default async function SalesPage({ searchParams }: { searchParams: { peri
   const { start, end, label } = rangeOf(period);
 
   const payments = await prisma.payment.findMany({
-    where: { receivedAt: { gte: start, lt: end } },
+    where: { side: "SALES", receivedAt: { gte: start, lt: end }, amount: { not: null } },
     include: { project: { select: { id: true, productName: true, client: { select: { name: true } } } } },
     orderBy: { receivedAt: "desc" },
   });
 
   const dep = payments.filter((p: any) => p.type === "DEPOSIT");
   const bal = payments.filter((p: any) => p.type === "BALANCE");
-  const sum = (arr: any[]) => arr.reduce((a, p) => a + Number(p.amount), 0);
+  const sum = (arr: any[]) => arr.reduce((a, p) => a + Number(p.amount ?? 0), 0);
   const depSum = sum(dep), balSum = sum(bal), allSum = depSum + balSum;
 
   const detailRows = detail === "DEPOSIT" ? dep : detail === "BALANCE" ? bal : detail === "ALL" ? payments : [];

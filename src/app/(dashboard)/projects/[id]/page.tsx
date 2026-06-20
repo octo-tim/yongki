@@ -15,7 +15,8 @@ import { ImportantNotePanel } from "@/components/important-note-panel";
 import { ProgressPhotoGrid } from "@/components/progress-photo-grid";
 import { RequestPanel } from "@/components/request-panel";
 import { WorkRequestPanel } from "@/components/work-request-panel";
-import { PaymentPanel } from "@/components/payment-panel";
+import { PaymentManager } from "@/components/payment-manager";
+import { ProjectEntityPicker } from "@/components/project-entity-picker";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
@@ -65,8 +66,17 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     ["공장명", p.factory?.name ?? "-"],
     ["관리책임자", p.manager?.name ?? "-"],
   ];
-  const dep = Number(p.deposit ?? 0), bal = Number(p.balance ?? 0);
-  const totalAmt = dep + bal;
+  // 판매처(업체)/구매처(공장) 표시 필드
+  const clientFields: [string, any][] = p.client ? [
+    ["대표자", p.client.representative], ["담당자", p.client.contact], ["직책", p.client.position],
+    ["연락처", p.client.phone], ["이메일", p.client.email], ["사업자번호", p.client.bizNo],
+    ["지역", p.client.region], ["주소", p.client.address], ["계좌", p.client.account], ["결제조건", p.client.paymentTerms],
+  ] : [];
+  const factoryFields: [string, any][] = p.factory ? [
+    ["지역", p.factory.region], ["품목", p.factory.category], ["담당자", p.factory.contact], ["직책", p.factory.position],
+    ["연락처", p.factory.phone], ["위챗ID", p.factory.wechat], ["이메일", p.factory.email],
+    ["주소", p.factory.address], ["계좌", p.factory.account], ["결제조건", p.factory.paymentTerms],
+  ] : [];
 
   return (
     <div className="space-y-6 p-6">
@@ -169,39 +179,55 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
         </div>
 
         <div className="space-y-6">
-          {/* 결제 정보 */}
+          {/* 판매처(업체) 정보 */}
           <Card>
-            <CardHeader><CardTitle className="text-base">결제 정보</CardTitle></CardHeader>
-            <CardContent>
-              <dl className="space-y-2.5 text-sm">
-                <div className="flex items-center justify-between border-b pb-2">
-                  <dt className="text-muted-foreground">전체금액</dt>
-                  <dd className="text-base font-bold">{fmtMoney(totalAmt)}</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">계약금</dt>
-                  <dd className="font-medium">{fmtMoney(p.deposit as any)}
-                    {p.depositMethod && <span className="ml-2 rounded bg-accent px-1.5 py-0.5 text-xs text-foreground">{p.depositMethod}</span>}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">잔금</dt>
-                  <dd className="font-medium">{fmtMoney(p.balance as any)}
-                    {p.balanceMethod && <span className="ml-2 rounded bg-accent px-1.5 py-0.5 text-xs text-foreground">{p.balanceMethod}</span>}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between border-t pt-2">
-                  <dt className="text-muted-foreground">공장 결재계좌</dt>
-                  <dd className="font-medium">{p.factoryAccount || "-"}</dd>
-                </div>
-              </dl>
+            <CardHeader><CardTitle className="text-base">판매처 정보 (업체)</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              <ProjectEntityPicker projectId={p.id} field="clientId" value={p.clientId} options={clients} />
+              {p.client ? (
+                <dl className="space-y-1.5 text-sm">
+                  <div className="flex items-center justify-between border-b pb-1.5">
+                    <dt className="text-muted-foreground">업체명</dt>
+                    <dd className="font-semibold"><Link href={`/clients/${p.client.id}`} className="hover:underline">{p.client.name}</Link></dd>
+                  </div>
+                  {clientFields.filter(([, v]) => v).map(([k, v]) => (
+                    <div key={k} className="flex items-start justify-between gap-3">
+                      <dt className="shrink-0 text-muted-foreground">{k}</dt>
+                      <dd className="text-right font-medium">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : <p className="text-sm text-muted-foreground">판매처를 선택하세요.</p>}
             </CardContent>
           </Card>
 
+          {/* 구매처(공장) 정보 */}
           <Card>
-            <CardHeader><CardTitle className="text-base">수금 내역</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">구매처 정보 (공장)</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              <ProjectEntityPicker projectId={p.id} field="factoryId" value={p.factoryId} options={factories} />
+              {p.factory ? (
+                <dl className="space-y-1.5 text-sm">
+                  <div className="flex items-center justify-between border-b pb-1.5">
+                    <dt className="text-muted-foreground">공장명</dt>
+                    <dd className="font-semibold"><Link href={`/factories/${p.factory.id}`} className="hover:underline">{p.factory.name}</Link></dd>
+                  </div>
+                  {factoryFields.filter(([, v]) => v).map(([k, v]) => (
+                    <div key={k} className="flex items-start justify-between gap-3">
+                      <dt className="shrink-0 text-muted-foreground">{k}</dt>
+                      <dd className="text-right font-medium">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : <p className="text-sm text-muted-foreground">구매처를 선택하세요.</p>}
+            </CardContent>
+          </Card>
+
+          {/* 결재관리 (판매/구매 × 계약금/잔금) */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">결재관리</CardTitle></CardHeader>
             <CardContent>
-              <PaymentPanel projectId={p.id} payments={p.payments as any} />
+              <PaymentManager projectId={p.id} payments={p.payments as any} />
             </CardContent>
           </Card>
 

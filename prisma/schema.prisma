@@ -19,6 +19,11 @@ enum PaymentType {
   BALANCE // 잔금
 }
 
+enum PaymentSide {
+  PURCHASE // 구매 (공장)
+  SALES    // 판매 (업체)
+}
+
 enum MeetingType {
   INTERNAL // 내부회의
   EXTERNAL // 외부회의
@@ -286,12 +291,13 @@ model Payment {
   id         String      @id @default(cuid())
   projectId  String
   project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  side       PaymentSide @default(SALES) // 구매(공장) / 판매(업체)
   type       PaymentType // 계약금 / 잔금
-  amount     Decimal     @db.Decimal(14, 2)
-  receivedAt DateTime    // 수령일
-  method     String?     // 결재방식 (현금/계좌이체/위챗/스프/카드)
-  account    String?     // 결재계좌 정보
-  memo       String?
+  amount     Decimal?    @db.Decimal(14, 2) // 결재금액
+  receivedAt DateTime?   // 결재일
+  method     String?     // 결재방법 (현금/계좌이체/위챗/스프/카드)
+  account    String?     // (미사용) 과거 호환
+  memo       String?     // 비고
   createdAt  DateTime    @default(now())
 
   @@index([projectId])

@@ -88,28 +88,13 @@ export function ProjectForm({
           <Field label="주문번호"><Input value={form.orderNo ?? ""} onChange={(e) => set("orderNo", e.target.value)} /></Field>
           <Field label="주문일자"><Input type="date" value={form.orderDate ?? ""} onChange={(e) => set("orderDate", e.target.value)} /></Field>
           <Field label="수량"><Input type="number" value={form.quantity ?? ""} onChange={(e) => set("quantity", e.target.value === "" ? null : Number(e.target.value))} /></Field>
-          <Field label="계약금"><Input type="number" value={form.deposit ?? ""} onChange={(e) => set("deposit", e.target.value === "" ? null : Number(e.target.value))} /></Field>
-          <Field label="잔금"><Input type="number" value={form.balance ?? ""} onChange={(e) => set("balance", e.target.value === "" ? null : Number(e.target.value))} /></Field>
-          <Field label="계약금 결재방식">
-            <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.depositMethod ?? ""} onChange={(e) => set("depositMethod", e.target.value)}>
-              <option value="">선택 안함</option>
-              {["현금","계좌이체","위챗","스프","카드"].map((m) => <option key={m} value={m}>{m}</option>)}
-            </select>
-          </Field>
-          <Field label="잔금 결재방식">
-            <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.balanceMethod ?? ""} onChange={(e) => set("balanceMethod", e.target.value)}>
-              <option value="">선택 안함</option>
-              {["현금","계좌이체","위챗","스프","카드"].map((m) => <option key={m} value={m}>{m}</option>)}
-            </select>
-          </Field>
-          <Field label="공장 결재계좌"><Input value={form.factoryAccount ?? ""} onChange={(e) => set("factoryAccount", e.target.value)} placeholder="계좌/지급처" /></Field>
-          <Field label="업체명">
+          <Field label="판매처 (업체)">
             <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.clientId ?? ""} onChange={(e) => set("clientId", e.target.value)}>
               <option value="">선택 안함</option>
               {clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </Field>
-          <Field label="공장명">
+          <Field label="구매처 (공장)">
             <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.factoryId ?? ""} onChange={(e) => set("factoryId", e.target.value)}>
               <option value="">선택 안함</option>
               {factories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
