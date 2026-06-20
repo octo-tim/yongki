@@ -10,7 +10,7 @@ export async function getNewProjectSteps(): Promise<StepDef[]> {
       orderBy: [{ type: "asc" }, { order: "asc" }],
     });
     if (rows.length > 0) {
-      return rows.map((r) => ({ type: r.type, group: r.group, name: r.name, order: r.order }));
+      return rows.map((r) => ({ type: r.type, status: r.group, group: r.group, name: r.name, order: r.order }));
     }
   } catch {
     /* 폴백 */

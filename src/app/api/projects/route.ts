@@ -31,10 +31,11 @@ export async function POST(req: NextRequest) {
     managerId: b.managerId || null,
   };
 
+  const stepDefs = await getNewProjectSteps();
   const project = await prisma.project.create({
     data: {
       ...data, status,
-      steps: { create: await getNewProjectSteps() },
+      steps: { create: stepDefs.map((s) => ({ type: s.type, group: s.group, name: s.name, order: s.order })) },
       logs: { create: { actorId: (session.user as any).id, action: "CREATE", message: "프로젝트 등록" } },
     },
   });
