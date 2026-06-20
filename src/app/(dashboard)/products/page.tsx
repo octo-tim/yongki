@@ -23,7 +23,7 @@ export default async function ProductsPage() {
   return (
     <div className="space-y-4 p-6">
       <div>
-        <h1 className="text-2xl font-bold">상품관리</h1>
+        <h1 className="text-2xl font-bold">품목관리</h1>
         <p className="text-sm text-muted-foreground">공급단가·판매단가 관리 · 총 {products.length}건</p>
       </div>
       <ProductManager

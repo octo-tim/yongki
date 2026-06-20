@@ -12,7 +12,7 @@ const baseNav = [
   { href: "/meetings", label: "회의록", icon: FileText },
   { href: "/photos", label: "진행사진", icon: ImageIcon },
   { href: "/projects", label: "프로젝트관리", icon: Package },
-  { href: "/products", label: "상품관리", icon: Tag },
+  { href: "/products", label: "품목관리", icon: Tag },
   { href: "/clients", label: "업체 관리", icon: Building2 },
   { href: "/factories", label: "공장 관리", icon: Factory },
   { href: "/sales", label: "매출현황", icon: Wallet },

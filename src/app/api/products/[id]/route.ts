@@ -10,7 +10,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const b = await req.json();
   const data: any = {};
-  if ("name" in b) data.name = b.name || "상품";
+  if ("name" in b) data.name = b.name || "품목";
   if ("code" in b) data.code = b.code || null;
   if ("supplyPrice" in b) data.supplyPrice = num(b.supplyPrice);
   if ("salesPrice" in b) data.salesPrice = num(b.salesPrice);

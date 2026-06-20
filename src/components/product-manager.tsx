@@ -53,7 +53,7 @@ export function ProductManager({ products, projects, factories, clients }: {
     router.refresh();
   }
   async function remove(id: string) {
-    if (!confirm("이 상품을 삭제하시겠습니까?")) return;
+    if (!confirm("이 품목을 삭제하시겠습니까?")) return;
     setRows((rs) => rs.filter((r) => r.id !== id));
     await fetch(`/api/products/${id}`, { method: "DELETE" });
     router.refresh();
@@ -81,14 +81,14 @@ export function ProductManager({ products, projects, factories, clients }: {
             </button>
           ))}
         </div>
-        <Button size="sm" onClick={() => setAdding((v) => !v)}><Plus className="h-4 w-4" /> 상품추가</Button>
+        <Button size="sm" onClick={() => setAdding((v) => !v)}><Plus className="h-4 w-4" /> 품목추가</Button>
       </div>
 
       {adding && (
         <Card className="space-y-3 p-4">
           <div className="grid gap-3 md:grid-cols-3">
-            <Field label="상품명 *"><Input value={form.name} onChange={(e) => setF("name", e.target.value)} /></Field>
-            <Field label="상품코드"><Input value={form.code} onChange={(e) => setF("code", e.target.value)} /></Field>
+            <Field label="품목명 *"><Input value={form.name} onChange={(e) => setF("name", e.target.value)} /></Field>
+            <Field label="품목코드"><Input value={form.code} onChange={(e) => setF("code", e.target.value)} /></Field>
             <Field label="수량"><Input type="number" value={form.quantity} onChange={(e) => setF("quantity", e.target.value)} /></Field>
             <Field label="공급단가 (공장)"><Input type="number" value={form.supplyPrice} onChange={(e) => setF("supplyPrice", e.target.value)} /></Field>
             <Field label="판매단가 (업체)"><Input type="number" value={form.salesPrice} onChange={(e) => setF("salesPrice", e.target.value)} /></Field>
@@ -104,7 +104,7 @@ export function ProductManager({ products, projects, factories, clients }: {
         </Card>
       )}
 
-      {rows.length === 0 && <Card><div className="py-12 text-center text-muted-foreground">등록된 상품이 없습니다.</div></Card>}
+      {rows.length === 0 && <Card><div className="py-12 text-center text-muted-foreground">등록된 품목이 없습니다.</div></Card>}
 
       {sections.map((sec) => (
         <div key={sec.label || "all"} className="space-y-2">
@@ -119,7 +119,7 @@ export function ProductManager({ products, projects, factories, clients }: {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>상품명</TableHead>
+                    <TableHead>품목명</TableHead>
                     <TableHead>프로젝트</TableHead>
                     <TableHead>공장</TableHead>
                     <TableHead>업체</TableHead>
