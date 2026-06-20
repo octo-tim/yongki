@@ -92,10 +92,16 @@ model User {
 model Client {
   id        String   @id @default(cuid())
   name      String
+  representative String? // 대표자
   contact   String?  // 담당자
+  position  String?  // 직책
   phone     String?  // 연락처
+  email     String?  // 이메일
+  bizNo     String?  // 사업자번호
   region    String?  // 지역
+  address   String?  // 주소
   account   String?  // 계좌
+  paymentTerms String? // 결제조건
   memo      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -116,8 +122,13 @@ model Factory {
   category    String?  // 품목 (튜브용기, 향수병 등)
   contactType String?  // 소통수단 (카카오톡, 위쳇 등)
   contact     String?  // 공장담당자
+  position    String?  // 직책
   phone       String?  // 연락처
+  wechat      String?  // 위챗ID
+  email       String?  // 이메일
+  address     String?  // 주소
   account     String?  // 계좌
+  paymentTerms String? // 결제조건
   memo        String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -356,6 +367,8 @@ model WorkRequest {
   id          String   @id @default(cuid())
   content     String   // 요청사항
   requestDate DateTime // 요청일
+  done        Boolean  @default(false) // 완료 여부 (요청자 체크)
+  doneAt      DateTime?
   requesterId String?  // 요청자 (로그인 사용자)
   requester   User?    @relation("RequestRequester", fields: [requesterId], references: [id])
   assigneeId  String?  // 담당자

@@ -13,12 +13,18 @@ export default async function ClientsPage() {
       <EntityManager
         endpoint="/api/clients" countKey="projects" linkBase="/clients" rows={clients as any}
         fields={[
-          { key: "name", label: "업체명", placeholder: "코스메디크" },
-          { key: "contact", label: "담당자" },
-          { key: "phone", label: "연락처" },
-          { key: "region", label: "지역" },
+          { key: "name", label: "업체명", placeholder: "코스메디크", primary: true },
+          { key: "representative", label: "대표자" },
+          { key: "contact", label: "담당자", primary: true },
+          { key: "position", label: "직책" },
+          { key: "phone", label: "연락처", primary: true },
+          { key: "email", label: "이메일" },
+          { key: "bizNo", label: "사업자번호" },
+          { key: "region", label: "지역", primary: true },
+          { key: "address", label: "주소" },
           { key: "account", label: "계좌" },
-          { key: "memo", label: "메모" },
+          { key: "paymentTerms", label: "결제조건" },
+          { key: "memo", label: "메모", textarea: true },
         ]}
       />
     </div>
