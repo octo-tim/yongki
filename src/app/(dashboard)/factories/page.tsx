@@ -17,6 +17,10 @@ export default async function FactoriesPage() {
           { key: "region", label: "지역" },
           { key: "category", label: "품목" },
           { key: "contactType", label: "소통수단" },
+          { key: "contact", label: "공장담당자" },
+          { key: "phone", label: "연락처" },
+          { key: "account", label: "계좌" },
+          { key: "memo", label: "메모" },
         ]}
       />
     </div>

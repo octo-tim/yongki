@@ -8,6 +8,6 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const b = await req.json();
   if (!b.name?.trim()) return NextResponse.json({ error: "공장명 필수" }, { status: 400 });
-  const f = await prisma.factory.create({ data: { name: b.name, region: b.region || null, category: b.category || null, contactType: b.contactType || null } });
+  const f = await prisma.factory.create({ data: { name: b.name, region: b.region || null, category: b.category || null, contactType: b.contactType || null, contact: b.contact || null, phone: b.phone || null, account: b.account || null, memo: b.memo || null } });
   return NextResponse.json(f);
 }

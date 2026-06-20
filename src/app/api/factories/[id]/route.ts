@@ -7,7 +7,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const b = await req.json();
-  const f = await prisma.factory.update({ where: { id: params.id }, data: { name: b.name, region: b.region || null, category: b.category || null, contactType: b.contactType || null } });
+  const f = await prisma.factory.update({ where: { id: params.id }, data: { name: b.name, region: b.region || null, category: b.category || null, contactType: b.contactType || null, contact: b.contact || null, phone: b.phone || null, account: b.account || null, memo: b.memo || null } });
   return NextResponse.json(f);
 }
 

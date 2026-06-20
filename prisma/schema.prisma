@@ -90,7 +90,9 @@ model Client {
   id        String   @id @default(cuid())
   name      String
   contact   String?  // 담당자
-  phone     String?
+  phone     String?  // 연락처
+  region    String?  // 지역
+  account   String?  // 계좌
   memo      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -109,6 +111,9 @@ model Factory {
   region      String?  // 지역 (广州, 余姚 등)
   category    String?  // 품목 (튜브용기, 향수병 등)
   contactType String?  // 소통수단 (카카오톡, 위쳇 등)
+  contact     String?  // 공장담당자
+  phone       String?  // 연락처
+  account     String?  // 계좌
   memo        String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -276,6 +281,8 @@ model Payment {
   type       PaymentType // 계약금 / 잔금
   amount     Decimal     @db.Decimal(14, 2)
   receivedAt DateTime    // 수령일
+  method     String?     // 결재방식 (현금/계좌이체/위챗/스프/카드)
+  account    String?     // 결재계좌 정보
   memo       String?
   createdAt  DateTime    @default(now())
 

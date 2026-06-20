@@ -16,6 +16,8 @@ export default async function ClientsPage() {
           { key: "name", label: "업체명", placeholder: "코스메디크" },
           { key: "contact", label: "담당자" },
           { key: "phone", label: "연락처" },
+          { key: "region", label: "지역" },
+          { key: "account", label: "계좌" },
           { key: "memo", label: "메모" },
         ]}
       />

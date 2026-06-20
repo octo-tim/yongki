@@ -42,6 +42,20 @@ export default async function FactoryDetailPage({ params }: { params: { id: stri
 
       <Card>
         <CardContent className="p-4">
+          <h2 className="mb-3 text-sm font-semibold">기본 정보</h2>
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm md:grid-cols-4">
+            {([["지역", factory.region], ["품목", (factory as any).category], ["소통수단", (factory as any).contactType], ["공장담당자", (factory as any).contact], ["연락처", (factory as any).phone], ["계좌", (factory as any).account], ["메모", factory.memo]] as [string, any][]).map(([k, v]) => (
+              <div key={k} className={k === "메모" ? "col-span-2 md:col-span-4" : ""}>
+                <dt className="text-xs text-muted-foreground">{k}</dt>
+                <dd className="font-medium">{v || "-"}</dd>
+              </div>
+            ))}
+          </dl>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4">
           <EntityProjects projects={factory.projects as any} statusCfg={statusCfg as any} />
         </CardContent>
       </Card>

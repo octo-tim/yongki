@@ -41,6 +41,20 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
 
       <Card>
         <CardContent className="p-4">
+          <h2 className="mb-3 text-sm font-semibold">기본 정보</h2>
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm md:grid-cols-4">
+            {([["담당자", client.contact], ["연락처", client.phone], ["지역", (client as any).region], ["계좌", (client as any).account], ["메모", client.memo]] as [string, any][]).map(([k, v]) => (
+              <div key={k} className={k === "메모" ? "col-span-2 md:col-span-4" : ""}>
+                <dt className="text-xs text-muted-foreground">{k}</dt>
+                <dd className="font-medium">{v || "-"}</dd>
+              </div>
+            ))}
+          </dl>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4">
           <EntityProjects projects={client.projects as any} statusCfg={statusCfg as any} />
         </CardContent>
       </Card>

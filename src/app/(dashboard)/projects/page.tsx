@@ -84,15 +84,15 @@ export default async function ProjectsPage({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-14 px-2"></TableHead>
               <TableHead>상태</TableHead>
-              <TableHead>주문일</TableHead>
-              <TableHead>상품명</TableHead>
-              <TableHead>업체</TableHead>
-              <TableHead>공장</TableHead>
+              <TableHead>주문번호</TableHead>
+              <TableHead className="w-16 px-2">제품사진</TableHead>
+              <TableHead>제품명</TableHead>
               <TableHead className="text-right">수량</TableHead>
-              <TableHead>완성예정</TableHead>
-              <TableHead>책임자</TableHead>
+              <TableHead>업체</TableHead>
+              <TableHead>제작공장</TableHead>
+              <TableHead>완성예정일</TableHead>
+              <TableHead>담당자</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -101,6 +101,8 @@ export default async function ProjectsPage({
             )}
             {projects.map((p) => (
               <TableRow key={p.id} className="cursor-pointer">
+                <TableCell><StatusBadge status={p.status} label={statusCfg.label[p.status]} colorClass={statusCfg.style[p.status]} /></TableCell>
+                <TableCell className="whitespace-nowrap text-xs text-muted-foreground">{p.orderNo ?? "-"}</TableCell>
                 <TableCell className="px-2">
                   {p.productPhoto ? (
                     <img src={p.productPhoto} alt="" className="h-10 w-10 rounded-md border object-cover" />
@@ -108,14 +110,12 @@ export default async function ProjectsPage({
                     <div className="h-10 w-10 rounded-md border border-dashed bg-muted/30" />
                   )}
                 </TableCell>
-                <TableCell><StatusBadge status={p.status} label={statusCfg.label[p.status]} colorClass={statusCfg.style[p.status]} /></TableCell>
-                <TableCell className="whitespace-nowrap">{fmtDate(p.orderDate)}</TableCell>
                 <TableCell className="max-w-xs">
                   <Link href={`/projects/${p.id}`} className="font-medium hover:underline">{p.productName}</Link>
                 </TableCell>
+                <TableCell className="text-right">{fmtMoney(p.quantity)}</TableCell>
                 <TableCell>{p.client?.name ?? "-"}</TableCell>
                 <TableCell className="max-w-[14rem] truncate text-xs text-muted-foreground">{p.factory?.name ?? "-"}</TableCell>
-                <TableCell className="text-right">{fmtMoney(p.quantity)}</TableCell>
                 <TableCell className="whitespace-nowrap">{fmtDate(p.expectedCompletionDate)}</TableCell>
                 <TableCell>{p.manager?.name ?? "-"}</TableCell>
               </TableRow>
