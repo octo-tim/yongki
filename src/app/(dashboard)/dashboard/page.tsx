@@ -58,6 +58,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     }),
     prisma.factory.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.workRequest.findMany({
+      where: { done: false },
       orderBy: { requestDate: "desc" }, take: 30,
       include: {
         requester: { select: { name: true } },

@@ -24,6 +24,18 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(wr);
 }
 
+export async function PATCH(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const { id, done } = await req.json();
+  if (!id) return NextResponse.json({ error: "id 필수" }, { status: 400 });
+  const wr = await prisma.workRequest.update({
+    where: { id },
+    data: { done: !!done, doneAt: done ? new Date() : null },
+  });
+  return NextResponse.json(wr);
+}
+
 export async function DELETE(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });

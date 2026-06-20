@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,6 +14,7 @@ import { MeetingPanel } from "@/components/meeting-panel";
 import { ImportantNotePanel } from "@/components/important-note-panel";
 import { ProgressPhotoGrid } from "@/components/progress-photo-grid";
 import { RequestPanel } from "@/components/request-panel";
+import { WorkRequestPanel } from "@/components/work-request-panel";
 import { PaymentPanel } from "@/components/payment-panel";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
@@ -33,6 +36,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       meetings: { orderBy: { meetingDate: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } }, files: true } },
       clientRequests: { orderBy: { requestDate: "desc" }, include: { createdBy: { select: { name: true } } } },
       progressPhotos: { orderBy: { createdAt: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } } } },
+      workRequests: { orderBy: { requestDate: "desc" }, include: { requester: { select: { name: true } }, assignee: { select: { id: true, name: true } }, client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, updates: { orderBy: { progressDate: "asc" }, include: { createdBy: { select: { name: true } } } } } },
       payments: { orderBy: { receivedAt: "desc" } },
       memos: { orderBy: { createdAt: "desc" }, include: { author: true } },
       logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: true } },
@@ -45,6 +49,8 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.factory.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
   ]);
+  const session = await getServerSession(authOptions);
+  const uid = (session?.user as any)?.id as string | undefined;
 
   const boardSteps = p.steps.map((s) => ({
     id: s.id, type: s.type, group: s.group, name: s.name, order: s.order,
@@ -134,6 +140,14 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             <CardHeader><CardTitle className="text-base">회의록</CardTitle></CardHeader>
             <CardContent>
               <MeetingPanel clients={clients} factories={factories} fixedProjectId={p.id} meetings={p.meetings as any} showProject={false} />
+            </CardContent>
+          </Card>
+
+          {/* 업무요청 */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">업무요청</CardTitle></CardHeader>
+            <CardContent>
+              <WorkRequestPanel requests={p.workRequests as any} currentUserId={uid} showCreate={false} />
             </CardContent>
           </Card>
 
