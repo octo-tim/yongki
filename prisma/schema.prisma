@@ -28,6 +28,11 @@ enum PaymentType {
   BALANCE // 잔금
 }
 
+enum MeetingType {
+  INTERNAL // 내부회의
+  EXTERNAL // 외부회의
+}
+
 // 상태 표시 설정 (라벨/색상/순서) — enum 값별 1행
 model StatusSetting {
   id        String        @id @default(cuid())
@@ -72,6 +77,8 @@ model User {
   notes           ProjectNote[]
   workLogs        WorkLog[]    @relation("WorkLogAssignee")
   createdWorkLogs WorkLog[]    @relation("WorkLogCreator")
+  meetings        Meeting[]    @relation("MeetingCreator")
+  clientRequests  ClientRequest[] @relation("RequestCreator")
   logs            ProjectLog[]
 
   @@map("users")
@@ -88,6 +95,7 @@ model Client {
   updatedAt DateTime @updatedAt
 
   projects Project[]
+  meetings Meeting[]
 
   @@map("clients")
 }
@@ -150,6 +158,8 @@ model Project {
   notes ProjectNote[]
   workLogs WorkLog[]
   payments Payment[]
+  meetings Meeting[]
+  clientRequests ClientRequest[]
   logs  ProjectLog[]
 
   createdAt DateTime @default(now())
@@ -263,6 +273,39 @@ model Payment {
   @@index([projectId])
   @@index([receivedAt])
   @@map("payments")
+}
+
+model Meeting {
+  id          String      @id @default(cuid())
+  type        MeetingType @default(INTERNAL)
+  title       String
+  content     String
+  meetingDate DateTime
+  clientId    String?     // 외부회의 거래처
+  client      Client?     @relation(fields: [clientId], references: [id])
+  projectId   String?     // 선택: 프로젝트 연결
+  project     Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdById String?
+  createdBy   User?       @relation("MeetingCreator", fields: [createdById], references: [id])
+  createdAt   DateTime    @default(now())
+
+  @@index([meetingDate])
+  @@index([projectId])
+  @@map("meetings")
+}
+
+model ClientRequest {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  content     String
+  requestDate DateTime // 요청 날짜
+  createdById String?
+  createdBy   User?    @relation("RequestCreator", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([projectId])
+  @@map("client_requests")
 }
 
 // 8. 프로젝트 로그 (이력)

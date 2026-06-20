@@ -8,6 +8,8 @@ import { getStatusConfig } from "@/lib/status-config";
 import { StepBoard } from "@/components/step-board";
 import { NotePanel } from "@/components/note-panel";
 import { WorkLogPanel } from "@/components/worklog-panel";
+import { MeetingPanel } from "@/components/meeting-panel";
+import { RequestPanel } from "@/components/request-panel";
 import { PaymentPanel } from "@/components/payment-panel";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
@@ -25,7 +27,9 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
       files: { orderBy: { createdAt: "desc" } },
       notes: { orderBy: { createdAt: "desc" }, include: { author: true } },
-      workLogs: { orderBy: { createdAt: "desc" }, include: { assignee: { select: { id: true, name: true } } } },
+      workLogs: { orderBy: { createdAt: "desc" }, include: { assignee: { select: { id: true, name: true } }, creator: { select: { id: true, name: true } } } },
+      meetings: { orderBy: { meetingDate: "desc" }, include: { client: { select: { id: true, name: true } }, createdBy: { select: { name: true } } } },
+      clientRequests: { orderBy: { requestDate: "desc" }, include: { createdBy: { select: { name: true } } } },
       payments: { orderBy: { receivedAt: "desc" } },
       memos: { orderBy: { createdAt: "desc" }, include: { author: true } },
       logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: true } },
@@ -33,7 +37,10 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
   });
   if (!p) notFound();
   const statusCfg = await getStatusConfig();
-  const users = await prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } });
+  const [users, clients] = await Promise.all([
+    prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+  ]);
 
   const boardSteps = p.steps.map((s) => ({
     id: s.id, type: s.type, group: s.group, name: s.name, order: s.order,
@@ -94,15 +101,31 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             </CardContent>
           </Card>
 
-          {/* 3. 진행업무내역 */}
+          {/* 3. 업무관리 */}
           <Card>
-            <CardHeader><CardTitle className="text-base">진행업무내역</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">업무관리</CardTitle></CardHeader>
             <CardContent>
               <WorkLogPanel users={users} fixedProjectId={p.id} logs={p.workLogs as any} />
             </CardContent>
           </Card>
 
-          {/* 4. 특이사항 (작성자·작성일별 다중 입력) */}
+          {/* 4. 회의록 */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">회의록</CardTitle></CardHeader>
+            <CardContent>
+              <MeetingPanel clients={clients} fixedProjectId={p.id} meetings={p.meetings as any} showProject={false} />
+            </CardContent>
+          </Card>
+
+          {/* 5. 거래처 요청사항 (날짜별) */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">거래처 요청사항</CardTitle></CardHeader>
+            <CardContent>
+              <RequestPanel projectId={p.id} requests={p.clientRequests as any} />
+            </CardContent>
+          </Card>
+
+          {/* 6. 특이사항 (작성자·작성일별 다중 입력) */}
           <Card>
             <CardHeader><CardTitle className="text-base">특이사항</CardTitle></CardHeader>
             <CardContent>

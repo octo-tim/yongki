@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getStatusConfig } from "@/lib/status-config";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WorkLogPanel } from "@/components/worklog-panel";
+import { MeetingPanel } from "@/components/meeting-panel";
 import { DailyDateNav } from "@/components/daily-date-nav";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +18,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   const dayStart = new Date(`${dateStr}T00:00:00.000Z`);
   const dayEnd = new Date(dayStart.getTime() + 86400000);
 
-  const [grouped, total, users, activeProjects, workLogs, dailySteps] = await Promise.all([
+  const [grouped, total, users, activeProjects, workLogs, dailySteps, clients, recentMeetings] = await Promise.all([
     prisma.project.groupBy({ by: ["status"], _count: { _all: true } }),
     prisma.project.count(),
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
@@ -32,6 +33,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
       where: { doneAt: { gte: dayStart, lt: dayEnd } },
       include: { project: { select: { id: true, productName: true, status: true } } },
       orderBy: [{ projectId: "asc" }, { type: "asc" }, { order: "asc" }],
+    }),
+    prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.meeting.findMany({
+      orderBy: { meetingDate: "desc" }, take: 4,
+      include: { client: { select: { id: true, name: true } }, project: { select: { id: true, productName: true } }, createdBy: { select: { name: true } } },
     }),
   ]);
 
@@ -77,6 +83,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
         <Card>
           <CardContent className="p-4">
             <WorkLogPanel users={users} projects={activeProjects} logs={workLogs as any} sortable showProject />
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* 회의록 (최근 3개) */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold text-muted-foreground">회의록 (최근 3개)</h2>
+        <Card>
+          <CardContent className="p-4">
+            <MeetingPanel clients={clients} projects={activeProjects} meetings={recentMeetings as any} limit={3} />
           </CardContent>
         </Card>
       </section>
