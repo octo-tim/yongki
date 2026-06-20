@@ -6,7 +6,7 @@ import { furthestStep, statusOfStep, STEP_BUCKETS, STEP_ORDER } from "@/lib/step
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { fmtDate, fmtMoney, cn } from "@/lib/utils";
-import { Download, PlusCircle, Search, Package, Building2, Factory, User, CalendarDays, Boxes, List, LayoutGrid, ChevronRight } from "lucide-react";
+import { Download, PlusCircle, Search, Package, Building2, Factory, User, CalendarDays, List, LayoutGrid } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -55,9 +55,6 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
   const selected = searchParams.step && allBuckets.includes(searchParams.step) ? searchParams.step : null;
   const list = selected ? groups.get(selected)! : projects;
 
-  const completed = projects.filter((p) => p.steps.some((s) => s.name === "고객인도" && s.done)).length;
-  const inProgress = projects.length - completed;
-
   const hrefFor = (step: string | null, viewMode: string) => {
     const sp = new URLSearchParams();
     if (q) sp.set("q", q);
@@ -69,12 +66,6 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
 
   const exportQs = new URLSearchParams();
   if (q) exportQs.set("q", q);
-
-  const summary = [
-    { label: "전체 프로젝트", value: projects.length, icon: Boxes, tint: "from-slate-50 to-slate-100 text-slate-700", ring: "ring-slate-200" },
-    { label: "진행중", value: inProgress, icon: Package, tint: "from-blue-50 to-indigo-50 text-blue-700", ring: "ring-blue-200" },
-    { label: "완료", value: completed, icon: CalendarDays, tint: "from-emerald-50 to-teal-50 text-emerald-700", ring: "ring-emerald-200" },
-  ];
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6">
@@ -94,21 +85,6 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
             <Link href="/projects/new"><PlusCircle className="h-4 w-4" /> 새 프로젝트</Link>
           </Button>
         </div>
-      </div>
-
-      {/* 요약 타일 */}
-      <div className="grid grid-cols-3 gap-3">
-        {summary.map((s) => (
-          <div key={s.label} className={cn("flex items-center gap-3 rounded-2xl bg-gradient-to-br p-4 ring-1", s.tint, s.ring)}>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 shadow-sm">
-              <s.icon className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold leading-none tabular-nums">{s.value}</div>
-              <div className="mt-1 text-xs font-medium opacity-80">{s.label}</div>
-            </div>
-          </div>
-        ))}
       </div>
 
       {/* 검색 + 뷰 토글 */}
@@ -215,54 +191,43 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/40 text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-3 font-semibold">제품</th>
-                  <th className="px-3 py-3 font-semibold">현재 단계</th>
-                  <th className="px-3 py-3 font-semibold">진행률</th>
-                  <th className="px-3 py-3 font-semibold">업체</th>
-                  <th className="px-3 py-3 font-semibold">공장</th>
-                  <th className="px-3 py-3 font-semibold">완성예정</th>
-                  <th className="px-3 py-3 font-semibold">담당자</th>
+                  <th className="px-3 py-3 font-semibold">단계</th>
+                  <th className="px-3 py-3 font-semibold">주문번호</th>
+                  <th className="px-3 py-3 font-semibold">제품사진</th>
+                  <th className="px-3 py-3 font-semibold">제품명</th>
                   <th className="px-3 py-3 text-right font-semibold">수량</th>
-                  <th className="w-8 px-2 py-3"></th>
+                  <th className="px-3 py-3 font-semibold">업체</th>
+                  <th className="px-3 py-3 font-semibold">제작공장</th>
+                  <th className="px-3 py-3 font-semibold">완성예정일</th>
+                  <th className="px-3 py-3 font-semibold">담당자</th>
                 </tr>
               </thead>
               <tbody>
                 {list.map((p) => {
-                  const { doneCount, pct, cur, st, isDone } = calc(p);
+                  const { cur, st } = calc(p);
                   return (
                     <tr key={p.id} className="group border-b last:border-0 transition-colors hover:bg-accent/40">
-                      <td className="px-4 py-2.5">
-                        <Link href={`/projects/${p.id}`} className="flex items-center gap-3">
-                          {p.productPhoto ? (
-                            <img src={p.productPhoto} alt="" className="h-10 w-10 shrink-0 rounded-lg border object-cover" />
-                          ) : (
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-dashed bg-muted/30"><Package className="h-4 w-4 text-muted-foreground/40" /></div>
-                          )}
-                          <div className="min-w-0">
-                            <div className="truncate font-semibold group-hover:text-primary">{p.productName}</div>
-                            <div className="truncate text-xs text-muted-foreground">{p.orderNo ?? "-"}</div>
-                          </div>
-                        </Link>
-                      </td>
                       <td className="px-3 py-2.5">
                         <span className={cn("inline-block whitespace-nowrap rounded-full border px-2 py-0.5 text-[11px] font-semibold", statusCfg.style[st] ?? "")}>{cur}</span>
                       </td>
+                      <td className="whitespace-nowrap px-3 py-2.5 text-xs text-muted-foreground">{p.orderNo ?? "-"}</td>
                       <td className="px-3 py-2.5">
-                        <div className="flex items-center gap-2">
-                          <div className="h-1.5 w-20 overflow-hidden rounded-full bg-muted">
-                            <div className={cn("h-full rounded-full", isDone ? "bg-emerald-500" : "bg-primary")} style={{ width: `${pct}%` }} />
-                          </div>
-                          <span className="text-[11px] tabular-nums text-muted-foreground">{doneCount}/{TOTAL_STEPS}</span>
-                        </div>
+                        <Link href={`/projects/${p.id}`} className="block">
+                          {p.productPhoto ? (
+                            <img src={p.productPhoto} alt="" className="h-10 w-10 rounded-lg border object-cover" />
+                          ) : (
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-dashed bg-muted/30"><Package className="h-4 w-4 text-muted-foreground/40" /></div>
+                          )}
+                        </Link>
                       </td>
+                      <td className="px-3 py-2.5">
+                        <Link href={`/projects/${p.id}`} className="font-semibold group-hover:text-primary">{p.productName}</Link>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums">{fmtMoney(p.quantity)}</td>
                       <td className="px-3 py-2.5">{p.client?.name ?? "-"}</td>
                       <td className="max-w-[12rem] truncate px-3 py-2.5 text-muted-foreground">{p.factory?.name ?? "-"}</td>
                       <td className="whitespace-nowrap px-3 py-2.5">{fmtDate(p.expectedCompletionDate)}</td>
                       <td className="whitespace-nowrap px-3 py-2.5">{p.manager?.name ?? "-"}</td>
-                      <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums">{fmtMoney(p.quantity)}</td>
-                      <td className="px-2 py-2.5 text-muted-foreground">
-                        <Link href={`/projects/${p.id}`} className="block opacity-0 transition-opacity group-hover:opacity-100"><ChevronRight className="h-4 w-4" /></Link>
-                      </td>
                     </tr>
                   );
                 })}
