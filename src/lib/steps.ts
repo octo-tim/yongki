@@ -43,14 +43,16 @@ export const STEP_TO_PROJECT_DATE: Record<string, string> = {
 };
 
 // 단계 진행 상태로부터 프로젝트 상태(준비/진행중/출고대기/완료) 도출
+// '가장 멀리 진행된(완료된) 단계'의 그룹 기준 — 중간에 빈 단계가 있어도 실제 진척을 반영
 export function statusFromSteps(steps: { name: string; done: boolean }[]): string {
   const doneSet = new Set(steps.filter((s) => s.done).map((s) => s.name));
   if (doneSet.has("고객인도")) return "완료";
-  for (const name of STEP_ORDER) {
-    if (name === "고객인도") break;
-    if (!doneSet.has(name)) return STEP_STATUS[name]; // 준비 / 진행중 / 출고대기
+  for (let i = STEP_ORDER.length - 1; i >= 0; i--) {
+    const name = STEP_ORDER[i];
+    if (name === "고객인도") continue;
+    if (doneSet.has(name)) return STEP_STATUS[name]; // 준비 / 진행중 / 출고대기
   }
-  return "출고대기"; // 고객인도 제외 전 단계 완료 → 고객인도 대기(출고대기)
+  return "준비"; // 완료된 단계 없음
 }
 
 export function defaultSteps(): StepDef[] {

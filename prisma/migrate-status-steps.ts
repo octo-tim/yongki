@@ -30,11 +30,12 @@ const STEP_STATUS: Record<string, string> = Object.fromEntries(CANON.map((s) => 
 function statusFromSteps(steps: { name: string; done: boolean }[]): string {
   const done = new Set(steps.filter((s) => s.done).map((s) => s.name));
   if (done.has("고객인도")) return "완료";
-  for (const name of STEP_ORDER) {
-    if (name === "고객인도") break;
-    if (!done.has(name)) return STEP_STATUS[name];
+  for (let i = STEP_ORDER.length - 1; i >= 0; i--) {
+    const name = STEP_ORDER[i];
+    if (name === "고객인도") continue;
+    if (done.has(name)) return STEP_STATUS[name];
   }
-  return "출고대기";
+  return "준비";
 }
 
 const DONE_VALUES = new Set(["DONE", "완료"]);
