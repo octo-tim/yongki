@@ -80,6 +80,9 @@ model User {
   meetings        Meeting[]    @relation("MeetingCreator")
   clientRequests  ClientRequest[] @relation("RequestCreator")
   progressPhotos  ProgressPhoto[] @relation("PhotoCreator")
+  workRequestsMade     WorkRequest[]       @relation("RequestRequester")
+  workRequestsAssigned WorkRequest[]       @relation("RequestAssignee")
+  workRequestUpdates   WorkRequestUpdate[] @relation("RequestUpdateCreator")
   logs            ProjectLog[]
 
   @@map("users")
@@ -100,6 +103,7 @@ model Client {
   projects Project[]
   meetings Meeting[]
   progressPhotos ProgressPhoto[]
+  workRequests WorkRequest[]
 
   @@map("clients")
 }
@@ -121,6 +125,7 @@ model Factory {
   projects Project[]
   meetings Meeting[]
   progressPhotos ProgressPhoto[]
+  workRequests WorkRequest[]
 
   @@map("factories")
 }
@@ -174,6 +179,7 @@ model Project {
   meetings Meeting[]
   clientRequests ClientRequest[]
   progressPhotos ProgressPhoto[]
+  workRequests WorkRequest[]
   logs  ProjectLog[]
 
   createdAt DateTime @default(now())
@@ -344,6 +350,41 @@ model ProgressPhoto {
   @@index([factoryId])
   @@index([projectId])
   @@map("progress_photos")
+}
+
+model WorkRequest {
+  id          String   @id @default(cuid())
+  content     String   // 요청사항
+  requestDate DateTime // 요청일
+  requesterId String?  // 요청자 (로그인 사용자)
+  requester   User?    @relation("RequestRequester", fields: [requesterId], references: [id])
+  assigneeId  String?  // 담당자
+  assignee    User?    @relation("RequestAssignee", fields: [assigneeId], references: [id])
+  clientId    String?
+  client      Client?  @relation(fields: [clientId], references: [id])
+  factoryId   String?
+  factory     Factory? @relation(fields: [factoryId], references: [id])
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  updates     WorkRequestUpdate[]
+  createdAt   DateTime @default(now())
+
+  @@index([requestDate])
+  @@map("work_requests")
+}
+
+model WorkRequestUpdate {
+  id           String      @id @default(cuid())
+  requestId    String
+  request      WorkRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  content      String      // 진행현황
+  progressDate DateTime    // 진행현황 입력일
+  createdById  String?
+  createdBy    User?       @relation("RequestUpdateCreator", fields: [createdById], references: [id])
+  createdAt    DateTime    @default(now())
+
+  @@index([requestId])
+  @@map("work_request_updates")
 }
 
 model ClientRequest {

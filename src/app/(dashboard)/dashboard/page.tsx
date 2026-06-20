@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getStatusConfig } from "@/lib/status-config";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardTasks } from "@/components/dashboard-tasks";
+import { WorkRequestPanel } from "@/components/work-request-panel";
 import { MeetingPanel } from "@/components/meeting-panel";
 import { DailyDateNav } from "@/components/daily-date-nav";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   const dayStart = new Date(`${dateStr}T00:00:00.000Z`);
   const dayEnd = new Date(dayStart.getTime() + 86400000);
 
-  const [attnRaw, total, users, activeProjects, allTasks, dailySteps, clients, recentMeetings, factories] = await Promise.all([
+  const [attnRaw, total, users, activeProjects, allTasks, dailySteps, clients, recentMeetings, factories, workRequests, projectsForSelect] = await Promise.all([
     // 주의 필요 후보: 완료가 아닌 프로젝트 + 최근 완료 단계 1건(정체 판단용)
     prisma.project.findMany({
       where: { status: { not: "DONE" } },
@@ -56,6 +57,18 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
       include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, project: { select: { id: true, productName: true } }, createdBy: { select: { name: true } }, files: true },
     }),
     prisma.factory.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.workRequest.findMany({
+      orderBy: { requestDate: "desc" }, take: 30,
+      include: {
+        requester: { select: { name: true } },
+        assignee: { select: { id: true, name: true } },
+        client: { select: { id: true, name: true } },
+        factory: { select: { id: true, name: true } },
+        project: { select: { id: true, productName: true } },
+        updates: { orderBy: { progressDate: "asc" }, include: { createdBy: { select: { name: true } } } },
+      },
+    }),
+    prisma.project.findMany({ orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
   ]);
 
   // 주의 필요 프로젝트 판정 (KST 오늘 기준)
@@ -106,6 +119,19 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
         <Card>
           <CardContent className="p-4">
             <DashboardTasks users={users} projects={activeProjects} tasks={allTasks as any} currentUserId={myId} />
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* 업무요청 */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold text-muted-foreground">업무요청</h2>
+        <Card>
+          <CardContent className="p-4">
+            <WorkRequestPanel
+              clients={clients} factories={factories}
+              projects={projectsForSelect.map((p) => ({ id: p.id, name: p.productName }))}
+              users={users} requests={workRequests as any} currentUserId={myId} />
           </CardContent>
         </Card>
       </section>
