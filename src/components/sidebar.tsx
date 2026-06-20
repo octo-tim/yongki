@@ -15,7 +15,7 @@ const baseNav = [
   { href: "/products", label: "품목관리", icon: Tag },
   { href: "/clients", label: "업체 관리", icon: Building2 },
   { href: "/factories", label: "공장 관리", icon: Factory },
-  { href: "/sales", label: "매출현황", icon: Wallet },
+  { href: "/sales", label: "입출금현황", icon: Wallet },
   { href: "/stats", label: "통계", icon: BarChart3 },
 ];
 

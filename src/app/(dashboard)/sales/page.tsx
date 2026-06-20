@@ -31,38 +31,98 @@ function rangeOf(period: string) {
   }
 }
 const fmt = (d: Date) => d.toISOString().slice(0, 10);
-const won = (n: number) => n.toLocaleString() + "원";
+const money = (n: number) => n.toLocaleString();
 
-export default async function SalesPage({ searchParams }: { searchParams: { period?: string; detail?: string } }) {
-  const period = PERIODS.some((p) => p.key === searchParams.period) ? searchParams.period! : "today";
-  const detail = searchParams.detail === "DEPOSIT" || searchParams.detail === "BALANCE" || searchParams.detail === "ALL" ? searchParams.detail : null;
+function FlowTable({ title, rows, partyLabel, accent }: {
+  title: string; rows: any[]; partyLabel: string; accent: string;
+}) {
+  const total = rows.reduce((a, p) => a + Number(p.amount ?? 0), 0);
+  return (
+    <Card>
+      <CardContent className="p-4">
+        <div className="mb-3 flex items-center justify-between">
+          <div className="text-sm font-semibold">{title} <span className="text-muted-foreground">({rows.length}건)</span></div>
+          <div className="text-right">
+            <span className="text-xs text-muted-foreground">합계 </span>
+            <span className={cn("text-lg font-bold tabular-nums", accent)}>{money(total)}</span>
+          </div>
+        </div>
+        {rows.length === 0 ? (
+          <p className="py-6 text-center text-sm text-muted-foreground">해당 기간 내역이 없습니다.</p>
+        ) : (
+          <div className="overflow-x-auto rounded-md border">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="border-b bg-muted/50 text-left">
+                  <th className="px-3 py-2 font-semibold">결재일</th>
+                  <th className="px-3 py-2 font-semibold">프로젝트</th>
+                  <th className="px-3 py-2 font-semibold">{partyLabel}</th>
+                  <th className="px-3 py-2 font-semibold">구분</th>
+                  <th className="px-3 py-2 text-right font-semibold">금액</th>
+                  <th className="px-3 py-2 font-semibold">방법</th>
+                  <th className="px-3 py-2 font-semibold">비고</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((p: any, i: number) => (
+                  <tr key={p.id} className={cn("border-b last:border-0", i % 2 ? "bg-muted/20" : "")}>
+                    <td className="whitespace-nowrap px-3 py-2 text-muted-foreground">{fmtDate(p.receivedAt)}</td>
+                    <td className="px-3 py-2">
+                      <Link href={`/projects/${p.project?.id}`} className="font-medium text-primary hover:underline">{p.project?.productName ?? "-"}</Link>
+                    </td>
+                    <td className="px-3 py-2 text-muted-foreground">{p.party}</td>
+                    <td className="px-3 py-2">
+                      <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${p.type === "DEPOSIT" ? "bg-blue-100 text-blue-700" : "bg-emerald-100 text-emerald-700"}`}>
+                        {p.type === "DEPOSIT" ? "계약금" : "잔금"}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2 text-right font-medium tabular-nums">{money(Number(p.amount ?? 0))}</td>
+                    <td className="px-3 py-2 text-muted-foreground">{p.method ?? "-"}</td>
+                    <td className="px-3 py-2 text-muted-foreground">{p.memo ?? "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t bg-muted/40 font-semibold">
+                  <td className="px-3 py-2" colSpan={4}>합계</td>
+                  <td className="px-3 py-2 text-right tabular-nums">{money(total)}</td>
+                  <td className="px-3 py-2" colSpan={2}></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+export default async function CashflowPage({ searchParams }: { searchParams: { period?: string } }) {
+  const period = PERIODS.some((p) => p.key === searchParams.period) ? searchParams.period! : "thismonth";
   const { start, end, label } = rangeOf(period);
 
   const payments = await prisma.payment.findMany({
-    where: { side: "SALES", receivedAt: { gte: start, lt: end }, amount: { not: null } },
-    include: { project: { select: { id: true, productName: true, client: { select: { name: true } } } } },
+    where: { receivedAt: { gte: start, lt: end }, amount: { not: null } },
+    include: { project: { select: { id: true, productName: true, client: { select: { name: true } }, factory: { select: { name: true } } } } },
     orderBy: { receivedAt: "desc" },
   });
 
-  const dep = payments.filter((p: any) => p.type === "DEPOSIT");
-  const bal = payments.filter((p: any) => p.type === "BALANCE");
+  const inflow = payments.filter((p: any) => p.side === "SALES").map((p: any) => ({ ...p, party: p.project?.client?.name ?? "-" }));
+  const outflow = payments.filter((p: any) => p.side === "PURCHASE").map((p: any) => ({ ...p, party: p.project?.factory?.name ?? "-" }));
   const sum = (arr: any[]) => arr.reduce((a, p) => a + Number(p.amount ?? 0), 0);
-  const depSum = sum(dep), balSum = sum(bal), allSum = depSum + balSum;
+  const inSum = sum(inflow), outSum = sum(outflow), net = inSum - outSum;
 
-  const detailRows = detail === "DEPOSIT" ? dep : detail === "BALANCE" ? bal : detail === "ALL" ? payments : [];
-  const detailTitle = detail === "DEPOSIT" ? "계약금" : detail === "BALANCE" ? "잔금" : "전체";
-
-  const cells: { type: string; key: string; label: string; count: number; amount: number; color: string }[] = [
-    { type: "DEPOSIT", key: "DEPOSIT", label: "계약금", count: dep.length, amount: depSum, color: "text-blue-700" },
-    { type: "BALANCE", key: "BALANCE", label: "잔금", count: bal.length, amount: balSum, color: "text-emerald-700" },
-    { type: "ALL", key: "ALL", label: "합계", count: payments.length, amount: allSum, color: "text-foreground" },
+  const cards = [
+    { label: "입금 합계 (판매)", count: inflow.length, amount: inSum, color: "text-blue-700" },
+    { label: "출금 합계 (구매)", count: outflow.length, amount: outSum, color: "text-orange-700" },
+    { label: "차액 (입금-출금)", count: payments.length, amount: net, color: net >= 0 ? "text-emerald-700" : "text-red-600" },
   ];
 
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold">매출현황</h1>
-        <p className="text-sm text-muted-foreground">기간별 수금(계약금·잔금) 집계 · {fmt(start)} ~ {fmt(new Date(end.getTime() - DAY))}</p>
+        <h1 className="text-2xl font-bold">입출금현황</h1>
+        <p className="text-sm text-muted-foreground">기간별 입금(판매)·출금(구매) 내역 · {fmt(start)} ~ {fmt(new Date(end.getTime() - DAY))}</p>
       </div>
 
       {/* 기간 선택 */}
@@ -76,70 +136,28 @@ export default async function SalesPage({ searchParams }: { searchParams: { peri
         ))}
       </div>
 
-      {/* 집계 카드 */}
+      {/* 요약 카드 */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {cells.map((c) => (
-          <Card key={c.key}>
+        {cards.map((c) => (
+          <Card key={c.label}>
             <CardContent className="p-5">
               <div className="text-sm font-semibold">{c.label}</div>
               <div className="mt-2 flex items-end justify-between">
-                <Link href={`/sales?period=${period}&detail=${c.key}`}
-                  className={cn("text-sm hover:underline", detail === c.key ? "font-bold" : "text-muted-foreground")}>
-                  건수 <span className={cn("text-xl font-bold", c.color)}>{c.count}</span> 건
-                </Link>
+                <span className="text-sm text-muted-foreground">건수 <span className={cn("text-xl font-bold", c.color)}>{c.count}</span> 건</span>
                 <div className="text-right">
                   <div className="text-xs text-muted-foreground">금액</div>
-                  <div className="text-lg font-bold tabular-nums">{won(c.amount)}</div>
+                  <div className={cn("text-lg font-bold tabular-nums", c.color)}>{money(c.amount)}</div>
                 </div>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
-      <p className="-mt-2 text-xs text-muted-foreground">※ 건수를 클릭하면 해당 기간·구분의 프로젝트 목록이 아래에 표시됩니다.</p>
+      <p className="-mt-2 text-xs text-muted-foreground">※ 결재관리의 판매(업체 수금)=입금, 구매(공장 지급)=출금 기준. 금액은 입력된 결재금액 그대로 합산합니다.</p>
 
-      {/* 상세 목록 */}
-      {detail && (
-        <Card>
-          <CardContent className="p-4">
-            <div className="mb-3 text-sm font-semibold">{label} · {detailTitle} 수금 내역 ({detailRows.length}건)</div>
-            {detailRows.length === 0 ? (
-              <p className="py-6 text-center text-sm text-muted-foreground">해당 내역이 없습니다.</p>
-            ) : (
-              <div className="overflow-x-auto rounded-md border">
-                <table className="w-full border-collapse text-sm">
-                  <thead>
-                    <tr className="border-b bg-muted/50 text-left">
-                      <th className="px-3 py-2 font-semibold">프로젝트</th>
-                      <th className="px-3 py-2 font-semibold">업체</th>
-                      <th className="px-3 py-2 font-semibold">구분</th>
-                      <th className="px-3 py-2 text-right font-semibold">금액</th>
-                      <th className="px-3 py-2 font-semibold">수령일</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {detailRows.map((p: any, i: number) => (
-                      <tr key={p.id} className={cn("border-b last:border-0", i % 2 ? "bg-muted/20" : "")}>
-                        <td className="px-3 py-2">
-                          <Link href={`/projects/${p.project?.id}`} className="font-medium text-primary hover:underline">{p.project?.productName ?? "-"}</Link>
-                        </td>
-                        <td className="px-3 py-2 text-muted-foreground">{p.project?.client?.name ?? "-"}</td>
-                        <td className="px-3 py-2">
-                          <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${p.type === "DEPOSIT" ? "bg-blue-100 text-blue-700" : "bg-emerald-100 text-emerald-700"}`}>
-                            {p.type === "DEPOSIT" ? "계약금" : "잔금"}
-                          </span>
-                        </td>
-                        <td className="px-3 py-2 text-right tabular-nums font-medium">{won(Number(p.amount))}</td>
-                        <td className="px-3 py-2 text-muted-foreground">{fmtDate(p.receivedAt)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
+      {/* 입금/출금 내역 */}
+      <FlowTable title={`${label} 입금내역`} rows={inflow} partyLabel="업체(판매처)" accent="text-blue-700" />
+      <FlowTable title={`${label} 출금내역`} rows={outflow} partyLabel="공장(구매처)" accent="text-orange-700" />
     </div>
   );
 }
