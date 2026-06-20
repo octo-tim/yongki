@@ -24,10 +24,10 @@ enum MeetingType {
   EXTERNAL // 외부회의
 }
 
-// 상태 표시 설정 (라벨/색상/순서) — enum 값별 1행
+// 상태 표시 설정 (라벨/색상/순서) — 상태값별 1행
 model StatusSetting {
   id        String        @id @default(cuid())
-  key       ProjectStatus @unique
+  key       String        @unique // 준비/진행중/출고대기/완료
   label     String
   color     String        // 팔레트 키 (blue, amber, emerald ...)
   sortOrder Int           @default(0)
