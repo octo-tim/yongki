@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { fmtDate, cn } from "@/lib/utils";
 import { WORK_STATUS, WORK_STATUS_MAP } from "@/lib/work-status";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, AlertTriangle, CalendarClock } from "lucide-react";
 
 type Task = {
   id: string; content: string; status: string; startDate: any; endDate: any;
@@ -20,17 +20,18 @@ type ProjOpt = { id: string; productName: string };
 
 const selCls = "h-9 rounded-md border border-input bg-background px-3 text-sm";
 const dstr = (v: any) => (v ? new Date(v).toISOString().slice(0, 10) : null);
+// 칸반 컬럼 순서
+const COLS = ["TODO", "DOING", "HOLD", "DONE"] as const;
 
 export function DashboardTasks({ users, projects, tasks, currentUserId }: {
   users: Opt[]; projects: ProjOpt[]; tasks: Task[]; currentUserId?: string;
 }) {
   const router = useRouter();
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
+  const weekLater = new Date(new Date(`${today}T00:00:00Z`).getTime() + 6 * 86400000).toISOString().slice(0, 10);
 
-  const [fStatus, setFStatus] = useState("ALL");
-  const [fAssignee, setFAssignee] = useState<string>(currentUserId ?? "ALL");
-  const [date, setDate] = useState(today);
-  const [allDates, setAllDates] = useState(false);
+  const [fAssignee, setFAssignee] = useState<string>("ALL");
+  const [quick, setQuick] = useState<"ALL" | "OVERDUE" | "TODAY" | "WEEK">("ALL");
 
   const [open, setOpen] = useState(false);
   const [aAssignee, setAAssignee] = useState(currentUserId ?? "");
@@ -42,25 +43,28 @@ export function DashboardTasks({ users, projects, tasks, currentUserId }: {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
-  function activeOn(t: Task, d: string) {
-    const s = dstr(t.startDate), e = dstr(t.endDate);
-    if (s && s > d) return false;
-    if (e && e < d) return false;
-    return true;
-  }
+  const isOverdue = (t: Task) => { const e = dstr(t.endDate); return !!e && e < today && t.status !== "DONE"; };
+  const isToday = (t: Task) => { const e = dstr(t.endDate); return e === today && t.status !== "DONE"; };
+  const isWeek = (t: Task) => { const e = dstr(t.endDate); return !!e && e >= today && e <= weekLater && t.status !== "DONE"; };
 
-  const filtered = useMemo(() => tasks.filter((t) => {
-    if (fStatus !== "ALL" && t.status !== fStatus) return false;
-    if (fAssignee === "NONE") { if (t.assignee) return false; }
-    else if (fAssignee !== "ALL" && t.assignee?.id !== fAssignee) return false;
-    if (!allDates && !activeOn(t, date)) return false;
-    return true;
-  }), [tasks, fStatus, fAssignee, date, allDates]);
+  // 담당자 필터 적용 집합 (요약/칸반 공통 기준)
+  const scoped = useMemo(() => tasks.filter((t) =>
+    fAssignee === "ALL" ? true : fAssignee === "NONE" ? !t.assignee : t.assignee?.id === fAssignee
+  ), [tasks, fAssignee]);
 
-  const countByStatus = (key: string) => tasks.filter((t) =>
-    (fAssignee === "ALL" || (fAssignee === "NONE" ? !t.assignee : t.assignee?.id === fAssignee)) &&
-    (allDates || activeOn(t, date)) && (key === "ALL" || t.status === key)
-  ).length;
+  const counts = useMemo(() => ({
+    all: scoped.length,
+    overdue: scoped.filter(isOverdue).length,
+    today: scoped.filter(isToday).length,
+    week: scoped.filter(isWeek).length,
+  }), [scoped]);
+
+  const visible = useMemo(() => scoped.filter((t) =>
+    quick === "ALL" ? true : quick === "OVERDUE" ? isOverdue(t) : quick === "TODAY" ? isToday(t) : isWeek(t)
+  ), [scoped, quick]);
+
+  const byCol = (key: string) => visible.filter((t) => t.status === key)
+    .sort((a, b) => (dstr(a.endDate) ?? "9999").localeCompare(dstr(b.endDate) ?? "9999"));
 
   async function add() {
     if (!aProject) { setErr("프로젝트를 선택하세요."); return; }
@@ -84,37 +88,36 @@ export function DashboardTasks({ users, projects, tasks, currentUserId }: {
     router.refresh();
   }
 
+  const chip = (key: typeof quick, label: string, n: number, tone: string, icon?: React.ReactNode) => (
+    <button onClick={() => setQuick(quick === key ? "ALL" : key)}
+      className={cn("flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm transition-colors",
+        quick === key ? "ring-2 ring-offset-1" : "hover:bg-accent", tone)}>
+      {icon}<span>{label}</span><span className="font-bold tabular-nums">{n}</span>
+    </button>
+  );
+
   return (
-    <div className="space-y-3">
-      {/* 필터 + 업무추가 */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <div className="flex items-center gap-1 text-xs">
-            <span className="text-muted-foreground">상태</span>
-            <button onClick={() => setFStatus("ALL")} className={cn("rounded border px-2 py-1", fStatus === "ALL" ? "bg-foreground text-background" : "hover:bg-accent")}>전체 {countByStatus("ALL")}</button>
-            {WORK_STATUS.map((s) => (
-              <button key={s.key} onClick={() => setFStatus(s.key)} className={cn("rounded border px-2 py-1", fStatus === s.key ? "bg-foreground text-background" : "hover:bg-accent")}>{s.label} {countByStatus(s.key)}</button>
-            ))}
-          </div>
-          <div className="flex items-center gap-1 text-xs">
-            <span className="text-muted-foreground">담당자</span>
-            <select className={cn(selCls, "h-8 py-0")} value={fAssignee} onChange={(e) => setFAssignee(e.target.value)}>
-              <option value="ALL">전체</option>
-              {currentUserId && <option value={currentUserId}>나</option>}
-              <option value="NONE">미지정</option>
-              {users.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
-            </select>
-          </div>
-          <div className="flex items-center gap-1.5 text-xs">
-            <span className="text-muted-foreground">날짜</span>
-            <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} disabled={allDates} className="h-8 w-[140px]" />
-            <label className="flex cursor-pointer items-center gap-1">
-              <input type="checkbox" checked={allDates} onChange={(e) => setAllDates(e.target.checked)} />
-              전체기간
-            </label>
-          </div>
+    <div className="space-y-4">
+      {/* 상단: 담당자 필터 + 업무추가 */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-sm">
+          <span className="text-muted-foreground">담당자</span>
+          <select className={cn(selCls, "h-8 py-0")} value={fAssignee} onChange={(e) => setFAssignee(e.target.value)}>
+            <option value="ALL">전체</option>
+            {currentUserId && <option value={currentUserId}>나</option>}
+            <option value="NONE">미지정</option>
+            {users.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
+          </select>
         </div>
         <Button size="sm" onClick={() => setOpen((o) => !o)}><Plus className="h-4 w-4" /> 업무추가</Button>
+      </div>
+
+      {/* 긴급도 요약 (클릭 = 빠른 필터) */}
+      <div className="flex flex-wrap gap-2">
+        {chip("ALL", "전체", counts.all, "border-slate-200")}
+        {chip("OVERDUE", "지연", counts.overdue, "border-red-200 bg-red-50 text-red-700", <AlertTriangle className="h-3.5 w-3.5" />)}
+        {chip("TODAY", "오늘마감", counts.today, "border-amber-200 bg-amber-50 text-amber-700", <CalendarClock className="h-3.5 w-3.5" />)}
+        {chip("WEEK", "이번주", counts.week, "border-blue-200 bg-blue-50 text-blue-700")}
       </div>
 
       {/* 추가 폼 */}
@@ -161,27 +164,53 @@ export function DashboardTasks({ users, projects, tasks, currentUserId }: {
         </div>
       )}
 
-      {/* 목록 (내용 표시) */}
-      <div className="space-y-2">
-        {filtered.length === 0 && <p className="py-6 text-center text-sm text-muted-foreground">해당 조건의 업무가 없습니다.</p>}
-        {filtered.map((t) => (
-          <div key={t.id} className="group rounded-md border p-3">
-            <div className="mb-1.5 flex flex-wrap items-center gap-2 text-xs">
-              <select value={t.status} onChange={(e) => patch(t.id, { status: e.target.value })}
-                className={cn("rounded-full border px-2 py-0.5 text-xs font-medium outline-none", WORK_STATUS_MAP[t.status]?.cls)}>
-                {WORK_STATUS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
-              </select>
-              <span className="rounded bg-accent px-1.5 py-0.5 font-medium text-foreground">{t.assignee?.name ?? "미지정"}</span>
-              {t.project && <Link href={`/projects/${t.project.id}`} className="font-medium text-foreground hover:underline">{t.project.productName}</Link>}
-              <span className="text-muted-foreground">· {fmtDate(t.startDate) || "?"} ~ {fmtDate(t.endDate) || "?"}</span>
-              {t.creator && <span className="text-muted-foreground">· 작성 {t.creator.name}</span>}
-              <button onClick={() => remove(t.id)} className="ml-auto opacity-0 transition-opacity group-hover:opacity-100">
-                <Trash2 className="h-3.5 w-3.5 text-destructive" />
-              </button>
+      {/* 상태별 칸반 */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {COLS.map((key) => {
+          const meta = WORK_STATUS_MAP[key];
+          const rows = byCol(key);
+          return (
+            <div key={key} className="flex flex-col rounded-lg border bg-muted/20">
+              <div className="flex items-center justify-between border-b px-3 py-2">
+                <span className={cn("rounded-full border px-2 py-0.5 text-xs font-semibold", meta?.cls)}>{meta?.label}</span>
+                <span className="text-xs font-semibold text-muted-foreground tabular-nums">{rows.length}</span>
+              </div>
+              <div className="max-h-[460px] space-y-2 overflow-y-auto p-2">
+                {rows.length === 0 && <p className="py-4 text-center text-xs text-muted-foreground">없음</p>}
+                {rows.map((t) => {
+                  const over = isOverdue(t), due = isToday(t);
+                  return (
+                    <div key={t.id} className={cn("group rounded-md border bg-background p-2.5 shadow-sm",
+                      over ? "border-l-4 border-l-red-500" : due ? "border-l-4 border-l-amber-500" : "")}>
+                      <div className="mb-1 flex items-center justify-between gap-1">
+                        {t.project
+                          ? <Link href={`/projects/${t.project.id}`} className="truncate text-xs font-semibold hover:underline">{t.project.productName}</Link>
+                          : <span className="truncate text-xs font-semibold text-muted-foreground">프로젝트 미지정</span>}
+                        <button onClick={() => remove(t.id)} className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100">
+                          <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                        </button>
+                      </div>
+                      <p className="mb-1.5 line-clamp-3 whitespace-pre-wrap text-sm">{t.content}</p>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
+                        <span className="rounded bg-accent px-1.5 py-0.5 font-medium text-foreground">{t.assignee?.name ?? "미지정"}</span>
+                        {t.endDate && (
+                          <span className={cn(over ? "font-semibold text-red-600" : due ? "font-semibold text-amber-600" : "")}>
+                            ~{fmtDate(t.endDate)}{over ? " (지연)" : due ? " (오늘)" : ""}
+                          </span>
+                        )}
+                      </div>
+                      <select value={t.status} onChange={(e) => patch(t.id, { status: e.target.value })}
+                        title="상태 변경"
+                        className="mt-1.5 w-full rounded border border-input bg-background px-1.5 py-1 text-[11px] outline-none">
+                        {WORK_STATUS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
+                      </select>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <p className="whitespace-pre-wrap text-sm">{t.content}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
