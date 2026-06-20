@@ -11,7 +11,7 @@ const DAY = 86400000;
 export default async function StatsPage() {
   const statusCfg = await getStatusConfig();
 
-  const [projects, stepAll, stepDone, workLogs] = await Promise.all([
+  const [projects, stepAll, stepDone, workLogs, payments, productCount] = await Promise.all([
     prisma.project.findMany({
       select: {
         id: true, status: true, orderDate: true, quantity: true,
@@ -24,6 +24,8 @@ export default async function StatsPage() {
     prisma.projectStep.groupBy({ by: ["type", "group", "name", "order"], _count: { _all: true } }),
     prisma.projectStep.groupBy({ by: ["type", "group", "name", "order"], where: { OR: [{ doneAt: { not: null } }, { staff: { not: null } }] }, _count: { _all: true } }),
     prisma.workLog.groupBy({ by: ["assigneeId"], _count: { _all: true } }),
+    prisma.payment.findMany({ where: { amount: { not: null }, receivedAt: { not: null } }, select: { side: true, amount: true, receivedAt: true } }),
+    prisma.product.count(),
   ]);
 
   const total = projects.length;
@@ -43,8 +45,19 @@ export default async function StatsPage() {
     { label: "총 프로젝트", value: total },
     { label: "진행중", value: cntProg },
     { label: "완료", value: cntDone, sub: `완료율 ${completionRate}%` },
+    { label: "총 품목", value: productCount.toLocaleString() },
     { label: "총 발주수량", value: totalQty.toLocaleString() },
     { label: "평균 리드타임", value: avgLead != null ? `${avgLead}일` : "-", sub: "공장주문→생산완료" },
+  ];
+
+  // 결재 입출금 (판매=입금, 구매=출금)
+  const inflowTotal = (payments as any[]).filter((p) => p.side === "SALES").reduce((a, p) => a + Number(p.amount ?? 0), 0);
+  const outflowTotal = (payments as any[]).filter((p) => p.side === "PURCHASE").reduce((a, p) => a + Number(p.amount ?? 0), 0);
+  const netTotal = inflowTotal - outflowTotal;
+  const finCards = [
+    { label: "입금 합계 (판매)", value: inflowTotal, color: "text-blue-700" },
+    { label: "출금 합계 (구매)", value: outflowTotal, color: "text-orange-700" },
+    { label: "차액 (입금-출금)", value: netTotal, color: netTotal >= 0 ? "text-emerald-700" : "text-red-600" },
   ];
 
   // 월별 주문 추이 (최근 12개월)
@@ -62,6 +75,20 @@ export default async function StatsPage() {
     if (m) m.count++;
   }
   const monthMax = Math.max(1, ...months.map((m) => m.count));
+
+  // 월별 입출금 추이 (최근 12개월)
+  const cashMonths: { key: string; label: string; in: number; out: number }[] = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    cashMonths.push({ key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`, label: `${d.getMonth() + 1}월`, in: 0, out: 0 });
+  }
+  for (const pay of payments as any[]) {
+    const d = new Date(pay.receivedAt);
+    const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const m = cashMonths.find((x) => x.key === k);
+    if (m) { if (pay.side === "SALES") m.in += Number(pay.amount ?? 0); else m.out += Number(pay.amount ?? 0); }
+  }
+  const cashMax = Math.max(1, ...cashMonths.flatMap((m) => [m.in, m.out]));
 
   // 상태별 분포
   const statusDist = statusCfg.order.map((s: string) => ({
@@ -128,7 +155,7 @@ export default async function StatsPage() {
       </div>
 
       {/* KPI */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
         {kpis.map((k) => (
           <Card key={k.label}>
             <CardContent className="p-4">
@@ -184,6 +211,43 @@ export default async function StatsPage() {
           <FunnelCol title="출고관리" rows={shipFunnel} total={total} accent="bg-emerald-500" />
         </CardContent>
       </Card>
+
+      {/* 결재 입출금 */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader><CardTitle className="text-base">결재 입출금 요약</CardTitle></CardHeader>
+          <CardContent className="space-y-3">
+            {finCards.map((c) => (
+              <div key={c.label} className="flex items-center justify-between rounded-md border p-3">
+                <span className="text-sm">{c.label}</span>
+                <span className={cn("text-lg font-bold tabular-nums", c.color)}>{c.value.toLocaleString()}</span>
+              </div>
+            ))}
+            <p className="text-[11px] text-muted-foreground">※ 결재관리 기준. 금액은 입력된 결재금액 그대로 합산(통화 미구분).</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle className="text-base">월별 입출금 추이 (최근 12개월)</CardTitle></CardHeader>
+          <CardContent>
+            <div className="flex h-40 items-end gap-2">
+              {cashMonths.map((m) => (
+                <div key={m.key} className="flex flex-1 flex-col items-center gap-1">
+                  <div className="flex h-full w-full items-end justify-center gap-0.5">
+                    <div className="w-1/2 rounded-t bg-blue-500" style={{ height: `${(m.in / cashMax) * 100}%`, minHeight: m.in ? 2 : 0 }} title={`입금 ${m.in.toLocaleString()}`} />
+                    <div className="w-1/2 rounded-t bg-orange-500" style={{ height: `${(m.out / cashMax) * 100}%`, minHeight: m.out ? 2 : 0 }} title={`출금 ${m.out.toLocaleString()}`} />
+                  </div>
+                  <div className="text-[10px] text-muted-foreground">{m.label}</div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-2 flex justify-center gap-4 text-[11px] text-muted-foreground">
+              <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-sm bg-blue-500" /> 입금</span>
+              <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-sm bg-orange-500" /> 출금</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* 랭킹 */}
       <div className="grid gap-6 lg:grid-cols-2">
