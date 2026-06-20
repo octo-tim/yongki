@@ -22,8 +22,17 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   const dayStart = new Date(`${dateStr}T00:00:00.000Z`);
   const dayEnd = new Date(dayStart.getTime() + 86400000);
 
-  const [grouped, total, users, activeProjects, allTasks, dailySteps, clients, recentMeetings] = await Promise.all([
-    prisma.project.groupBy({ by: ["status"], _count: { _all: true } }),
+  const [attnRaw, total, users, activeProjects, allTasks, dailySteps, clients, recentMeetings] = await Promise.all([
+    // 주의 필요 후보: 완료가 아닌 프로젝트 + 최근 완료 단계 1건(정체 판단용)
+    prisma.project.findMany({
+      where: { status: { not: "DONE" } },
+      select: {
+        id: true, productName: true, status: true, orderDate: true,
+        expectedCompletionDate: true, shipOutDate: true, koreaArrivalDate: true, customerDeliveryDate: true,
+        client: { select: { name: true } },
+        steps: { where: { doneAt: { not: null } }, select: { doneAt: true }, orderBy: { doneAt: "desc" }, take: 1 },
+      },
+    }),
     prisma.project.count(),
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.project.findMany({ where: { status: "IN_PROGRESS" }, orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
@@ -48,7 +57,32 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     }),
   ]);
 
-  const countMap = Object.fromEntries(grouped.map((g) => [g.status, g._count._all]));
+  // 주의 필요 프로젝트 판정 (KST 오늘 기준)
+  const todayMs = new Date(`${today}T00:00:00.000Z`).getTime();
+  const dnum = (v: any) => (v ? Math.floor((todayMs - new Date(new Date(v).toISOString().slice(0, 10) + "T00:00:00.000Z").getTime()) / 86400000) : null); // 오늘 - 날짜 (일수, 과거면 양수)
+  type Attn = { id: string; productName: string; client?: string | null; status: string; reason: string; sev: "red" | "amber"; sort: number };
+  const attention: Attn[] = [];
+  for (const p of attnRaw as any[]) {
+    const ecdOver = dnum(p.expectedCompletionDate); // 양수=경과
+    const shipped = !!p.shipOutDate;
+    const delivered = !!p.customerDeliveryDate;
+    const lastDoneDays = p.steps[0]?.doneAt ? dnum(p.steps[0].doneAt) : null;
+    const shipDays = dnum(p.shipOutDate);
+    let a: Attn | null = null;
+    if (ecdOver != null && ecdOver > 0 && !shipped) {
+      a = { ...base(p), reason: `완성예정일 ${ecdOver}일 경과`, sev: "red", sort: 1000 + ecdOver };
+    } else if (shipped && !delivered && !p.koreaArrivalDate && shipDays != null && shipDays > 14) {
+      a = { ...base(p), reason: `출고 후 ${shipDays}일 미인도`, sev: "red", sort: 900 + shipDays };
+    } else if (ecdOver != null && ecdOver <= 0 && ecdOver >= -7) {
+      a = { ...base(p), reason: `완성예정일 임박 (D${ecdOver === 0 ? "-day" : ecdOver})`, sev: "amber", sort: 500 + (7 + ecdOver) };
+    } else if (p.status === "IN_PROGRESS") {
+      const stall = lastDoneDays != null ? lastDoneDays : dnum(p.orderDate);
+      if (stall != null && stall >= 14) a = { ...base(p), reason: `${stall}일째 진척 없음`, sev: "amber", sort: 200 + Math.min(stall, 99) };
+    }
+    if (a) attention.push(a);
+  }
+  attention.sort((x, y) => y.sort - x.sort);
+  function base(p: any) { return { id: p.id, productName: p.productName, client: p.client?.name ?? null, status: p.status }; }
 
   // 일별 진행내역: 프로젝트별 묶기
   const byProject: { project: any; steps: any[] }[] = [];
@@ -75,23 +109,41 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
         </Card>
       </section>
 
-      {/* 상태별 현황 */}
+      {/* 주의 필요 프로젝트 */}
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-muted-foreground">상태별 현황</h2>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-          {statusCfg.order.map((s) => (
-            <Link key={s} href={`/projects?status=${s}`}>
-              <Card className="transition-shadow hover:shadow-md">
-                <CardContent className="p-4">
-                  <div className={cn("mb-2 inline-flex rounded-full border px-2 py-0.5 text-xs font-medium", statusCfg.style[s])}>
-                    {statusCfg.label[s]}
-                  </div>
-                  <div className="text-2xl font-bold">{countMap[s] ?? 0}</div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        <h2 className="text-sm font-semibold text-muted-foreground">주의 필요 프로젝트 {attention.length > 0 && <span className="text-red-600">({attention.length})</span>}</h2>
+        <Card>
+          <CardContent className="p-4">
+            {attention.length === 0 ? (
+              <p className="py-6 text-center text-sm text-muted-foreground">👍 지금 주의가 필요한 프로젝트가 없습니다.</p>
+            ) : (
+              <div className="grid gap-2 md:grid-cols-2">
+                {attention.slice(0, 12).map((a) => (
+                  <Link key={a.id} href={`/projects/${a.id}`}
+                    className={cn("flex items-center gap-3 rounded-lg border p-2.5 transition-colors hover:bg-accent",
+                      a.sev === "red" ? "border-l-4 border-l-red-500" : "border-l-4 border-l-amber-500")}>
+                    <span className={cn("mt-0.5 h-2 w-2 shrink-0 rounded-full", a.sev === "red" ? "bg-red-500" : "bg-amber-500")} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate text-sm font-medium">{a.productName}</span>
+                        {a.client && <span className="shrink-0 text-xs text-muted-foreground">{a.client}</span>}
+                      </div>
+                      <span className={cn("text-xs font-medium", a.sev === "red" ? "text-red-600" : "text-amber-600")}>{a.reason}</span>
+                    </div>
+                    <span className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-medium", statusCfg.style[a.status as keyof typeof statusCfg.style])}>
+                      {statusCfg.label[a.status as keyof typeof statusCfg.label]}
+                    </span>
+                  </Link>
+                ))}
+                {attention.length > 12 && (
+                  <Link href="/projects" className="flex items-center justify-center rounded-lg border p-2.5 text-xs text-muted-foreground hover:bg-accent md:col-span-2">
+                    외 {attention.length - 12}건 더 보기 →
+                  </Link>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </section>
 
       {/* 회의록 (최근 3개) */}
