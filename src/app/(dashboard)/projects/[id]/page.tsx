@@ -10,6 +10,7 @@ import { NotePanel } from "@/components/note-panel";
 import { WorkLogPanel } from "@/components/worklog-panel";
 import { MeetingPanel } from "@/components/meeting-panel";
 import { ImportantNotePanel } from "@/components/important-note-panel";
+import { ProgressPhotoGrid } from "@/components/progress-photo-grid";
 import { RequestPanel } from "@/components/request-panel";
 import { PaymentPanel } from "@/components/payment-panel";
 import { MemoPanel } from "@/components/memo-panel";
@@ -31,6 +32,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       workLogs: { orderBy: { createdAt: "desc" }, include: { assignee: { select: { id: true, name: true } }, creator: { select: { id: true, name: true } } } },
       meetings: { orderBy: { meetingDate: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } }, files: true } },
       clientRequests: { orderBy: { requestDate: "desc" }, include: { createdBy: { select: { name: true } } } },
+      progressPhotos: { orderBy: { createdAt: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } } } },
       payments: { orderBy: { receivedAt: "desc" } },
       memos: { orderBy: { createdAt: "desc" }, include: { author: true } },
       logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: true } },
@@ -108,6 +110,14 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             <CardHeader><CardTitle className="text-base">진행 단계</CardTitle></CardHeader>
             <CardContent>
               <StepBoard projectId={p.id} steps={boardSteps} />
+            </CardContent>
+          </Card>
+
+          {/* 진행사진 */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">진행사진 ({p.progressPhotos.length})</CardTitle></CardHeader>
+            <CardContent>
+              <ProgressPhotoGrid photos={p.progressPhotos as any} empty="등록된 진행사진이 없습니다. (진행사진 메뉴에서 등록)" />
             </CardContent>
           </Card>
 

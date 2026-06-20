@@ -79,6 +79,7 @@ model User {
   createdWorkLogs WorkLog[]    @relation("WorkLogCreator")
   meetings        Meeting[]    @relation("MeetingCreator")
   clientRequests  ClientRequest[] @relation("RequestCreator")
+  progressPhotos  ProgressPhoto[] @relation("PhotoCreator")
   logs            ProjectLog[]
 
   @@map("users")
@@ -96,6 +97,7 @@ model Client {
 
   projects Project[]
   meetings Meeting[]
+  progressPhotos ProgressPhoto[]
 
   @@map("clients")
 }
@@ -113,6 +115,7 @@ model Factory {
 
   projects Project[]
   meetings Meeting[]
+  progressPhotos ProgressPhoto[]
 
   @@map("factories")
 }
@@ -165,6 +168,7 @@ model Project {
   payments Payment[]
   meetings Meeting[]
   clientRequests ClientRequest[]
+  progressPhotos ProgressPhoto[]
   logs  ProjectLog[]
 
   createdAt DateTime @default(now())
@@ -312,6 +316,27 @@ model MeetingFile {
 
   @@index([meetingId])
   @@map("meeting_files")
+}
+
+model ProgressPhoto {
+  id          String   @id @default(cuid())
+  path        String   // 업로드 경로
+  caption     String?  // 설명
+  clientId    String?
+  client      Client?  @relation(fields: [clientId], references: [id])
+  factoryId   String?
+  factory     Factory? @relation(fields: [factoryId], references: [id])
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdById String?
+  createdBy   User?    @relation("PhotoCreator", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([clientId])
+  @@index([factoryId])
+  @@index([projectId])
+  @@map("progress_photos")
 }
 
 model ClientRequest {

@@ -5,6 +5,7 @@ export const config = {
     "/dashboard/:path*",
     "/tasks/:path*",
     "/meetings/:path*",
+    "/photos/:path*",
     "/projects/:path*",
     "/clients/:path*",
     "/factories/:path*",

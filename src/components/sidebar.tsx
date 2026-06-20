@@ -4,12 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Settings, BarChart3, Wallet, ChevronLeft, ChevronRight, ClipboardList, FileText } from "lucide-react";
+import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Settings, BarChart3, Wallet, ChevronLeft, ChevronRight, ClipboardList, FileText, Image as ImageIcon } from "lucide-react";
 
 const baseNav = [
   { href: "/dashboard", label: "대시보드", icon: LayoutDashboard },
   { href: "/tasks", label: "업무관리", icon: ClipboardList },
   { href: "/meetings", label: "회의록", icon: FileText },
+  { href: "/photos", label: "진행사진", icon: ImageIcon },
   { href: "/projects", label: "프로젝트", icon: Package },
   { href: "/projects/new", label: "프로젝트 등록", icon: PlusCircle },
   { href: "/clients", label: "업체 관리", icon: Building2 },

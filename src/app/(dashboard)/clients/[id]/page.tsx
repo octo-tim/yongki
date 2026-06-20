@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getStatusConfig } from "@/lib/status-config";
 import { Card, CardContent } from "@/components/ui/card";
 import { EntityProjects } from "@/components/entity-projects";
+import { ProgressPhotoGrid } from "@/components/progress-photo-grid";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,10 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
       projects: {
         orderBy: { orderDate: "desc" },
         include: { steps: { orderBy: [{ type: "asc" }, { order: "asc" }] } },
+      },
+      progressPhotos: {
+        orderBy: { createdAt: "desc" },
+        include: { factory: { select: { id: true, name: true } }, project: { select: { id: true, productName: true } }, createdBy: { select: { name: true } } },
       },
     },
   });
@@ -37,6 +42,13 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
       <Card>
         <CardContent className="p-4">
           <EntityProjects projects={client.projects as any} statusCfg={statusCfg as any} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4">
+          <h2 className="mb-3 text-sm font-semibold">진행사진 ({client.progressPhotos.length})</h2>
+          <ProgressPhotoGrid photos={client.progressPhotos as any} />
         </CardContent>
       </Card>
     </div>
