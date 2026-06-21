@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { WorkRequestPanel } from "@/components/work-request-panel";
+import { WorkViews } from "@/components/work-views";
 
 export const dynamic = "force-dynamic";
 
@@ -30,12 +30,12 @@ export default async function TasksPage() {
     <div className="space-y-5 p-6">
       <div>
         <h1 className="text-2xl font-bold">업무</h1>
-        <p className="text-sm text-muted-foreground">업무 통합 관리 · 구분 · 요청/완료 상태 · 시작/완료일 · 진행현황</p>
+        <p className="text-sm text-muted-foreground">리스트 · 캘린더 · 칸반 · 구분/상태 색인 · 검색</p>
       </div>
-      <WorkRequestPanel
+      <WorkViews
         users={users} clients={clients} factories={factories}
         projects={projects.map((p) => ({ id: p.id, name: p.productName }))}
-        requests={requests as any} currentUserId={myId} showFilters />
+        requests={requests as any} currentUserId={myId} />
     </div>
   );
 }
