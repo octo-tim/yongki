@@ -25,3 +25,11 @@ export function fmtMoney(v?: number | string | null) {
   if (isNaN(n)) return "-";
   return n.toLocaleString("ko-KR");
 }
+
+// 단가·금액 표기: 천단위 콤마 + 소수점 2자리
+export function fmtPrice(v?: number | string | null) {
+  if (v === null || v === undefined || v === "") return "-";
+  const n = typeof v === "string" ? Number(v) : v;
+  if (isNaN(n)) return "-";
+  return n.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
