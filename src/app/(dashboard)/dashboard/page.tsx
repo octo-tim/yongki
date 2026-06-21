@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getStatusConfig } from "@/lib/status-config";
-import { statusOfStep } from "@/lib/steps";
+import { statusOfStep, furthestStep } from "@/lib/steps";
 import { Card, CardContent } from "@/components/ui/card";
 import { WorkRequestPanel } from "@/components/work-request-panel";
 import { MeetingPanel } from "@/components/meeting-panel";
@@ -28,7 +28,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   const dayStart = new Date(`${dateStr}T00:00:00.000Z`);
   const dayEnd = new Date(dayStart.getTime() + 86400000);
 
-  const [total, users, clients, factories, projectsForSelect, workRequests, recentMeetings, dailySteps, atInspection, atProduction] = await Promise.all([
+  const [total, users, clients, factories, projectsForSelect, workRequests, recentMeetings, dailySteps, stageProjects] = await Promise.all([
     prisma.project.count(),
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
@@ -55,9 +55,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
       include: { project: { select: { id: true, productName: true, status: true } } },
       orderBy: [{ projectId: "asc" }, { type: "asc" }, { order: "asc" }],
     }),
-    prisma.project.findMany({ where: { status: "검품" }, orderBy: { shipRequestDate: "asc" }, select: stepSelect }),
-    prisma.project.findMany({ where: { status: "생산완료" }, orderBy: { shipRequestDate: "asc" }, select: stepSelect }),
+    prisma.project.findMany({ orderBy: { shipRequestDate: "asc" }, select: { ...stepSelect, steps: { select: { name: true, done: true } } } }),
   ]);
+
+  // 현재 단계(가장 진행된 단계)를 단계 데이터에서 직접 계산 → status 컬럼에 의존하지 않음
+  const curStep = (p: any) => furthestStep(p.steps) ?? "";
+  const atInspection = (stageProjects as any[]).filter((p) => curStep(p) === "검품");
+  const atProduction = (stageProjects as any[]).filter((p) => curStep(p) === "생산완료");
 
   const byProject: { project: any; steps: any[] }[] = [];
   for (const s of dailySteps) {
