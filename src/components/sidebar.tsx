@@ -8,7 +8,7 @@ import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Setti
 
 const baseNav = [
   { href: "/dashboard", label: "대시보드", icon: LayoutDashboard },
-  { href: "/tasks", label: "업무관리", icon: ClipboardList },
+  { href: "/tasks", label: "업무", icon: ClipboardList },
   { href: "/meetings", label: "회의록", icon: FileText },
   { href: "/photos", label: "진행사진", icon: ImageIcon },
   { href: "/projects", label: "프로젝트관리", icon: Package },

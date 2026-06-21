@@ -5,11 +5,9 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/components/status-badge";
-import { getStatusConfig } from "@/lib/status-config";
-import { StepBoard } from "@/components/step-board";
+import { StepSelect } from "@/components/step-select";
+import { StepTimeline } from "@/components/step-timeline";
 import { NotePanel } from "@/components/note-panel";
-import { WorkLogPanel } from "@/components/worklog-panel";
 import { MeetingPanel } from "@/components/meeting-panel";
 import { ImportantNotePanel } from "@/components/important-note-panel";
 import { ProgressPhotoGrid } from "@/components/progress-photo-grid";
@@ -33,7 +31,6 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
       files: { orderBy: { createdAt: "desc" } },
       notes: { orderBy: { createdAt: "desc" }, include: { author: true } },
-      workLogs: { orderBy: { createdAt: "desc" }, include: { assignee: { select: { id: true, name: true } }, creator: { select: { id: true, name: true } } } },
       meetings: { orderBy: { meetingDate: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } }, files: true } },
       clientRequests: { orderBy: { requestDate: "desc" }, include: { createdBy: { select: { name: true } } } },
       progressPhotos: { orderBy: { createdAt: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } } } },
@@ -45,7 +42,6 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     },
   });
   if (!p) notFound();
-  const statusCfg = await getStatusConfig();
   const [users, clients, factories] = await Promise.all([
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
@@ -54,15 +50,10 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
   const session = await getServerSession(authOptions);
   const uid = (session?.user as any)?.id as string | undefined;
 
-  const boardSteps = p.steps.map((s) => ({
-    id: s.id, type: s.type, group: s.group, name: s.name, order: s.order,
-    done: s.done, doneAt: s.doneAt as any, staff: s.staff,
-  }));
-
   const info: [string, string][] = [
     ["주문번호", p.orderNo ?? "-"],
     ["주문일자", fmtDate(p.orderDate)],
-    ["출고요청일", fmtDate(p.shipRequestDate)],
+    ["완료예정일", fmtDate(p.shipRequestDate)],
     ["구매처(공장)", p.factory?.name ?? "-"],
     ["주문업체(업체)", p.client?.name ?? "-"],
     ["관리책임자", p.manager?.name ?? "-"],
@@ -99,7 +90,8 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           <div className="flex items-center gap-2">
             <Link href="/projects" className="text-sm text-muted-foreground hover:underline">프로젝트</Link>
             <span className="text-muted-foreground">/</span>
-            <StatusBadge status={p.status} label={statusCfg.label[p.status]} colorClass={statusCfg.style[p.status]} />
+            <span className="text-xs text-muted-foreground">현재 단계</span>
+            <StepSelect projectId={p.id} current={p.status} size="sm" />
           </div>
           <h1 className="text-2xl font-bold">{p.productName}</h1>
         </div>
@@ -157,11 +149,12 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             </CardContent>
           </Card>
 
-          {/* 2. 진행 단계 */}
+          {/* 2. 진행 단계 (단계 선택 시 오늘 + 로그인 담당자 자동 기록) */}
           <Card>
             <CardHeader><CardTitle className="text-base">진행 단계</CardTitle></CardHeader>
             <CardContent>
-              <StepBoard projectId={p.id} steps={boardSteps} />
+              <StepTimeline projectId={p.id} current={p.status}
+                steps={p.steps.map((s) => ({ name: s.name, doneAt: s.doneAt, staff: s.staff, done: s.done }))} />
             </CardContent>
           </Card>
 
@@ -173,11 +166,14 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             </CardContent>
           </Card>
 
-          {/* 3. 업무관리 */}
+          {/* 3. 업무 (업무요청 통합) */}
           <Card>
-            <CardHeader><CardTitle className="text-base">업무관리</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">업무</CardTitle></CardHeader>
             <CardContent>
-              <WorkLogPanel users={users} fixedProjectId={p.id} logs={p.workLogs as any} />
+              <WorkRequestPanel
+                users={users} clients={clients} factories={factories}
+                projects={[{ id: p.id, name: p.productName }]}
+                fixedProjectId={p.id} requests={p.workRequests as any} currentUserId={uid} />
             </CardContent>
           </Card>
 
@@ -186,14 +182,6 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             <CardHeader><CardTitle className="text-base">회의록</CardTitle></CardHeader>
             <CardContent>
               <MeetingPanel clients={clients} factories={factories} fixedProjectId={p.id} meetings={p.meetings as any} showProject={false} />
-            </CardContent>
-          </Card>
-
-          {/* 업무요청 */}
-          <Card>
-            <CardHeader><CardTitle className="text-base">업무요청</CardTitle></CardHeader>
-            <CardContent>
-              <WorkRequestPanel requests={p.workRequests as any} currentUserId={uid} showCreate={false} />
             </CardContent>
           </Card>
 

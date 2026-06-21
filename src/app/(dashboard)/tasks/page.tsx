@@ -1,18 +1,27 @@
 import { prisma } from "@/lib/prisma";
-import { TaskManager } from "@/components/task-manager";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { WorkRequestPanel } from "@/components/work-request-panel";
 
 export const dynamic = "force-dynamic";
 
 export default async function TasksPage() {
-  const [users, activeProjects, tasks] = await Promise.all([
+  const session = await getServerSession(authOptions);
+  const myId = (session?.user as any)?.id as string | undefined;
+  const [users, clients, factories, projects, requests] = await Promise.all([
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
-    prisma.project.findMany({ where: { status: "진행중" }, orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
-    prisma.workLog.findMany({
-      orderBy: { createdAt: "desc" },
+    prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.factory.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.project.findMany({ orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
+    prisma.workRequest.findMany({
+      orderBy: [{ done: "asc" }, { requestDate: "desc" }], take: 300,
       include: {
+        requester: { select: { name: true } },
         assignee: { select: { id: true, name: true } },
-        creator: { select: { id: true, name: true } },
+        client: { select: { id: true, name: true } },
+        factory: { select: { id: true, name: true } },
         project: { select: { id: true, productName: true } },
+        updates: { orderBy: { progressDate: "asc" }, include: { createdBy: { select: { name: true } } } },
       },
     }),
   ]);
@@ -20,10 +29,13 @@ export default async function TasksPage() {
   return (
     <div className="space-y-5 p-6">
       <div>
-        <h1 className="text-2xl font-bold">업무관리</h1>
-        <p className="text-sm text-muted-foreground">담당자별 · 프로젝트별 진행업무 관리 (시작일·종료일·상태)</p>
+        <h1 className="text-2xl font-bold">업무</h1>
+        <p className="text-sm text-muted-foreground">업무 통합 관리 · 구분 · 요청/완료 상태 · 시작/완료일 · 진행현황</p>
       </div>
-      <TaskManager users={users} projects={activeProjects} tasks={tasks as any} />
+      <WorkRequestPanel
+        users={users} clients={clients} factories={factories}
+        projects={projects.map((p) => ({ id: p.id, name: p.productName }))}
+        requests={requests as any} currentUserId={myId} />
     </div>
   );
 }
