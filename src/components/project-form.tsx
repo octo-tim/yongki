@@ -7,12 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toDateInput } from "@/lib/utils";
-import { STATUS_LABEL, ALL_STATUSES } from "@/lib/status";
+import { STEP_ORDER } from "@/lib/steps";
 
 type Option = { id: string; name: string };
 export type ProjectFormData = {
   id?: string;
-  orderDate?: string | null; shipRequestDate?: string | null; orderNo?: string | null; productName?: string;
+  orderDate?: string | null; shipRequestDate?: string | null; initialStep?: string | null; orderNo?: string | null; productName?: string;
   quantity?: number | null; deposit?: any; balance?: any; note?: string | null;
   depositMethod?: string | null; balanceMethod?: string | null; factoryAccount?: string | null; importantNote?: string | null;
   clientId?: string | null; factoryId?: string | null; managerId?: string | null;
@@ -63,12 +63,12 @@ export function ProjectForm({
     e.preventDefault();
     if (!form.productName) { setErr("상품명은 필수입니다."); return; }
     setSaving(true); setErr("");
+    const { status: _omitStatus, ...rest } = form;
     const payload = {
-      ...form,
+      ...rest,
       quantity: form.quantity ? Number(form.quantity) : null,
       deposit: form.deposit ? Number(form.deposit) : null,
       balance: form.balance ? Number(form.balance) : null,
-      status: form.status || "준비",
     };
     const url = mode === "create" ? "/api/projects" : `/api/projects/${initial.id}`;
     const method = mode === "create" ? "POST" : "PATCH";
@@ -88,7 +88,7 @@ export function ProjectForm({
           <Field label="상품명 *"><Input value={form.productName ?? ""} onChange={(e) => set("productName", e.target.value)} required /></Field>
           <Field label="주문번호"><Input value={form.orderNo ?? ""} onChange={(e) => set("orderNo", e.target.value)} /></Field>
           <Field label="주문일자"><Input type="date" value={form.orderDate ?? ""} onChange={(e) => set("orderDate", e.target.value)} /></Field>
-          <Field label="출고요청일"><Input type="date" value={form.shipRequestDate ?? ""} onChange={(e) => set("shipRequestDate", e.target.value)} /></Field>
+          <Field label="완료예정일"><Input type="date" value={form.shipRequestDate ?? ""} onChange={(e) => set("shipRequestDate", e.target.value)} /></Field>
           <Field label="수량"><Input type="number" value={form.quantity ?? ""} onChange={(e) => set("quantity", e.target.value === "" ? null : Number(e.target.value))} /></Field>
           <Field label="판매처 (업체)">
             <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.clientId ?? ""} onChange={(e) => set("clientId", e.target.value)}>
@@ -108,12 +108,15 @@ export function ProjectForm({
               {managers.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </Field>
-          <Field label="상태">
+          {mode === "create" && (
+          <Field label="시작 단계">
             <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-              value={form.status ?? "준비"} onChange={(e) => set("status", e.target.value)}>
-              {ALL_STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
+              value={form.initialStep ?? ""} onChange={(e) => set("initialStep", e.target.value)}>
+              <option value="">단계 선택 (미지정)</option>
+              {STEP_ORDER.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
           </Field>
+          )}
           <Field label="제품사진">
             <div className="space-y-2">
               <Input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadPhoto(e.target.files[0])} />

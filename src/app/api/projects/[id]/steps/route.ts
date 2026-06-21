@@ -28,8 +28,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const col = STEP_TO_PROJECT_DATE[updated.name];
   if (col) await prisma.project.update({ where: { id: params.id }, data: { [col]: updated.doneAt } as any });
 
-  // 현재 단계(status) = 기록된 단계 중 가장 진행된 단계
-  await recomputeProjectStatus(params.id, uid);
+  // 현재 단계(status): 기록 시 선택한 단계로 지정, 삭제 시 가장 진행된 단계로 재계산
+  if (clear) {
+    await recomputeProjectStatus(params.id, uid);
+  } else {
+    await prisma.project.update({ where: { id: params.id }, data: { status: name } });
+  }
 
   await prisma.projectLog.create({
     data: {

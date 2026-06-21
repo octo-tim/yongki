@@ -8,7 +8,7 @@ import { fmtPrice } from "@/lib/utils";
 type Pay = { id: string; side: string; type: string; amount: any; receivedAt: any; method: string | null; memo: string | null };
 type Row = { amount: string; receivedAt: string; method: string; memo: string };
 
-const METHODS = ["현금", "계좌이체", "위챗", "스프", "카드"];
+const METHODS = ["통장이체", "위쳇결재", "쯔프바오", "기타"];
 const selCls = "h-9 w-full rounded-md border border-input bg-background px-2 text-sm";
 const dInput = (v: any) => (v ? new Date(v).toISOString().slice(0, 10) : "");
 

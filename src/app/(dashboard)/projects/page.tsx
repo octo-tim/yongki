@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { fmtDate, fmtMoney, cn } from "@/lib/utils";
 import { Download, PlusCircle, Search, Package, Building2, Factory, User, CalendarDays, List, LayoutGrid } from "lucide-react";
+import { StepSelect } from "@/components/step-select";
+import { ProjectRowDelete } from "@/components/project-row-delete";
 
 export const dynamic = "force-dynamic";
 
@@ -172,7 +174,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
                     <dl className="space-y-1.5 text-xs">
                       <Meta icon={Building2} label="업체" value={p.client?.name} />
                       <Meta icon={Factory} label="공장" value={p.factory?.name} />
-                      <Meta icon={CalendarDays} label="완성예정" value={fmtDate(p.expectedCompletionDate)} />
+                      <Meta icon={CalendarDays} label="완료예정" value={fmtDate(p.shipRequestDate)} />
                       <div className="flex items-center justify-between pt-1">
                         <span className="flex items-center gap-1.5 text-muted-foreground"><User className="h-3.5 w-3.5" /> {p.manager?.name ?? "-"}</span>
                         <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-medium tabular-nums">{fmtMoney(p.quantity)}개</span>
@@ -198,17 +200,17 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
                   <th className="px-3 py-3 text-right font-semibold">수량</th>
                   <th className="px-3 py-3 font-semibold">업체</th>
                   <th className="px-3 py-3 font-semibold">제작공장</th>
-                  <th className="px-3 py-3 font-semibold">완성예정일</th>
+                  <th className="px-3 py-3 font-semibold">완료예정일</th>
                   <th className="px-3 py-3 font-semibold">담당자</th>
+                  <th className="w-10 px-2 py-3 text-right"></th>
                 </tr>
               </thead>
               <tbody>
                 {list.map((p) => {
-                  const { cur, st } = calc(p);
                   return (
                     <tr key={p.id} className="group border-b last:border-0 transition-colors hover:bg-accent/40">
                       <td className="px-3 py-2.5">
-                        <span className={cn("inline-block whitespace-nowrap rounded-full border px-2 py-0.5 text-[11px] font-semibold", statusCfg.style[st] ?? "")}>{cur}</span>
+                        <StepSelect projectId={p.id} current={p.status} size="sm" />
                       </td>
                       <td className="whitespace-nowrap px-3 py-2.5 text-xs text-muted-foreground">{p.orderNo ?? "-"}</td>
                       <td className="px-3 py-2.5">
@@ -226,8 +228,9 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
                       <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums">{fmtMoney(p.quantity)}</td>
                       <td className="px-3 py-2.5">{p.client?.name ?? "-"}</td>
                       <td className="max-w-[12rem] truncate px-3 py-2.5 text-muted-foreground">{p.factory?.name ?? "-"}</td>
-                      <td className="whitespace-nowrap px-3 py-2.5">{fmtDate(p.expectedCompletionDate)}</td>
+                      <td className="whitespace-nowrap px-3 py-2.5">{fmtDate(p.shipRequestDate)}</td>
                       <td className="whitespace-nowrap px-3 py-2.5">{p.manager?.name ?? "-"}</td>
+                      <td className="px-2 py-2.5 text-right"><ProjectRowDelete projectId={p.id} /></td>
                     </tr>
                   );
                 })}

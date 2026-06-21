@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   const b = await req.json();
   if (!b.productName) return NextResponse.json({ error: "상품명 필수" }, { status: 400 });
 
-  const initialStep = b.initialStep || ""; // 현재 단계(status에 단계명 저장)
+  const status = b.status || "준비"; // 신규는 준비 (단계 진행에 따라 자동 변경)
   const data = {
     productName: b.productName,
     orderNo: b.orderNo || null,
@@ -33,24 +33,12 @@ export async function POST(req: NextRequest) {
   };
 
   const stepDefs = await getNewProjectSteps();
-  const uid = (session.user as any).id as string;
   const project = await prisma.project.create({
     data: {
-      ...data, status: initialStep,
+      ...data, status,
       steps: { create: stepDefs.map((s) => ({ type: s.type, group: s.group, name: s.name, order: s.order })) },
-      logs: { create: { actorId: uid, action: "CREATE", message: "프로젝트 등록" } },
+      logs: { create: { actorId: (session.user as any).id, action: "CREATE", message: "프로젝트 등록" } },
     },
-    include: { steps: true },
   });
-
-  // 시작 단계 선택 시: 오늘 + 등록 담당자(로그인) 자동 스탬프
-  if (initialStep) {
-    const st = project.steps.find((s) => s.name === initialStep);
-    if (st) {
-      const me = await prisma.user.findUnique({ where: { id: uid }, select: { name: true } });
-      const staffName = me?.name || (session.user as any).name || (session.user as any).email || "-";
-      await prisma.projectStep.update({ where: { id: st.id }, data: { done: true, doneAt: new Date(), staff: staffName } });
-    }
-  }
   return NextResponse.json(project);
 }

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getStatusConfig } from "@/lib/status-config";
+import { statusOfStep } from "@/lib/steps";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AggregateTable, type AggRow } from "@/components/aggregate-table";
 import { cn } from "@/lib/utils";
@@ -29,8 +30,8 @@ export default async function StatsPage() {
   ]);
 
   const total = projects.length;
-  const cntDone = projects.filter((p: any) => p.status === "완료").length;
-  const cntProg = projects.filter((p: any) => p.status === "진행중").length;
+  const cntDone = projects.filter((p: any) => statusOfStep(p.status) === "완료").length;
+  const cntProg = projects.filter((p: any) => statusOfStep(p.status) === "진행중").length;
   const totalQty = projects.reduce((a: number, p: any) => a + (p.quantity ?? 0), 0);
   const completionRate = total ? Math.round((cntDone / total) * 100) : 0;
 
@@ -92,7 +93,7 @@ export default async function StatsPage() {
 
   // 상태별 분포
   const statusDist = statusCfg.order.map((s: string) => ({
-    status: s, count: projects.filter((p: any) => p.status === s).length,
+    status: s, count: projects.filter((p: any) => statusOfStep(p.status) === s).length,
   }));
   const statusMax = Math.max(1, ...statusDist.map((s) => s.count));
 

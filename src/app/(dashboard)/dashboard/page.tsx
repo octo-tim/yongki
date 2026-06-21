@@ -55,11 +55,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
       include: { project: { select: { id: true, productName: true, status: true } } },
       orderBy: [{ projectId: "asc" }, { type: "asc" }, { order: "asc" }],
     }),
-    prisma.project.findMany({ orderBy: { shipRequestDate: "asc" }, select: { ...stepSelect, steps: { select: { name: true, done: true } } } }),
+    prisma.project.findMany({ orderBy: { shipRequestDate: "asc" }, select: { ...stepSelect, status: true, steps: { select: { name: true, done: true } } } }),
   ]);
 
-  // 현재 단계(가장 진행된 단계)를 단계 데이터에서 직접 계산 → status 컬럼에 의존하지 않음
-  const curStep = (p: any) => furthestStep(p.steps) ?? "";
+  // 현재 단계: status(선택한 단계)를 우선, 없으면 단계 데이터에서 계산
+  const STEP_NAMES = new Set(["고객의뢰", "공장주문", "계약금입금(공장)", "파일수령(업체)", "파일전달(공장)", "중간검품", "생산완료", "창고입고", "검품", "출고", "한국도착", "고객인도"]);
+  const curStep = (p: any) => (p.status && STEP_NAMES.has(p.status) ? p.status : (furthestStep(p.steps) ?? ""));
   const atInspection = (stageProjects as any[]).filter((p) => curStep(p) === "검품");
   const atProduction = (stageProjects as any[]).filter((p) => curStep(p) === "생산완료");
 

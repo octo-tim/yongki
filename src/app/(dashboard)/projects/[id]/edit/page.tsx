@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProjectForm } from "@/components/project-form";
-import { StepBoard } from "@/components/step-board";
+import { StepTimeline } from "@/components/step-timeline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
@@ -19,10 +19,6 @@ export default async function EditProjectPage({ params }: { params: { id: string
   if (!project) notFound();
 
   const { steps, ...projectFields } = project as any;
-  const boardSteps = steps.map((s: any) => ({
-    id: s.id, type: s.type, group: s.group, name: s.name, order: s.order,
-    done: s.done, doneAt: s.doneAt as any, staff: s.staff,
-  }));
 
   return (
     <div className="space-y-4 p-6">
@@ -31,10 +27,11 @@ export default async function EditProjectPage({ params }: { params: { id: string
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">진행 단계 (일자 · 직원)</CardTitle>
+          <CardTitle className="text-base">진행 단계 (단계 선택 시 오늘 · 로그인 담당자 자동 기록)</CardTitle>
         </CardHeader>
         <CardContent>
-          <StepBoard projectId={project.id} steps={boardSteps} />
+          <StepTimeline projectId={project.id} current={(projectFields as any).status}
+            steps={steps.map((s: any) => ({ name: s.name, doneAt: s.doneAt, staff: s.staff, done: s.done }))} />
         </CardContent>
       </Card>
     </div>
