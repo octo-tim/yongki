@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { EntityProjects } from "@/components/entity-projects";
 import { ProgressPhotoGrid } from "@/components/progress-photo-grid";
 import { WorkRequestPanel } from "@/components/work-request-panel";
+import { FactoryInfoEditor } from "@/components/factory-info-editor";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +35,7 @@ export default async function FactoryDetailPage({ params }: { params: { id: stri
   const session = await getServerSession(authOptions);
   const uid = (session?.user as any)?.id as string | undefined;
 
-  const meta = [factory.region, (factory as any).category, (factory as any).contactType].filter(Boolean).join(" · ");
+  const meta = [factory.region, (factory as any).mainProducts, (factory as any).contactType].filter(Boolean).join(" · ");
 
   return (
     <div className="space-y-5 p-6">
@@ -51,15 +52,7 @@ export default async function FactoryDetailPage({ params }: { params: { id: stri
 
       <Card>
         <CardContent className="p-4">
-          <h2 className="mb-3 text-sm font-semibold">기본 정보</h2>
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm md:grid-cols-4">
-            {([["지역", factory.region], ["품목", (factory as any).category], ["소통수단", (factory as any).contactType], ["공장담당자", (factory as any).contact], ["직책", (factory as any).position], ["연락처", (factory as any).phone], ["위챗ID", (factory as any).wechat], ["이메일", (factory as any).email], ["주소", (factory as any).address], ["계좌", (factory as any).account], ["결제조건", (factory as any).paymentTerms], ["메모", factory.memo]] as [string, any][]).map(([k, v]) => (
-              <div key={k} className={k === "메모" ? "col-span-2 md:col-span-4" : ""}>
-                <dt className="text-xs text-muted-foreground">{k}</dt>
-                <dd className="font-medium">{v || "-"}</dd>
-              </div>
-            ))}
-          </dl>
+          <FactoryInfoEditor factory={factory as any} />
         </CardContent>
       </Card>
 
