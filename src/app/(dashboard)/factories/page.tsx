@@ -15,7 +15,8 @@ export default async function FactoriesPage() {
         fields={[
           { key: "name", label: "공장명", placeholder: "广州 튜브용기 昕鸿", primary: true },
           { key: "region", label: "지역", primary: true },
-          { key: "category", label: "품목", primary: true },
+          { key: "mainProducts", label: "주요품목", primary: true },
+          { key: "wechatGroup", label: "위쳇단체방이름(위챗ID)", primary: true },
           { key: "contactType", label: "소통수단" },
           { key: "contact", label: "공장담당자", primary: true },
           { key: "position", label: "직책" },

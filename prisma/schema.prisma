@@ -116,7 +116,9 @@ model Factory {
   id          String   @id @default(cuid())
   name        String   // 공장명 / 微信群名
   region      String?  // 지역 (广州, 余姚 등)
-  category    String?  // 품목 (튜브용기, 향수병 등)
+  category    String?  // (구) 품목 - 미사용
+  mainProducts String? // 주요품목 (자유입력)
+  wechatGroup String?  // 위쳇단체방이름(위챗ID)
   contactType String?  // 소통수단 (카카오톡, 위쳇 등)
   contact     String?  // 공장담당자
   position    String?  // 직책
@@ -367,8 +369,11 @@ model ProgressPhoto {
 model WorkRequest {
   id          String   @id @default(cuid())
   content     String   // 요청사항
+  category    String?  // 업무구분: 제안서발송/업체전달사항/공장확인사항/공장결재
   requestDate DateTime // 요청일
-  done        Boolean  @default(false) // 완료 여부 (요청자 체크)
+  startDate   DateTime? // 시작일
+  endDate     DateTime? // 완료일
+  done        Boolean  @default(false) // 완료 여부 (요청/완료)
   doneAt      DateTime?
   requesterId String?  // 요청자 (로그인 사용자)
   requester   User?    @relation("RequestRequester", fields: [requesterId], references: [id])
