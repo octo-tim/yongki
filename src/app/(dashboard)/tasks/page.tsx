@@ -35,7 +35,7 @@ export default async function TasksPage() {
       <WorkRequestPanel
         users={users} clients={clients} factories={factories}
         projects={projects.map((p) => ({ id: p.id, name: p.productName }))}
-        requests={requests as any} currentUserId={myId} />
+        requests={requests as any} currentUserId={myId} showFilters />
     </div>
   );
 }

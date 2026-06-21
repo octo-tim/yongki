@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { SearchableSelect } from "@/components/searchable-select";
 import { fmtDate, cn } from "@/lib/utils";
-import { Trash2, Plus, Building2, Factory as FactoryIcon, Package, CheckCircle2, ChevronRight } from "lucide-react";
+import { Trash2, Plus, Building2, Factory as FactoryIcon, Package, CheckCircle2, ChevronRight, Search as SearchIcon } from "lucide-react";
 
 type Update = { id: string; content: string; progressDate: any; createdBy?: { name: string } | null };
 type WReq = {
@@ -31,9 +31,9 @@ const CAT_STYLE: Record<string, string> = {
 const selCls = "h-9 w-full rounded-md border border-input bg-background px-3 text-sm";
 
 export function WorkRequestPanel({
-  clients = [], factories = [], projects = [], users = [], requests, currentUserId, showCreate = true, fixedProjectId,
+  clients = [], factories = [], projects = [], users = [], requests, currentUserId, showCreate = true, fixedProjectId, showFilters = false,
 }: {
-  clients?: Opt[]; factories?: Opt[]; projects?: Opt[]; users?: Opt[]; requests: WReq[]; currentUserId?: string; showCreate?: boolean; fixedProjectId?: string;
+  clients?: Opt[]; factories?: Opt[]; projects?: Opt[]; users?: Opt[]; requests: WReq[]; currentUserId?: string; showCreate?: boolean; fixedProjectId?: string; showFilters?: boolean;
 }) {
   const router = useRouter();
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
@@ -68,8 +68,41 @@ export function WorkRequestPanel({
     router.refresh();
   }
 
+  // 검색 + 단계별(업무구분)·상태 색인
+  const [query, setQuery] = useState("");
+  const [statusF, setStatusF] = useState<"all" | "open" | "done">("all");
+  const [catF, setCatF] = useState<string>("all");
+  const q = query.trim().toLowerCase();
+  const visible = requests.filter((r) => {
+    if (statusF === "open" && r.done) return false;
+    if (statusF === "done" && !r.done) return false;
+    if (catF !== "all" && (r.category ?? "") !== catF) return false;
+    if (!q) return true;
+    const hay = [r.content, r.category, r.client?.name, r.factory?.name, r.project?.productName, r.assignee?.name, r.requester?.name]
+      .filter(Boolean).join(" ").toLowerCase();
+    return hay.includes(q);
+  });
+  const catCount = (c: string) => requests.filter((r) => (r.category ?? "") === c).length;
+
   return (
     <div className="space-y-3">
+      {showFilters && (
+        <div className="space-y-2">
+          <div className="relative">
+            <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="업무 내용 · 업체 · 공장 · 프로젝트 · 담당자 검색" className="h-9 rounded-full pl-9" />
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Chip active={statusF === "all"} onClick={() => setStatusF("all")}>전체 {requests.length}</Chip>
+            <Chip active={statusF === "open"} onClick={() => setStatusF("open")}>요청 {requests.filter((r) => !r.done).length}</Chip>
+            <Chip active={statusF === "done"} onClick={() => setStatusF("done")}>완료 {requests.filter((r) => r.done).length}</Chip>
+            <span className="mx-1 h-4 w-px bg-border" />
+            <Chip active={catF === "all"} onClick={() => setCatF("all")}>구분 전체</Chip>
+            {CATEGORIES.map((c) => <Chip key={c} active={catF === c} onClick={() => setCatF(c)}>{c} {catCount(c)}</Chip>)}
+          </div>
+        </div>
+      )}
+
       {showCreate && (
         <>
           <div className="flex justify-end">
@@ -137,9 +170,20 @@ export function WorkRequestPanel({
 
       <div className="space-y-2">
         {requests.length === 0 && <p className="py-4 text-center text-sm text-muted-foreground">등록된 업무가 없습니다.</p>}
-        {requests.map((r) => <RequestCard key={r.id} req={r} currentUserId={currentUserId} onRemove={remove} />)}
+        {requests.length > 0 && visible.length === 0 && <p className="py-4 text-center text-sm text-muted-foreground">검색/필터에 맞는 업무가 없습니다.</p>}
+        {visible.map((r) => <RequestCard key={r.id} req={r} currentUserId={currentUserId} onRemove={remove} />)}
       </div>
     </div>
+  );
+}
+
+function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button onClick={onClick}
+      className={cn("rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
+        active ? "border-foreground bg-foreground text-background" : "bg-background hover:bg-accent")}>
+      {children}
+    </button>
   );
 }
 
