@@ -194,6 +194,7 @@ model Project {
   workRequests WorkRequest[]
   logs  ProjectLog[]
   products Product[]
+  costItems CostItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -309,6 +310,17 @@ model Payment {
   @@index([projectId])
   @@index([receivedAt])
   @@map("payments")
+}
+
+model CostItem {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String   // 비용 항목 (운임, 금형비, 검품비 등)
+  amount    Decimal  @db.Decimal(14, 2) // 금액 (구매통화 기준)
+  createdAt DateTime @default(now())
+
+  @@map("cost_items")
 }
 
 model Meeting {

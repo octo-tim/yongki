@@ -15,6 +15,7 @@ import { RequestPanel } from "@/components/request-panel";
 import { WorkRequestPanel } from "@/components/work-request-panel";
 import { PaymentManager } from "@/components/payment-manager";
 import { ProductInfoPanel } from "@/components/product-info-panel";
+import { PurchaseCostPanel } from "@/components/purchase-cost-panel";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
@@ -37,6 +38,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       workRequests: { orderBy: { requestDate: "desc" }, include: { requester: { select: { name: true } }, assignee: { select: { id: true, name: true } }, client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, updates: { orderBy: { progressDate: "asc" }, include: { createdBy: { select: { name: true } } } } } },
       payments: { orderBy: { receivedAt: "desc" } },
       products: { orderBy: { createdAt: "asc" } },
+      costItems: { orderBy: { createdAt: "asc" } },
       memos: { orderBy: { createdAt: "desc" }, include: { author: true } },
       logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: true } },
     },
@@ -73,13 +75,15 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
   // 제품정보(상품관리 연동) + 결재관리 전체금액 계산
   const prod = p.products[0] ?? null;
   const qty = prod?.quantity ?? 0;
+  const productPurchase = qty * Number(prod?.supplyPrice ?? 0);
+  const extrasSum = (p.costItems ?? []).reduce((a: number, c: any) => a + Number(c.amount ?? 0), 0);
   const salesRmb = prod ? (prod.salesCurrency === "RMB" ? Number(prod.salesPrice ?? 0) : Number(prod.salesPrice ?? 0) * Number(prod.exchangeRate ?? 0)) : 0;
   const salesConverted = !!prod && (prod.salesCurrency === "RMB" || Number(prod.exchangeRate ?? 0) > 0);
   const salesUnit = salesConverted ? salesRmb : Number(prod?.salesPrice ?? 0);
   const paymentTotals = {
     salesTotal: qty * salesUnit,
     salesCurrency: salesConverted ? "RMB" : (prod?.salesCurrency ?? "RMB"),
-    purchaseTotal: qty * Number(prod?.supplyPrice ?? 0),
+    purchaseTotal: productPurchase + extrasSum,
     purchaseCurrency: prod?.supplyCurrency ?? "RMB",
   };
 
@@ -130,6 +134,15 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
                 clientId={p.clientId}
                 product={prod as any}
               />
+            </CardContent>
+          </Card>
+
+          {/* 구매 추가비용 (공장 지급) */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">구매 추가비용 (공장 지급)</CardTitle></CardHeader>
+            <CardContent>
+              <PurchaseCostPanel projectId={p.id} items={p.costItems as any}
+                currency={prod?.supplyCurrency ?? "RMB"} productAmount={productPurchase} />
             </CardContent>
           </Card>
 
