@@ -10,8 +10,9 @@ export const CANON_STEPS: StepDef[] = [
   { type: "PRODUCTION", status: "준비",   group: "계약금입금(공장)",  name: "계약금입금(공장)",  order: 2 },
   { type: "PRODUCTION", status: "진행중", group: "파일수령(업체)",    name: "파일수령(업체)",    order: 3 },
   { type: "PRODUCTION", status: "진행중", group: "파일전달(공장)",    name: "파일전달(공장)",    order: 4 },
-  { type: "PRODUCTION", status: "진행중", group: "중간검품",         name: "중간검품",         order: 5 },
-  { type: "PRODUCTION", status: "진행중", group: "생산완료",         name: "생산완료",         order: 6 },
+  { type: "PRODUCTION", status: "진행중", group: "제작진행중",       name: "제작진행중",       order: 5 },
+  { type: "PRODUCTION", status: "진행중", group: "중간검품",         name: "중간검품",         order: 6 },
+  { type: "PRODUCTION", status: "진행중", group: "생산완료",         name: "생산완료",         order: 7 },
   { type: "SHIPPING",   status: "출고대기", group: "창고입고",       name: "창고입고",         order: 0 },
   { type: "SHIPPING",   status: "출고대기", group: "검품",          name: "검품",            order: 1 },
   { type: "SHIPPING",   status: "출고대기", group: "출고",          name: "출고",            order: 2 },
@@ -22,7 +23,7 @@ export const CANON_STEPS: StepDef[] = [
 // 전체 진행 순서 (PRODUCTION 0..6 → SHIPPING 0..4)
 export const STEP_ORDER: string[] = [
   "고객의뢰", "공장주문", "계약금입금(공장)",
-  "파일수령(업체)", "파일전달(공장)", "중간검품", "생산완료",
+  "파일수령(업체)", "파일전달(공장)", "제작진행중", "중간검품", "생산완료",
   "창고입고", "검품", "출고", "한국도착",
   "고객인도",
 ];
