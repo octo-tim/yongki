@@ -4,27 +4,30 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n-provider";
+import { LanguageToggle } from "@/components/language-toggle";
 import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Settings, BarChart3, Wallet, ChevronLeft, ChevronRight, ClipboardList, FileText, Image as ImageIcon, Tag } from "lucide-react";
 
 const baseNav = [
-  { href: "/dashboard", label: "대시보드", icon: LayoutDashboard },
-  { href: "/tasks", label: "업무", icon: ClipboardList },
-  { href: "/meetings", label: "회의록", icon: FileText },
-  { href: "/photos", label: "진행사진", icon: ImageIcon },
-  { href: "/projects", label: "프로젝트관리", icon: Package },
-  { href: "/products", label: "품목관리", icon: Tag },
-  { href: "/clients", label: "업체 관리", icon: Building2 },
-  { href: "/factories", label: "공장 관리", icon: Factory },
-  { href: "/sales", label: "입출금현황", icon: Wallet },
-  { href: "/stats", label: "통계", icon: BarChart3 },
+  { href: "/dashboard", key: "nav.dashboard", icon: LayoutDashboard },
+  { href: "/tasks", key: "nav.tasks", icon: ClipboardList },
+  { href: "/meetings", key: "nav.meetings", icon: FileText },
+  { href: "/photos", key: "nav.photos", icon: ImageIcon },
+  { href: "/projects", key: "nav.projects", icon: Package },
+  { href: "/products", key: "nav.products", icon: Tag },
+  { href: "/clients", key: "nav.clients", icon: Building2 },
+  { href: "/factories", key: "nav.factories", icon: Factory },
+  { href: "/sales", key: "nav.sales", icon: Wallet },
+  { href: "/stats", key: "nav.stats", icon: BarChart3 },
 ];
 
 const adminNav = [
-  { href: "/admin", label: "관리자 (사용자·단계)", icon: Settings },
+  { href: "/admin", key: "nav.admin", icon: Settings },
 ];
 
 export function Sidebar({ userName, userRole }: { userName?: string | null; userRole?: string }) {
   const pathname = usePathname();
+  const { t } = useI18n();
   const nav = userRole === "ADMIN" ? [...baseNav, ...adminNav] : baseNav;
 
   const [collapsed, setCollapsed] = useState(false);
@@ -64,7 +67,7 @@ export function Sidebar({ userName, userRole }: { userName?: string | null; user
             <Link
               key={item.href}
               href={item.href}
-              title={collapsed ? item.label : undefined}
+              title={collapsed ? t(item.key) : undefined}
               className={cn(
                 "flex items-center rounded-md py-2 text-sm font-medium transition-colors",
                 collapsed ? "justify-center px-2" : "gap-3 px-3",
@@ -72,23 +75,26 @@ export function Sidebar({ userName, userRole }: { userName?: string | null; user
               )}
             >
               <Icon className="h-4 w-4 shrink-0" />
-              {!collapsed && <span className="truncate">{item.label}</span>}
+              {!collapsed && <span className="truncate">{t(item.key)}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className={cn("border-t p-3", collapsed && "px-2")}>
-        {!collapsed && <div className="px-3 py-2 text-xs text-muted-foreground truncate">{userName ?? "사용자"}</div>}
+      <div className={cn("space-y-2 border-t p-3", collapsed && "px-2")}>
+        <div className={cn(collapsed ? "flex justify-center" : "px-1")}>
+          <LanguageToggle collapsed={collapsed} />
+        </div>
+        {!collapsed && <div className="px-3 py-1 text-xs text-muted-foreground truncate">{userName ?? "사용자"}</div>}
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
-          title={collapsed ? "로그아웃" : undefined}
+          title={collapsed ? t("nav.logout") : undefined}
           className={cn(
             "flex w-full items-center rounded-md py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
             collapsed ? "justify-center px-2" : "gap-3 px-3"
           )}
         >
-          <LogOut className="h-4 w-4 shrink-0" /> {!collapsed && "로그아웃"}
+          <LogOut className="h-4 w-4 shrink-0" /> {!collapsed && t("nav.logout")}
         </button>
       </div>
     </aside>

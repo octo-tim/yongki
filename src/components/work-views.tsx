@@ -5,6 +5,7 @@ import Link from "next/link";
 import { WorkRequestPanel } from "@/components/work-request-panel";
 import { cn, fmtDate } from "@/lib/utils";
 import { List, Calendar as CalIcon, Columns3, ChevronLeft, ChevronRight, CheckCircle2, Building2, Factory as FactoryIcon, Package } from "lucide-react";
+import { useI18n } from "@/components/i18n-provider";
 
 type WReq = {
   id: string; content: string; category?: string | null; requestDate: any; startDate?: any; endDate?: any; done?: boolean;
@@ -30,13 +31,14 @@ const CAT_DOT: Record<string, string> = {
 export function WorkViews({ requests, clients = [], factories = [], projects = [], users = [], currentUserId }: {
   requests: WReq[]; clients?: Opt[]; factories?: Opt[]; projects?: Opt[]; users?: Opt[]; currentUserId?: string;
 }) {
+  const { t } = useI18n();
   const [view, setView] = useState<"list" | "calendar" | "kanban">("list");
   return (
     <div className="space-y-3">
       <div className="inline-flex rounded-full border bg-card p-0.5 shadow-sm">
-        <ViewBtn active={view === "list"} onClick={() => setView("list")} icon={List}>리스트</ViewBtn>
-        <ViewBtn active={view === "calendar"} onClick={() => setView("calendar")} icon={CalIcon}>캘린더</ViewBtn>
-        <ViewBtn active={view === "kanban"} onClick={() => setView("kanban")} icon={Columns3}>칸반</ViewBtn>
+        <ViewBtn active={view === "list"} onClick={() => setView("list")} icon={List}>{t("view.list")}</ViewBtn>
+        <ViewBtn active={view === "calendar"} onClick={() => setView("calendar")} icon={CalIcon}>{t("view.calendar")}</ViewBtn>
+        <ViewBtn active={view === "kanban"} onClick={() => setView("kanban")} icon={Columns3}>{t("view.kanban")}</ViewBtn>
       </div>
 
       {view === "list" && (
