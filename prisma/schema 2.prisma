@@ -1,0 +1,460 @@
+// 화장품 용기 제작관리 — Prisma schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 프로젝트 상태 (자동 계산 + 수동 보류)
+enum StepType {
+  PRODUCTION // 제작 타임라인
+  SHIPPING   // 출고 타임라인
+}
+
+enum PaymentType {
+  DEPOSIT // 계약금
+  BALANCE // 잔금
+}
+
+enum PaymentSide {
+  PURCHASE // 구매 (공장)
+  SALES    // 판매 (업체)
+}
+
+enum MeetingType {
+  INTERNAL // 내부회의
+  EXTERNAL // 외부회의
+}
+
+// 상태 표시 설정 (라벨/색상/순서) — 상태값별 1행
+model StatusSetting {
+  id        String        @id @default(cuid())
+  key       String        @unique // 준비/진행중/출고대기/완료
+  label     String
+  color     String        // 팔레트 키 (blue, amber, emerald ...)
+  sortOrder Int           @default(0)
+
+  @@map("status_settings")
+}
+
+// 단계(제작/출고 하위업무) 템플릿 — 신규 프로젝트 생성 시 사용
+model StepTemplate {
+  id        String   @id @default(cuid())
+  type      StepType
+  group     String   @default("")
+  name      String
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("step_templates")
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+}
+
+// 1. 사용자
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      UserRole @default(STAFF)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  managedProjects Project[] @relation("ProjectManager")
+  memos           ProjectMemo[]
+  notes           ProjectNote[]
+  workLogs        WorkLog[]    @relation("WorkLogAssignee")
+  createdWorkLogs WorkLog[]    @relation("WorkLogCreator")
+  meetings        Meeting[]    @relation("MeetingCreator")
+  clientRequests  ClientRequest[] @relation("RequestCreator")
+  progressPhotos  ProgressPhoto[] @relation("PhotoCreator")
+  workRequestsMade     WorkRequest[]       @relation("RequestRequester")
+  workRequestsAssigned WorkRequest[]       @relation("RequestAssignee")
+  workRequestUpdates   WorkRequestUpdate[] @relation("RequestUpdateCreator")
+  logs            ProjectLog[]
+
+  @@map("users")
+}
+
+// 2. 업체 (발주 고객사)
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  representative String? // 대표자
+  contact   String?  // 담당자
+  position  String?  // 직책
+  phone     String?  // 연락처
+  email     String?  // 이메일
+  bizNo     String?  // 사업자번호
+  region    String?  // 지역
+  address   String?  // 주소
+  account   String?  // 계좌
+  paymentTerms String? // 결제조건
+  memo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+  meetings Meeting[]
+  progressPhotos ProgressPhoto[]
+  workRequests WorkRequest[]
+  products Product[]
+
+  @@map("clients")
+}
+
+// 3. 공장 (중국/해외 생산처)
+model Factory {
+  id          String   @id @default(cuid())
+  name        String   // 공장명 / 微信群名
+  region      String?  // 지역 (广州, 余姚 등)
+  category    String?  // 품목 (튜브용기, 향수병 등)
+  contactType String?  // 소통수단 (카카오톡, 위쳇 등)
+  contact     String?  // 공장담당자
+  position    String?  // 직책
+  phone       String?  // 연락처
+  wechat      String?  // 위챗ID
+  email       String?  // 이메일
+  address     String?  // 주소
+  account     String?  // 계좌
+  paymentTerms String? // 결제조건
+  memo        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  projects Project[]
+  meetings Meeting[]
+  progressPhotos ProgressPhoto[]
+  workRequests WorkRequest[]
+  products Product[]
+
+  @@map("factories")
+}
+
+// 4. 프로젝트 (제작 건)
+model Project {
+  id          String   @id @default(cuid())
+  orderDate   DateTime?            // 주문일자
+  shipRequestDate DateTime?        // 출고요청일
+  orderNo     String?              // 주문번호
+  productName String                // 상품명
+  productPhoto String?             // 제품사진 (업로드 경로)
+  quantity    Int?                 // 수량
+  deposit     Decimal?  @db.Decimal(14, 2) // 계약금
+  balance     Decimal?  @db.Decimal(14, 2) // 잔금
+  depositMethod  String?              // 계약금 결재방식
+  balanceMethod  String?              // 잔금 결재방식
+  factoryAccount String?              // 공장 결재계좌
+  importantNote  String?              // 제품제작 중요사항
+  note        String?              // 특이사항
+
+  status       String  @default("준비")  // 단계 진행에서 자동 도출 (준비/진행중/출고대기/완료)
+  manualStatus String? // (미사용) 과거 수동 지정값 호환용
+  manualHold   Boolean @default(false) // (미사용) 과거 호환용
+
+  // 제작 일정
+  factoryOrderDate       DateTime? // 공장 주문일자
+  expectedCompletionDate DateTime? // 완성 예정일
+  productionCompleteDate DateTime? // 생산 완료일
+
+  // 출고 일정
+  warehouseInDate     DateTime? // 창고 입고일
+  inspectionDate      DateTime? // 검품일
+  shipOutDate         DateTime? // 출고일
+  koreaArrivalDate    DateTime? // 한국 도착일
+  customerDeliveryDate DateTime? // 고객 인도일
+
+  // 관계
+  clientId  String?
+  client    Client? @relation(fields: [clientId], references: [id])
+  factoryId String?
+  factory   Factory? @relation(fields: [factoryId], references: [id])
+  managerId String?
+  manager   User?   @relation("ProjectManager", fields: [managerId], references: [id])
+
+  steps ProjectStep[]
+  files ProjectFile[]
+  memos ProjectMemo[]
+  notes ProjectNote[]
+  workLogs WorkLog[]
+  payments Payment[]
+  meetings Meeting[]
+  clientRequests ClientRequest[]
+  progressPhotos ProgressPhoto[]
+  workRequests WorkRequest[]
+  logs  ProjectLog[]
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([clientId])
+  @@index([factoryId])
+  @@map("projects")
+}
+
+// 5. 프로젝트 단계 (타임라인)
+model ProjectStep {
+  id        String    @id @default(cuid())
+  projectId String
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type      StepType  // 제작일정관리(PRODUCTION) / 출고관리(SHIPPING)
+  group     String    @default("") // 2단계: 공장주문일자/완성예정일/제작확인/창고입고...
+  name      String    // 3단계(leaf): 파일수령/생산완료/검품 ...
+  order     Int       // 정렬 순서
+  done      Boolean   @default(false)
+  doneAt    DateTime? // 완료 일자
+  staff     String?   // 담당 직원 (자유 입력)
+  note      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([projectId])
+  @@map("project_steps")
+}
+
+// 6. 프로젝트 파일
+model ProjectFile {
+  id         String   @id @default(cuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  fileName   String   // 원본 파일명
+  filePath   String   // 저장 경로
+  fileType   String?  // mime
+  fileSize   Int?     // bytes
+  createdAt  DateTime @default(now())
+
+  @@index([projectId])
+  @@map("project_files")
+}
+
+// 7. 프로젝트 메모
+model ProjectMemo {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  authorId  String?
+  author    User?    @relation(fields: [authorId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@map("project_memos")
+}
+
+model ProjectNote {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  authorId  String?
+  author    User?    @relation(fields: [authorId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@map("project_notes")
+}
+
+enum WorkStatus {
+  TODO  // 예정
+  DOING // 진행중
+  DONE  // 완료
+  HOLD  // 보류
+}
+
+model WorkLog {
+  id         String     @id @default(cuid())
+  projectId  String
+  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assigneeId String?
+  assignee   User?      @relation("WorkLogAssignee", fields: [assigneeId], references: [id])
+  creatorId  String?
+  creator    User?      @relation("WorkLogCreator", fields: [creatorId], references: [id])
+  content    String     // 진행내역
+  status     WorkStatus @default(DOING)
+  startDate  DateTime?  // 시작일
+  endDate    DateTime?  // 종료일
+  createdAt  DateTime   @default(now())
+
+  @@index([projectId])
+  @@index([assigneeId])
+  @@map("work_logs")
+}
+
+model Payment {
+  id         String      @id @default(cuid())
+  projectId  String
+  project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  side       PaymentSide @default(SALES) // 구매(공장) / 판매(업체)
+  type       PaymentType // 계약금 / 잔금
+  amount     Decimal?    @db.Decimal(14, 2) // 결재금액
+  receivedAt DateTime?   // 결재일
+  method     String?     // 결재방법 (현금/계좌이체/위챗/스프/카드)
+  account    String?     // (미사용) 과거 호환
+  memo       String?     // 비고
+  createdAt  DateTime    @default(now())
+
+  @@index([projectId])
+  @@index([receivedAt])
+  @@map("payments")
+}
+
+model Meeting {
+  id          String      @id @default(cuid())
+  type        MeetingType @default(INTERNAL)
+  title       String
+  content     String
+  meetingDate DateTime
+  clientId    String?     // 외부회의 대상: 업체
+  client      Client?     @relation(fields: [clientId], references: [id])
+  factoryId   String?     // 외부회의 대상: 공장
+  factory     Factory?    @relation(fields: [factoryId], references: [id])
+  projectId   String?     // 선택: 프로젝트 연결
+  project     Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdById String?
+  createdBy   User?       @relation("MeetingCreator", fields: [createdById], references: [id])
+  files       MeetingFile[]
+  createdAt   DateTime    @default(now())
+
+  @@index([meetingDate])
+  @@index([projectId])
+  @@map("meetings")
+}
+
+model MeetingFile {
+  id        String   @id @default(cuid())
+  meetingId String
+  meeting   Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  name      String
+  path      String
+  createdAt DateTime @default(now())
+
+  @@index([meetingId])
+  @@map("meeting_files")
+}
+
+model ProgressPhoto {
+  id          String   @id @default(cuid())
+  path        String   // 업로드 경로
+  caption     String?  // 설명
+  clientId    String?
+  client      Client?  @relation(fields: [clientId], references: [id])
+  factoryId   String?
+  factory     Factory? @relation(fields: [factoryId], references: [id])
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdById String?
+  createdBy   User?    @relation("PhotoCreator", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([clientId])
+  @@index([factoryId])
+  @@index([projectId])
+  @@map("progress_photos")
+}
+
+model WorkRequest {
+  id          String   @id @default(cuid())
+  content     String   // 요청사항
+  requestDate DateTime // 요청일
+  done        Boolean  @default(false) // 완료 여부 (요청자 체크)
+  doneAt      DateTime?
+  requesterId String?  // 요청자 (로그인 사용자)
+  requester   User?    @relation("RequestRequester", fields: [requesterId], references: [id])
+  assigneeId  String?  // 담당자
+  assignee    User?    @relation("RequestAssignee", fields: [assigneeId], references: [id])
+  clientId    String?
+  client      Client?  @relation(fields: [clientId], references: [id])
+  factoryId   String?
+  factory     Factory? @relation(fields: [factoryId], references: [id])
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  updates     WorkRequestUpdate[]
+  createdAt   DateTime @default(now())
+
+  @@index([requestDate])
+  @@map("work_requests")
+}
+
+model WorkRequestUpdate {
+  id           String      @id @default(cuid())
+  requestId    String
+  request      WorkRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  content      String      // 진행현황
+  progressDate DateTime    // 진행현황 입력일
+  createdById  String?
+  createdBy    User?       @relation("RequestUpdateCreator", fields: [createdById], references: [id])
+  createdAt    DateTime    @default(now())
+
+  @@index([requestId])
+  @@map("work_request_updates")
+}
+
+model ClientRequest {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  content     String
+  requestDate DateTime // 요청 날짜
+  createdById String?
+  createdBy   User?    @relation("RequestCreator", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([projectId])
+  @@map("client_requests")
+}
+
+// 8. 프로젝트 로그 (이력)
+model ProjectLog {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id])
+  action    String   // CREATE / UPDATE / STATUS_CHANGE / FILE_UPLOAD ...
+  message   String
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@map("project_logs")
+}
+
+// 상품 (공급/판매 단가 관리)
+model Product {
+  id          String   @id @default(cuid())
+  name        String   // 상품명
+  code        String?  // 상품코드
+  supplyPrice Decimal? @db.Decimal(14, 2) // 공급단가 (공장 → 당사)
+  salesPrice  Decimal? @db.Decimal(14, 2) // 판매단가 (당사 → 업체)
+  supplyCurrency String? @default("RMB") // 구매단가 통화 (RMB/USD)
+  salesCurrency  String? @default("RMB") // 판매단가 통화 (USD/RMB/KRW)
+  exchangeRate   Decimal? @db.Decimal(14, 4) // 판매단가 → RMB 환율 (RMB per 1 통화)
+  quantity    Int? // 수량
+  note        String? // 비고
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  factoryId String?
+  factory   Factory? @relation(fields: [factoryId], references: [id], onDelete: SetNull)
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([factoryId])
+  @@index([clientId])
+  @@map("products")
+}

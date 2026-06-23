@@ -21,10 +21,14 @@ async function getProjects(where: Prisma.ProjectWhereInput) {
     include: { client: true, factory: true, manager: true, steps: { select: { name: true, done: true } } },
   });
 }
+// 현재 단계: status(명시적 선택)를 우선, 없으면 단계기록에서 계산 → 분류/드롭다운/타일 동일 기준
+function currentStepOf(p: { status?: string | null; steps: { name: string; done: boolean }[] }) {
+  return p.status && STEP_ORDER.includes(p.status) ? p.status : (furthestStep(p.steps) ?? "");
+}
 function calc(p: P) {
   const doneCount = p.steps.filter((s) => s.done).length;
   const pct = Math.round((doneCount / TOTAL_STEPS) * 100);
-  const cur = furthestStep(p.steps) ?? "시작전";
+  const cur = currentStepOf(p) || "시작전";
   const st = statusOfStep(cur);
   const isDone = p.steps.some((s) => s.name === "고객인도" && s.done);
   return { doneCount, pct, cur, st, isDone };
@@ -49,7 +53,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
 
   const groups = new Map<string, P[]>();
   for (const p of projects) {
-    const key = furthestStep(p.steps) ?? "시작전";
+    const key = currentStepOf(p) || "시작전";
     const arr = groups.get(key);
     if (arr) arr.push(p); else groups.set(key, [p]);
   }
@@ -210,7 +214,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
                   return (
                     <tr key={p.id} className="group border-b last:border-0 transition-colors hover:bg-accent/40">
                       <td className="px-3 py-2.5">
-                        <StepSelect projectId={p.id} current={p.status} size="sm" />
+                        <StepSelect projectId={p.id} current={currentStepOf(p)} size="sm" />
                       </td>
                       <td className="whitespace-nowrap px-3 py-2.5 text-xs text-muted-foreground">{p.orderNo ?? "-"}</td>
                       <td className="px-3 py-2.5">
