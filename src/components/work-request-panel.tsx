@@ -31,15 +31,15 @@ const CAT_STYLE: Record<string, string> = {
 const selCls = "h-9 w-full rounded-md border border-input bg-background px-3 text-sm";
 
 export function WorkRequestPanel({
-  clients = [], factories = [], projects = [], users = [], requests, currentUserId, showCreate = true, fixedProjectId, showFilters = false,
+  clients = [], factories = [], projects = [], users = [], requests, currentUserId, showCreate = true, fixedProjectId, fixedClientId, fixedFactoryId, showFilters = false,
 }: {
-  clients?: Opt[]; factories?: Opt[]; projects?: Opt[]; users?: Opt[]; requests: WReq[]; currentUserId?: string; showCreate?: boolean; fixedProjectId?: string; showFilters?: boolean;
+  clients?: Opt[]; factories?: Opt[]; projects?: Opt[]; users?: Opt[]; requests: WReq[]; currentUserId?: string; showCreate?: boolean; fixedProjectId?: string; fixedClientId?: string; fixedFactoryId?: string; showFilters?: boolean;
 }) {
   const router = useRouter();
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
   const [open, setOpen] = useState(false);
-  const [clientId, setClientId] = useState("");
-  const [factoryId, setFactoryId] = useState("");
+  const [clientId, setClientId] = useState(fixedClientId ?? "");
+  const [factoryId, setFactoryId] = useState(fixedFactoryId ?? "");
   const [projectId, setProjectId] = useState(fixedProjectId ?? "");
   const [assigneeId, setAssigneeId] = useState("");
   const [content, setContent] = useState("");
@@ -60,7 +60,7 @@ export function WorkRequestPanel({
     });
     setBusy(false);
     if (!res.ok) { setErr("등록에 실패했습니다."); return; }
-    setContent(""); setCategory(""); setStartDate(""); setEndDate(""); setClientId(""); setFactoryId(""); setProjectId(fixedProjectId ?? ""); setAssigneeId(""); setOpen(false); router.refresh();
+    setContent(""); setCategory(""); setStartDate(""); setEndDate(""); setClientId(fixedClientId ?? ""); setFactoryId(fixedFactoryId ?? ""); setProjectId(fixedProjectId ?? ""); setAssigneeId(""); setOpen(false); router.refresh();
   }
   async function remove(id: string) {
     if (!confirm("이 업무요청을 삭제하시겠습니까?")) return;
@@ -111,14 +111,18 @@ export function WorkRequestPanel({
           {open && (
             <div className="space-y-2 rounded-lg border bg-muted/20 p-3">
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                {!fixedClientId && (
                 <div>
                   <label className="mb-1 block text-xs text-muted-foreground">업체</label>
                   <SearchableSelect options={clients} value={clientId} onChange={setClientId} placeholder="업체 검색..." />
                 </div>
+                )}
+                {!fixedFactoryId && (
                 <div>
                   <label className="mb-1 block text-xs text-muted-foreground">공장</label>
                   <SearchableSelect options={factories} value={factoryId} onChange={setFactoryId} placeholder="공장 검색..." />
                 </div>
+                )}
                 {!fixedProjectId && (
                 <div>
                   <label className="mb-1 block text-xs text-muted-foreground">프로젝트</label>

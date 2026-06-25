@@ -33,6 +33,11 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
   const statusCfg = await getStatusConfig();
   const session = await getServerSession(authOptions);
   const uid = (session?.user as any)?.id as string | undefined;
+  const [users, factories, projects] = await Promise.all([
+    prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.factory.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.project.findMany({ orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
+  ]);
 
   return (
     <div className="space-y-5 p-6">
@@ -70,8 +75,11 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
 
       <Card>
         <CardContent className="p-4">
-          <h2 className="mb-3 text-sm font-semibold">업무요청</h2>
-          <WorkRequestPanel requests={client.workRequests as any} currentUserId={uid} showCreate={false} />
+          <h2 className="mb-3 text-sm font-semibold">업무 (이 업체 · 프로젝트 무관 포함)</h2>
+          <WorkRequestPanel requests={client.workRequests as any} currentUserId={uid}
+            showCreate fixedClientId={client.id}
+            users={users} factories={factories}
+            projects={projects.map((p) => ({ id: p.id, name: p.productName }))} />
         </CardContent>
       </Card>
 
