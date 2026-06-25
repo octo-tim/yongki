@@ -49,7 +49,7 @@ export default async function FactoryDetailPage({ params }: { params: { id: stri
           <Link href="/factories" className="hover:underline">공장 관리</Link>
           <span>/</span>
         </div>
-        <h1 className="text-2xl font-bold">{factory.name}</h1>
+        <h1 className="text-2xl font-bold">{(factory as any).code ? `#${(factory as any).code} ` : ""}{factory.name}</h1>
         <p className="text-sm text-muted-foreground">
           전체 프로젝트 {factory.projects.length}건{meta ? ` · ${meta}` : ""}
         </p>

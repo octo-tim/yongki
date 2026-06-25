@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default async function FactoriesPage() {
   const factories = await prisma.factory.findMany({
-    orderBy: { name: "asc" },
+    orderBy: [{ code: "asc" }, { name: "asc" }],
     include: {
       _count: { select: { projects: true } },
       projects: { orderBy: { orderDate: "desc" }, select: { id: true, productName: true, status: true, steps: { select: { name: true, done: true } } } },
@@ -15,7 +15,7 @@ export default async function FactoriesPage() {
     <div className="space-y-4 p-6">
       <div><h1 className="text-2xl font-bold">공장 관리</h1><p className="text-sm text-muted-foreground">해외 생산처 목록</p></div>
       <EntityManager
-        endpoint="/api/factories" countKey="projects" linkBase="/factories" rows={factories as any}
+        endpoint="/api/factories" countKey="projects" linkBase="/factories" rows={factories as any} showCode
         fields={[
           { key: "name", label: "공장명", placeholder: "广州 튜브용기 昕鸿", primary: true },
           { key: "region", label: "지역", primary: true },

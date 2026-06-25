@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ClientsPage() {
   const clients = await prisma.client.findMany({
-    orderBy: { name: "asc" },
+    orderBy: [{ code: "asc" }, { name: "asc" }],
     include: {
       _count: { select: { projects: true } },
       projects: { orderBy: { orderDate: "desc" }, select: { id: true, productName: true, status: true, steps: { select: { name: true, done: true } } } },
@@ -15,7 +15,7 @@ export default async function ClientsPage() {
     <div className="space-y-4 p-6">
       <div><h1 className="text-2xl font-bold">업체 관리</h1><p className="text-sm text-muted-foreground">발주 업체(고객사) 목록</p></div>
       <EntityManager
-        endpoint="/api/clients" countKey="projects" linkBase="/clients" rows={clients as any}
+        endpoint="/api/clients" countKey="projects" linkBase="/clients" rows={clients as any} showCode
         fields={[
           { key: "name", label: "업체명", placeholder: "코스메디크", primary: true },
           { key: "representative", label: "대표자" },

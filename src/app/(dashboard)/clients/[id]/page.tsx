@@ -46,7 +46,7 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
           <Link href="/clients" className="hover:underline">업체 관리</Link>
           <span>/</span>
         </div>
-        <h1 className="text-2xl font-bold">{client.name}</h1>
+        <h1 className="text-2xl font-bold">{(client as any).code ? `#${(client as any).code} ` : ""}{client.name}</h1>
         <p className="text-sm text-muted-foreground">
           전체 프로젝트 {client.projects.length}건
           {client.contact ? ` · 담당자 ${client.contact}` : ""}{client.phone ? ` · ${client.phone}` : ""}

@@ -88,6 +88,7 @@ model User {
 model Client {
   id        String   @id @default(cuid())
   name      String
+  code      Int?     @unique // 업체 번호
   representative String? // 대표자
   contact   String?  // 담당자
   position  String?  // 직책
@@ -115,6 +116,7 @@ model Client {
 model Factory {
   id          String   @id @default(cuid())
   name        String   // 공장명 / 微信群名
+  code        Int?     @unique // 공장 번호
   region      String?  // 지역 (广州, 余姚 등)
   category    String?  // (구) 품목 - 미사용
   mainProducts String? // 주요품목 (자유입력)

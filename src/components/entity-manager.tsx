@@ -22,8 +22,8 @@ function currentStepName(p: { status?: string | null; steps?: { name: string; do
   return "";
 }
 
-export function EntityManager({ endpoint, fields, rows, countKey, linkBase }: {
-  endpoint: string; fields: FieldDef[]; rows: Entity[]; countKey?: string; linkBase?: string;
+export function EntityManager({ endpoint, fields, rows, countKey, linkBase, showCode }: {
+  endpoint: string; fields: FieldDef[]; rows: Entity[]; countKey?: string; linkBase?: string; showCode?: boolean;
 }) {
   const router = useRouter();
   const empty = Object.fromEntries(fields.map((f) => [f.key, ""]));
@@ -89,13 +89,14 @@ export function EntityManager({ endpoint, fields, rows, countKey, linkBase }: {
         <Table>
           <TableHeader>
             <TableRow>
+              {showCode && <TableHead className="w-14">번호</TableHead>}
               {cols.map((f) => <TableHead key={f.key}>{f.label}</TableHead>)}
               {countKey && <TableHead className="text-right">프로젝트</TableHead>}
               <TableHead className="w-20 text-right">관리</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rows.length === 0 && <TableRow><TableCell colSpan={cols.length + 2} className="py-8 text-center text-muted-foreground">데이터가 없습니다.</TableCell></TableRow>}
+            {rows.length === 0 && <TableRow><TableCell colSpan={cols.length + 2 + (showCode ? 1 : 0)} className="py-8 text-center text-muted-foreground">데이터가 없습니다.</TableCell></TableRow>}
             {rows.map((r) => {
               const projects: any[] = r.projects ?? [];
               const count = r._count?.[countKey ?? ""] ?? projects.length;
@@ -104,6 +105,7 @@ export function EntityManager({ endpoint, fields, rows, countKey, linkBase }: {
               return (
                 <Fragment key={r.id}>
                   <TableRow className={isOpen ? "border-b-0" : ""}>
+                    {showCode && <TableCell className="text-sm font-semibold text-muted-foreground">{r.code ?? "-"}</TableCell>}
                     {cols.map((f, fi) => (
                       <TableCell key={f.key} className={fi === 0 ? "font-medium" : "text-sm text-muted-foreground"}>
                         {fi === 0 && linkBase
@@ -130,7 +132,7 @@ export function EntityManager({ endpoint, fields, rows, countKey, linkBase }: {
                   </TableRow>
                   {isOpen && (
                     <TableRow className="bg-muted/20 hover:bg-muted/20">
-                      <TableCell colSpan={cols.length + 2} className="py-2">
+                      <TableCell colSpan={cols.length + 2 + (showCode ? 1 : 0)} className="py-2">
                         <div className="space-y-1">
                           {projects.map((p) => {
                             const cur = currentStepName(p);
