@@ -1,0 +1,6246 @@
+[
+{
+"productName": "풋 셋트 파우치 1만개",
+"orderNo": "2025081301",
+"orderDate": "2025-08-13",
+"shipRequestDate": "2025-08-19",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "捷高制袋（温州）\n温州 풋 파우치",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-13"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-13"
+},
+{
+"name": "제작진행중",
+"date": "2025-08-16"
+},
+{
+"name": "중간검품",
+"date": "2025-08-19"
+},
+{
+"name": "생산완료",
+"date": "2025-08-19"
+},
+{
+"name": "창고입고",
+"date": "2025-08-20"
+},
+{
+"name": "출고",
+"date": "2025-08-20"
+},
+{
+"name": "한국도착",
+"date": "2025-08-22"
+},
+{
+"name": "고객인도",
+"date": "2025-08-25"
+}
+]
+},
+{
+"productName": "32파이 펌푸 10200개",
+"orderNo": "2025080701",
+"orderDate": "2025-08-07",
+"shipRequestDate": "2025-08-20",
+"quantity": 10200,
+"client": "미소코스",
+"factory": "宝城塑料制品（广州珠海）\n广东 32파이펌프 宝力",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "8월25일 한국도착해야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-07"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-07"
+},
+{
+"name": "제작진행중",
+"date": "2025-08-17"
+},
+{
+"name": "중간검품",
+"date": "2025-08-18"
+},
+{
+"name": "생산완료",
+"date": "2025-08-18"
+},
+{
+"name": "창고입고",
+"date": "2025-08-20"
+},
+{
+"name": "출고",
+"date": "2025-08-20"
+},
+{
+"name": "한국도착",
+"date": "2025-08-22"
+},
+{
+"name": "고객인도",
+"date": "2025-08-25"
+}
+]
+},
+{
+"productName": "아우디 장우산 1,500개",
+"orderNo": "2025080901",
+"orderDate": "2025-08-09",
+"shipRequestDate": "2025-08-22",
+"quantity": 1500,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-09"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-09"
+},
+{
+"name": "생산완료",
+"date": "2025-08-22"
+},
+{
+"name": "창고입고",
+"date": "2025-08-23"
+},
+{
+"name": "출고",
+"date": "2025-08-23"
+},
+{
+"name": "한국도착",
+"date": "2025-08-25"
+}
+]
+},
+{
+"productName": "BMW우산 4천개",
+"orderNo": "2025081101",
+"orderDate": "2025-08-11",
+"shipRequestDate": "2025-08-23",
+"quantity": 4000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "공산품 표시사항 스티커 / 원산지표시 / 반투명 비닐커버 별도",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-13"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-13"
+},
+{
+"name": "생산완료",
+"date": "2025-08-22"
+},
+{
+"name": "창고입고",
+"date": "2025-08-23"
+},
+{
+"name": "출고",
+"date": "2025-08-23"
+},
+{
+"name": "한국도착",
+"date": "2025-08-25"
+}
+]
+},
+{
+"productName": "경추베개 200개",
+"orderNo": "2025081801",
+"orderDate": "2025-08-18",
+"shipRequestDate": "2025-08-19",
+"quantity": 200,
+"client": "자사제품",
+"factory": "南通暖施梦纺织品有限公司",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "도매꾹 상품 재고 보충",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-18"
+},
+{
+"name": "생산완료",
+"date": "2025-08-19"
+},
+{
+"name": "창고입고",
+"date": "2025-08-20"
+},
+{
+"name": "출고",
+"date": "2025-08-20"
+},
+{
+"name": "한국도착",
+"date": "2025-08-22"
+}
+]
+},
+{
+"productName": "아트클립 2천개",
+"orderNo": "2025080901",
+"orderDate": "2025-08-09",
+"shipRequestDate": "2025-08-25",
+"quantity": 2000,
+"client": "피트니스코리아",
+"factory": "泓添五金（广州）\n东莞 아트클립",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "이과장이 직접 확인해주세요. 사이즈(금형)와 색상, 인쇄 중요. 미리 샘플 받아보세요",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-09"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-09"
+},
+{
+"name": "제작진행중",
+"date": "2025-08-17"
+},
+{
+"name": "생산완료",
+"date": "2025-08-25"
+},
+{
+"name": "창고입고",
+"date": "2025-08-26"
+}
+]
+},
+{
+"productName": "아트클립 종이커버 2천개",
+"orderNo": "2025081101",
+"orderDate": "2025-08-11",
+"shipRequestDate": "2025-08-25",
+"quantity": 2000,
+"client": "피트니스코리아",
+"factory": "佳全印业（义乌）\n义乌카드佳全印业",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-13"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-13"
+},
+{
+"name": "생산완료",
+"date": "2025-08-25"
+},
+{
+"name": "창고입고",
+"date": "2025-08-26"
+}
+]
+},
+{
+"productName": "15ml 미백주름 앰플병 2만개",
+"orderNo": "2025080701",
+"orderDate": "2025-08-07",
+"shipRequestDate": "2025-08-18",
+"quantity": 20000,
+"client": "미소코스",
+"factory": "环大玻璃制品（徐州）\n徐州15ml유리용기",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "캡 수량보충 공장에 요청함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-07"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-07"
+},
+{
+"name": "제작진행중",
+"date": "2025-08-14"
+},
+{
+"name": "중간검품",
+"date": "2025-08-18"
+},
+{
+"name": "생산완료",
+"date": "2025-08-18"
+},
+{
+"name": "창고입고",
+"date": "2025-08-20"
+},
+{
+"name": "출고",
+"date": "2025-08-27"
+}
+]
+},
+{
+"productName": "캐리어 400개 (로고400개)",
+"orderNo": "2025080902",
+"orderDate": "2025-08-09",
+"shipRequestDate": "2025-08-24",
+"quantity": 400,
+"client": "준트레이드컴퍼니",
+"factory": "嘉兴市意丰箱包(嘉兴)\n嘉兴 캐리어 가방",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "벤츠 200개, BMW 200개 로고는 한국으로 택배발송 완료",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-09"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-09"
+},
+{
+"name": "제작진행중",
+"date": "2025-08-23"
+},
+{
+"name": "중간검품",
+"date": "2025-08-23"
+},
+{
+"name": "생산완료",
+"date": "2025-08-24"
+},
+{
+"name": "창고입고",
+"date": "2025-08-27"
+},
+{
+"name": "출고",
+"date": "2025-08-27"
+}
+]
+},
+{
+"productName": "케이스 3천개",
+"orderNo": "2025081102",
+"orderDate": "2025-08-11",
+"shipRequestDate": "2025-08-26",
+"quantity": 3000,
+"client": "블랙빈테크",
+"factory": "佳全印业（义乌）\n义乌카드佳全印业",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "프라스틱 내품 모서리 부분 중요함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-13"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-13"
+},
+{
+"name": "생산완료",
+"date": "2025-08-26"
+},
+{
+"name": "창고입고",
+"date": "2025-08-30"
+},
+{
+"name": "출고",
+"date": "2025-08-31"
+}
+]
+},
+{
+"productName": "원형고리 3천개",
+"orderNo": "2025070201",
+"orderDate": "2025-07-02",
+"shipRequestDate": "2025-08-30",
+"quantity": 3000,
+"client": "블랙빈테크",
+"factory": "将利五金（义乌）\n义乌 원형고리",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-20"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-20"
+},
+{
+"name": "제작진행중",
+"date": "2025-08-28"
+},
+{
+"name": "생산완료",
+"date": "2025-08-30"
+},
+{
+"name": "창고입고",
+"date": "2025-08-30"
+},
+{
+"name": "출고",
+"date": "2025-09-06"
+}
+]
+},
+{
+"productName": "벤츠 장우산 4,000개",
+"orderNo": "2025082201",
+"orderDate": "2025-08-22",
+"shipRequestDate": "2025-09-02",
+"quantity": 4000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-22"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-22"
+},
+{
+"name": "제작진행중",
+"date": "2025-08-28"
+},
+{
+"name": "중간검품",
+"date": "2025-08-29"
+},
+{
+"name": "생산완료",
+"date": "2025-09-02"
+},
+{
+"name": "창고입고",
+"date": "2025-09-03"
+},
+{
+"name": "출고",
+"date": "2025-09-06"
+}
+]
+},
+{
+"productName": "에어스텝퍼 885개",
+"orderNo": "2025082601",
+"orderDate": "2025-08-26",
+"shipRequestDate": "2025-09-07",
+"quantity": 885,
+"client": "자사상품",
+"factory": "东昊健身器材（永康）",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "계기판 문제없이 제작해애함. 계기판 각각10개씩 따로요청 부품추가(고무판)20개정도",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-25"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-26"
+},
+{
+"name": "중간검품",
+"date": "2025-09-02"
+},
+{
+"name": "출고",
+"date": "2025-09-07"
+}
+]
+},
+{
+"productName": "마카롱 미니 양우산400개",
+"orderNo": "2025090301",
+"orderDate": "2025-09-03",
+"shipRequestDate": "2025-09-10",
+"quantity": 400,
+"client": "국민연금공단",
+"factory": "义乌 UV 자동우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-03"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-04"
+},
+{
+"name": "출고",
+"date": "2025-09-10"
+},
+{
+"name": "한국도착",
+"date": "2025-09-15"
+}
+]
+},
+{
+"productName": "마카롱 우산 상자 460개",
+"orderNo": "2025090301",
+"orderDate": "2025-09-03",
+"shipRequestDate": "2025-09-10",
+"quantity": 460,
+"client": null,
+"factory": "아리바바 구매",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "아리바바 460개  구매완료",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-03"
+},
+{
+"name": "출고",
+"date": "2025-09-10"
+},
+{
+"name": "한국도착",
+"date": "2025-09-15"
+}
+]
+},
+{
+"productName": "플로랄 UV 미니 양우산 300개",
+"orderNo": "2025090401",
+"orderDate": "2025-09-04",
+"shipRequestDate": "2025-09-10",
+"quantity": 300,
+"client": "전국학교 비정규직노동조합",
+"factory": "鸿宬伞业 （绍兴）\n플로랄 우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-04"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-04"
+},
+{
+"name": "출고",
+"date": "2025-09-10"
+},
+{
+"name": "한국도착",
+"date": "2025-09-15"
+}
+]
+},
+{
+"productName": "플로랄 UV 미니 양우산160개",
+"orderNo": "2025090501",
+"orderDate": "2025-09-05",
+"shipRequestDate": "2025-09-10",
+"quantity": 160,
+"client": "비케이브로",
+"factory": "鸿宬伞业 （绍兴）\n플로랄 우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-05"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-05"
+},
+{
+"name": "출고",
+"date": "2025-09-10"
+},
+{
+"name": "한국도착",
+"date": "2025-09-15"
+}
+]
+},
+{
+"productName": "초연화수 골드5종",
+"orderNo": "2025080901",
+"orderDate": "2025-08-09",
+"shipRequestDate": "2025-09-14",
+"quantity": 16000,
+"client": "미소코스",
+"factory": "紫顺包装（广州）\n新 紫顺 广州美博城103",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "130ml용기는 원래대로진행 나머지3종은 로고수정후 인쇄",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-09"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-09"
+},
+{
+"name": "제작진행중",
+"date": "2025-08-22"
+},
+{
+"name": "중간검품",
+"date": "2025-08-30"
+},
+{
+"name": "출고",
+"date": "2025-09-14"
+},
+{
+"name": "한국도착",
+"date": "2025-09-17"
+}
+]
+},
+{
+"productName": "마카롱 미니 양우산 250개",
+"orderNo": "2025090301",
+"orderDate": "2025-09-03",
+"shipRequestDate": "2025-09-14",
+"quantity": 250,
+"client": "고려기념사",
+"factory": "义乌 UV 자동우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "인쇄 시안 고객 확인 대기중",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-03"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-09"
+},
+{
+"name": "창고입고",
+"date": "2025-09-13"
+},
+{
+"name": "출고",
+"date": "2025-09-14"
+},
+{
+"name": "한국도착",
+"date": "2025-09-17"
+}
+]
+},
+{
+"productName": "플로랄 UV 미니 양우산150개",
+"orderNo": "2025091001",
+"orderDate": "2025-09-10",
+"shipRequestDate": "2025-09-14",
+"quantity": 150,
+"client": "비케이브로",
+"factory": "鸿宬伞业 （绍兴）\n플로랄 우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-10"
+},
+{
+"name": "창고입고",
+"date": "2025-09-12"
+},
+{
+"name": "출고",
+"date": "2025-09-14"
+},
+{
+"name": "한국도착",
+"date": "2025-09-17"
+}
+]
+},
+{
+"productName": "킥보드용 걸이 가방",
+"orderNo": "2025080101",
+"orderDate": "2025-08-01",
+"shipRequestDate": "2025-09-17",
+"quantity": 2000,
+"client": "자사제품",
+"factory": "壹雅(广州)\n广州 yiya",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "원산지 태그 제작후 공장전달해야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-01"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-01"
+},
+{
+"name": "제작진행중",
+"date": "2025-08-27"
+},
+{
+"name": "중간검품",
+"date": "2025-09-03"
+},
+{
+"name": "창고입고",
+"date": "2025-09-16"
+},
+{
+"name": "출고",
+"date": "2025-09-17"
+}
+]
+},
+{
+"productName": "스크래쳐 장난감 마우스100 스마일150 물고기150",
+"orderNo": "2025091101",
+"orderDate": "2025-09-11",
+"shipRequestDate": "2025-09-17",
+"quantity": 400,
+"client": "나울",
+"factory": "아리바바 구매",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-11"
+},
+{
+"name": "창고입고",
+"date": "2025-09-15"
+},
+{
+"name": "출고",
+"date": "2025-09-17"
+}
+]
+},
+{
+"productName": "에어리스용기",
+"orderNo": "2025080801",
+"orderDate": "2025-08-08",
+"shipRequestDate": "2025-09-11",
+"quantity": 2000,
+"client": "라온제나",
+"factory": "联盛摸塑厂（宁波）",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "용기 뚜껑 반투명으로 다시 제작 (안개분사펌프). 뚜껑 체결불량 꼭 주의해야 함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-28"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-28"
+},
+{
+"name": "제작진행중",
+"date": "2025-09-09"
+},
+{
+"name": "중간검품",
+"date": "2025-09-10"
+},
+{
+"name": "생산완료",
+"date": "2025-09-11"
+},
+{
+"name": "창고입고",
+"date": "2025-09-16"
+},
+{
+"name": "출고",
+"date": "2025-09-17"
+}
+]
+},
+{
+"productName": "20ml 스포이드 용기 (반투명) 5000개",
+"orderNo": "2025091101",
+"orderDate": "2025-09-11",
+"shipRequestDate": "2025-09-11",
+"quantity": 5000,
+"client": "(주)킹케어",
+"factory": "쉬저우 유리공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "스포이드: 엘라스토머. 도착후 검품하고 출고해야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-11"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-11"
+},
+{
+"name": "제작진행중",
+"date": "2025-09-11"
+},
+{
+"name": "중간검품",
+"date": "2025-09-11"
+},
+{
+"name": "생산완료",
+"date": "2025-09-11"
+},
+{
+"name": "창고입고",
+"date": "2025-09-18"
+},
+{
+"name": "출고",
+"date": "2025-09-18"
+}
+]
+},
+{
+"productName": "3단자동우산 BMW/벤츠 각 500개씩",
+"orderNo": "2025090101",
+"orderDate": "2025-09-01",
+"shipRequestDate": "2025-09-15",
+"quantity": 1000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "출고완료",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-01"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-04"
+},
+{
+"name": "생산완료",
+"date": "2025-09-15"
+},
+{
+"name": "창고입고",
+"date": "2025-09-20"
+},
+{
+"name": "출고",
+"date": "2025-09-20"
+}
+]
+},
+{
+"productName": "BMW 장우산 4000개",
+"orderNo": "2025090901",
+"orderDate": "2025-09-09",
+"shipRequestDate": "2025-09-20",
+"quantity": 4000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "출고완료. 다음건 부터 우산 커버접이 우산살때 문제없게 꼭 확인해야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-09"
+},
+{
+"name": "창고입고",
+"date": "2025-09-20"
+},
+{
+"name": "출고",
+"date": "2025-09-20"
+}
+]
+},
+{
+"productName": "켈리리빙 CAGO 쇼핑카트 300개",
+"orderNo": "2025091001",
+"orderDate": "2025-09-10",
+"shipRequestDate": "2025-09-19",
+"quantity": 300,
+"client": "비케이브로",
+"factory": "台州 金猫\n겔리리빙 쇼핑카트",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "출고완료",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-10"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-10"
+},
+{
+"name": "창고입고",
+"date": "2025-09-19"
+},
+{
+"name": "출고",
+"date": "2025-09-20"
+}
+]
+},
+{
+"productName": "100ml 아크릴 크림용기 3000개",
+"orderNo": "2025082601",
+"orderDate": "2025-08-26",
+"shipRequestDate": "2025-09-28",
+"quantity": 3000,
+"client": "미소코스",
+"factory": "凯尔包装（绍兴）",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "9월28일 출고해야함 (금형 중요함). 생산 샘플 확인후 진행",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-08-26"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-08-26"
+},
+{
+"name": "제작진행중",
+"date": "2025-09-09"
+},
+{
+"name": "중간검품",
+"date": "2025-09-13"
+},
+{
+"name": "창고입고",
+"date": "2025-09-28"
+},
+{
+"name": "출고",
+"date": "2025-09-28"
+}
+]
+},
+{
+"productName": "드로퍼 튜브 30ml 5000개",
+"orderNo": "2025082801",
+"orderDate": "2025-08-28",
+"shipRequestDate": "2025-09-28",
+"quantity": 5000,
+"client": "바르다화장품",
+"factory": "광저우 튜브 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "용기 그라데이션. 옵셋인쇄. 1도 실크인쇄",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-05"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-05"
+},
+{
+"name": "제작진행중",
+"date": "2025-09-16"
+},
+{
+"name": "창고입고",
+"date": "2025-09-28"
+},
+{
+"name": "출고",
+"date": "2025-09-28"
+}
+]
+},
+{
+"productName": "벤츠 장우산 4000개",
+"orderNo": "2025091301",
+"orderDate": "2025-09-13",
+"shipRequestDate": "2025-09-23",
+"quantity": 4000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-13"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-13"
+},
+{
+"name": "생산완료",
+"date": "2025-09-22"
+},
+{
+"name": "창고입고",
+"date": "2025-09-23"
+},
+{
+"name": "출고",
+"date": "2025-09-27"
+}
+]
+},
+{
+"productName": "벤츠/BMW 장우산 각각4000개",
+"orderNo": "2025101101",
+"orderDate": "2025-09-23",
+"shipRequestDate": "2025-10-11",
+"quantity": 4000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-23"
+},
+{
+"name": "창고입고",
+"date": "2025-10-11"
+},
+{
+"name": "출고",
+"date": "2025-10-11"
+}
+]
+},
+{
+"productName": "엘라인스크레쳐 브라운 1000개",
+"orderNo": "2025092601",
+"orderDate": "2025-09-04",
+"shipRequestDate": "2025-09-26",
+"quantity": 1000,
+"client": "나울",
+"factory": "쉬저우 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-04"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-04"
+},
+{
+"name": "창고입고",
+"date": "2025-09-26"
+},
+{
+"name": "출고",
+"date": "2025-10-15"
+}
+]
+},
+{
+"productName": "120ml 원터치 캡 튜브 1만개",
+"orderNo": "2025091001",
+"orderDate": "2025-09-10",
+"shipRequestDate": "2025-10-16",
+"quantity": 10000,
+"client": "주식회사 루엠",
+"factory": "광저우 튜브 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "한국에서 CT샘플 확인후에 출고할것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-19"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-09-19"
+},
+{
+"name": "생산완료",
+"date": "2025-10-10"
+},
+{
+"name": "창고입고",
+"date": "2025-10-16"
+},
+{
+"name": "출고",
+"date": "2025-10-22"
+}
+]
+},
+{
+"productName": "벤츠/BMW 장우산 각각4000개",
+"orderNo": "2025092601",
+"orderDate": "2025-09-26",
+"shipRequestDate": "2025-10-17",
+"quantity": 4000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "10월24일 까지 공자에 보관",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-26"
+},
+{
+"name": "중간검품",
+"date": "2025-10-16"
+},
+{
+"name": "생산완료",
+"date": "2025-10-17"
+},
+{
+"name": "창고입고",
+"date": "2025-10-25"
+},
+{
+"name": "출고",
+"date": "2025-10-25"
+}
+]
+},
+{
+"productName": "메니큐어 용기 1만개",
+"orderNo": "2025092701",
+"orderDate": "2025-09-27",
+"shipRequestDate": "2025-10-11",
+"quantity": 10000,
+"client": "에프씨티",
+"factory": "쉬저우 유리 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "입고후 포장다시해서 출고해야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-27"
+},
+{
+"name": "생산완료",
+"date": "2025-10-11"
+},
+{
+"name": "창고입고",
+"date": "2025-10-20"
+},
+{
+"name": "출고",
+"date": "2025-11-02"
+}
+]
+},
+{
+"productName": "30ml 스포이드 용기 1500개",
+"orderNo": "2025101601",
+"orderDate": "2025-10-16",
+"shipRequestDate": "2025-10-29",
+"quantity": 1500,
+"client": "코리아트레이드",
+"factory": "쉬저우 유리 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "테스트 샘플 확인후 출고할것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-10-16"
+},
+{
+"name": "생산완료",
+"date": "2025-10-29"
+},
+{
+"name": "창고입고",
+"date": "2025-11-01"
+},
+{
+"name": "출고",
+"date": "2025-11-02"
+}
+]
+},
+{
+"productName": "120ml 원터치 캡 튜브 2만개",
+"orderNo": "2025101401",
+"orderDate": "2025-10-14",
+"shipRequestDate": "2025-11-12",
+"quantity": 20000,
+"client": "주식회사 루엠",
+"factory": "광저우 튜브 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "리오더 전에꺼와 똑깥아야 함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-10-14"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-10-15"
+},
+{
+"name": "중간검품",
+"date": "2025-11-11"
+},
+{
+"name": "생산완료",
+"date": "2025-11-12"
+},
+{
+"name": "창고입고",
+"date": "2025-11-14"
+},
+{
+"name": "출고",
+"date": "2025-11-16"
+}
+]
+},
+{
+"productName": "10ml 갈색용기 5000개",
+"orderNo": "2025101601",
+"orderDate": "2025-10-16",
+"shipRequestDate": "2025-11-11",
+"quantity": 5000,
+"client": "(주) 에이에스비",
+"factory": "广州市鹏华包装制品有限公司",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "구슬용기 하나씩 검품",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-10-16"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-10-16"
+},
+{
+"name": "중간검품",
+"date": "2025-11-10"
+},
+{
+"name": "생산완료",
+"date": "2025-11-11"
+},
+{
+"name": "창고입고",
+"date": "2025-11-12"
+},
+{
+"name": "출고",
+"date": "2025-11-12"
+}
+]
+},
+{
+"productName": "10ml 갈색용기 단상자 2500개",
+"orderNo": "2025101601",
+"orderDate": "2025-10-16",
+"shipRequestDate": "2025-11-13",
+"quantity": 2500,
+"client": "(주) 에이에스비",
+"factory": "이우 박스 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "용기 보내서 사이즈 맞게 제작해야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-07"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-07"
+},
+{
+"name": "생산완료",
+"date": "2025-11-13"
+},
+{
+"name": "창고입고",
+"date": "2025-11-12"
+},
+{
+"name": "출고",
+"date": "2025-11-12"
+}
+]
+},
+{
+"productName": "장우산 벤츠5000개 BMW3000개",
+"orderNo": "2025102401",
+"orderDate": "2025-10-24",
+"shipRequestDate": "2025-11-15",
+"quantity": 8000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "15일 토요일에 한국발송 예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-10-24"
+},
+{
+"name": "창고입고",
+"date": "2025-11-15"
+},
+{
+"name": "출고",
+"date": "2025-11-15"
+}
+]
+},
+{
+"productName": "자동우산 벤츠800개 BMW300개",
+"orderNo": "2025102501",
+"orderDate": "2025-10-25",
+"shipRequestDate": "2025-11-15",
+"quantity": 1200,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "15일 토요일에 한국발송 예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-10-25"
+},
+{
+"name": "창고입고",
+"date": "2025-11-15"
+},
+{
+"name": "출고",
+"date": "2025-11-15"
+}
+]
+},
+{
+"productName": "파우재 스크래쳐 1460개",
+"orderNo": "2025101601",
+"orderDate": "2025-10-16",
+"shipRequestDate": "2025-11-17",
+"quantity": 1460,
+"client": "나울",
+"factory": "닝보우 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "박스와 포장재 20개 추가. 컨테이너 출고 예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-10-16"
+},
+{
+"name": "중간검품",
+"date": "2025-11-15"
+},
+{
+"name": "생산완료",
+"date": "2025-11-17"
+},
+{
+"name": "출고",
+"date": "2025-11-18"
+}
+]
+},
+{
+"productName": "케리어 가방 100개",
+"orderNo": "2025110501",
+"orderDate": "2025-11-05",
+"shipRequestDate": "2025-11-12",
+"quantity": 100,
+"client": "준트레이드컴퍼니",
+"factory": "嘉兴 意丰箱包",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-06"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-06"
+},
+{
+"name": "생산완료",
+"date": "2025-11-12"
+},
+{
+"name": "창고입고",
+"date": "2025-11-19"
+},
+{
+"name": "출고",
+"date": "2025-11-19"
+}
+]
+},
+{
+"productName": "에어스텝퍼 885개",
+"orderNo": "2025111101",
+"orderDate": "2025-11-11",
+"shipRequestDate": "2025-11-19",
+"quantity": 885,
+"client": "자사상품",
+"factory": "东昊健身器材（永康）",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "박스 50개 추가",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-11"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-11"
+},
+{
+"name": "생산완료",
+"date": "2025-11-19"
+},
+{
+"name": "출고",
+"date": "2025-11-21"
+}
+]
+},
+{
+"productName": "50ml 스포이드 용기 3000개",
+"orderNo": "2025110401",
+"orderDate": "2025-11-04",
+"shipRequestDate": "2025-11-21",
+"quantity": 3000,
+"client": "비엔에프 솔루션",
+"factory": "광저우 旺顺包装",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플 확인후 진행",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-04"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-11"
+},
+{
+"name": "중간검품",
+"date": "2025-11-20"
+},
+{
+"name": "생산완료",
+"date": "2025-11-21"
+},
+{
+"name": "창고입고",
+"date": "2025-11-24"
+},
+{
+"name": "출고",
+"date": "2025-11-29"
+}
+]
+},
+{
+"productName": "단상자 3000개",
+"orderNo": "2025110401",
+"orderDate": "2025-11-04",
+"shipRequestDate": "2025-11-27",
+"quantity": 3000,
+"client": "비엔에프 솔루션",
+"factory": "이우 박스 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-21"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-21"
+},
+{
+"name": "중간검품",
+"date": "2025-11-27"
+},
+{
+"name": "생산완료",
+"date": "2025-11-27"
+},
+{
+"name": "창고입고",
+"date": "2025-11-27"
+},
+{
+"name": "출고",
+"date": "2025-11-29"
+}
+]
+},
+{
+"productName": "쇼핑백 1000개",
+"orderNo": "2025110401",
+"orderDate": "2025-11-04",
+"shipRequestDate": "2025-11-27",
+"quantity": 1000,
+"client": "비엔에프 솔루션",
+"factory": "이우 守恒制袋",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-21"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-21"
+},
+{
+"name": "생산완료",
+"date": "2025-11-27"
+},
+{
+"name": "창고입고",
+"date": "2025-11-27"
+},
+{
+"name": "출고",
+"date": "2025-11-29"
+}
+]
+},
+{
+"productName": "장우산 포르쉐 600개 랜드로버 600개 캐딜락 400개",
+"orderNo": "2025112501",
+"orderDate": "2025-11-17",
+"shipRequestDate": "2025-11-25",
+"quantity": 1600,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-17"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-17"
+},
+{
+"name": "생산완료",
+"date": "2025-11-25"
+},
+{
+"name": "창고입고",
+"date": "2025-11-29"
+},
+{
+"name": "출고",
+"date": "2025-11-29"
+}
+]
+},
+{
+"productName": "골프72 박스 5000개",
+"orderNo": "2025112001",
+"orderDate": "2025-11-20",
+"shipRequestDate": "2025-11-24",
+"quantity": 5000,
+"client": null,
+"factory": "이우 단상자 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-20"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-21"
+},
+{
+"name": "제작진행중",
+"date": "2025-11-23"
+},
+{
+"name": "중간검품",
+"date": "2025-11-24"
+},
+{
+"name": "생산완료",
+"date": "2025-11-24"
+},
+{
+"name": "창고입고",
+"date": "2025-11-24"
+},
+{
+"name": "출고",
+"date": "2025-11-26"
+}
+]
+},
+{
+"productName": "5g 블러셔 용기 22260개",
+"orderNo": "2025110401",
+"orderDate": "2025-11-04",
+"shipRequestDate": "2025-12-08",
+"quantity": 22260,
+"client": "크리에이션포레",
+"factory": "산토우 雅美之",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘산 샘플 확인후 진행",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-04"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-21"
+},
+{
+"name": "생산완료",
+"date": "2025-12-08"
+},
+{
+"name": "창고입고",
+"date": "2025-12-10"
+},
+{
+"name": "출고",
+"date": "2025-12-10"
+}
+]
+},
+{
+"productName": "5ml 갈색용기 30000개",
+"orderNo": "2025121401",
+"orderDate": "2025-11-17",
+"shipRequestDate": "2025-12-14",
+"quantity": 30000,
+"client": "미소코스",
+"factory": "徐州尚礼玻璃制品公司",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-17"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-17"
+},
+{
+"name": "제작진행중",
+"date": "2025-12-02"
+},
+{
+"name": "생산완료",
+"date": "2025-12-14"
+},
+{
+"name": "창고입고",
+"date": "2025-12-16"
+},
+{
+"name": "출고",
+"date": "2025-12-17"
+}
+]
+},
+{
+"productName": "사각고리 3000개",
+"orderNo": "2025120201",
+"orderDate": "2025-11-18",
+"shipRequestDate": "2025-12-02",
+"quantity": 3000,
+"client": null,
+"factory": "广州 美杜斯五金",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-18"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-18"
+},
+{
+"name": "생산완료",
+"date": "2025-12-02"
+},
+{
+"name": "창고입고",
+"date": "2025-12-05"
+},
+{
+"name": "출고",
+"date": "2025-12-07"
+},
+{
+"name": "한국도착",
+"date": "2025-12-11"
+}
+]
+},
+{
+"productName": "원형고리 3000개",
+"orderNo": "2025120901",
+"orderDate": "2025-11-18",
+"shipRequestDate": "2025-12-09",
+"quantity": 3000,
+"client": null,
+"factory": "이우 将利五金",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-18"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-18"
+},
+{
+"name": "생산완료",
+"date": "2025-12-09"
+},
+{
+"name": "창고입고",
+"date": "2025-12-10"
+},
+{
+"name": "출고",
+"date": "2025-12-17"
+}
+]
+},
+{
+"productName": "장우산 벤츠5000개 BMW3000개",
+"orderNo": "2025120902",
+"orderDate": "2025-11-20",
+"shipRequestDate": "2025-12-09",
+"quantity": 80000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-20"
+},
+{
+"name": "생산완료",
+"date": "2025-12-09"
+},
+{
+"name": "창고입고",
+"date": "2025-12-13"
+},
+{
+"name": "출고",
+"date": "2025-12-13"
+},
+{
+"name": "한국도착",
+"date": "2025-12-17"
+}
+]
+},
+{
+"productName": "10ml 튜브용기 6000개",
+"orderNo": "2025112101",
+"orderDate": "2025-11-21",
+"shipRequestDate": "2025-12-08",
+"quantity": 6000,
+"client": "(주)뷰티프렌즈",
+"factory": "광저우 튜브공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "각각 3000개식 인쇄",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-02"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-22"
+},
+{
+"name": "생산완료",
+"date": "2025-12-08"
+},
+{
+"name": "창고입고",
+"date": "2025-12-10"
+},
+{
+"name": "출고",
+"date": "2025-12-10"
+}
+]
+},
+{
+"productName": "골프 72 케이스 3천개",
+"orderNo": "2025120401",
+"orderDate": "2025-12-04",
+"shipRequestDate": "2025-12-14",
+"quantity": 3000,
+"client": "블랙빈테크",
+"factory": "이우 佳全印业",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-04"
+},
+{
+"name": "생산완료",
+"date": "2025-12-14"
+},
+{
+"name": "창고입고",
+"date": "2025-12-15"
+},
+{
+"name": "출고",
+"date": "2025-12-17"
+}
+]
+},
+{
+"productName": "케리어 가방 250개",
+"orderNo": "2025120402",
+"orderDate": "2025-12-04",
+"shipRequestDate": "2025-12-15",
+"quantity": 250,
+"client": "준트레이드컴퍼니",
+"factory": "嘉兴 意丰箱包",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "로고 벤츠100개 BMW 50개 / 벤츠 100개 추가됨 (12월 9일)",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-04"
+},
+{
+"name": "생산완료",
+"date": "2025-12-15"
+},
+{
+"name": "창고입고",
+"date": "2025-12-17"
+},
+{
+"name": "출고",
+"date": "2025-12-17"
+}
+]
+},
+{
+"productName": "타슬란파우치 1만개",
+"orderNo": "2025080801",
+"orderDate": "2025-08-08",
+"shipRequestDate": "2025-12-14",
+"quantity": 10000,
+"client": "피트니스코리아",
+"factory": "壹雅(广州)\n广州 yiya",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "원단 샘플 공장으로 택배보냈음 / 9527#2007# 원단으로 최종 컴펌 받음 디자인 파일 받은후 생산시작대기",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-09-23"
+},
+{
+"name": "중간검품",
+"date": "2025-12-13"
+},
+{
+"name": "생산완료",
+"date": "2025-12-14"
+},
+{
+"name": "창고입고",
+"date": "2025-12-18"
+},
+{
+"name": "출고",
+"date": "2025-12-21"
+}
+]
+},
+{
+"productName": "타슬란파우치 포장봉투 1만개",
+"orderNo": "2025111201",
+"orderDate": "2025-11-12",
+"shipRequestDate": "2025-11-23",
+"quantity": 10000,
+"client": "피트니스코리아",
+"factory": "义乌绿彩包装",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "광주 공장 발송후 포장",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-12"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-18"
+},
+{
+"name": "제작진행중",
+"date": "2025-11-19"
+},
+{
+"name": "중간검품",
+"date": "2025-11-22"
+},
+{
+"name": "생산완료",
+"date": "2025-11-23"
+},
+{
+"name": "창고입고",
+"date": "2025-11-25"
+},
+{
+"name": "출고",
+"date": "2025-12-21"
+}
+]
+},
+{
+"productName": "장우산 벤츠4000개 BMW4000개",
+"orderNo": "2025120401",
+"orderDate": "2025-12-04",
+"shipRequestDate": "2025-12-19",
+"quantity": 8000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-04"
+},
+{
+"name": "생산완료",
+"date": "2025-12-19"
+},
+{
+"name": "창고입고",
+"date": "2025-12-27"
+},
+{
+"name": "출고",
+"date": "2025-12-27"
+}
+]
+},
+{
+"productName": "3단우산 벤츠 1,500개",
+"orderNo": "2025121201",
+"orderDate": "2025-12-12",
+"shipRequestDate": "2025-12-19",
+"quantity": 1500,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "600개 보상해주기로 함 / 검품완료후에 받을것 / 검품영상 받을것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-02"
+},
+{
+"name": "생산완료",
+"date": "2025-12-19"
+},
+{
+"name": "창고입고",
+"date": "2025-12-27"
+},
+{
+"name": "출고",
+"date": "2025-12-27"
+}
+]
+},
+{
+"productName": "장우산 포르쉐 600개",
+"orderNo": "2025121701",
+"orderDate": "2025-12-17",
+"shipRequestDate": "2025-12-27",
+"quantity": 600,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "먼저 생산해달라고 함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-19"
+},
+{
+"name": "창고입고",
+"date": "2025-12-27"
+},
+{
+"name": "출고",
+"date": "2025-12-27"
+}
+]
+},
+{
+"productName": "에어 스텝퍼",
+"orderNo": "2025121001",
+"orderDate": "2025-12-10",
+"shipRequestDate": "2025-12-29",
+"quantity": 885,
+"client": "자사제품",
+"factory": "东昊健身器材（永康）",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "컨테이너 예약 해야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-10"
+},
+{
+"name": "출고",
+"date": "2025-12-29"
+},
+{
+"name": "한국도착",
+"date": "2026-01-09"
+}
+]
+},
+{
+"productName": "양문형 안전문",
+"orderNo": "2025102901",
+"orderDate": "2025-10-29",
+"shipRequestDate": "2025-12-23",
+"quantity": 1230,
+"client": "나울",
+"factory": "불산 祥业门栏",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "12월23일 검품 예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-10-29"
+},
+{
+"name": "제작진행중",
+"date": "2025-12-21"
+},
+{
+"name": "중간검품",
+"date": "2025-12-23"
+},
+{
+"name": "생산완료",
+"date": "2025-12-23"
+},
+{
+"name": "출고",
+"date": "2025-12-26"
+},
+{
+"name": "한국도착",
+"date": "2025-01-05"
+}
+]
+},
+{
+"productName": "120ml MSM유황크림 쿨 튜브용기",
+"orderNo": "2025120401",
+"orderDate": "2025-12-04",
+"shipRequestDate": "2025-12-23",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "광저우 튜브공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "수량 270개 부족한것 보충없이 한국으로 보내기로 함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-04"
+},
+{
+"name": "생산완료",
+"date": "2025-12-23"
+},
+{
+"name": "출고",
+"date": "2026-01-03"
+}
+]
+},
+{
+"productName": "120ml MSM유황크림 쿨 튜브용기 박스",
+"orderNo": "2025120401",
+"orderDate": "2025-12-04",
+"shipRequestDate": "2026-01-03",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "温州 巨福 단상자 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-19"
+},
+{
+"name": "출고",
+"date": "2026-01-03"
+}
+]
+},
+{
+"productName": "그로아 40g 튜브용기",
+"orderNo": "2025120501",
+"orderDate": "2025-12-05",
+"shipRequestDate": "2025-12-23",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "광저우 튜브공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "보류 유황크림 튜브랑 같이 받아야 할것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-09"
+},
+{
+"name": "생산완료",
+"date": "2025-12-23"
+},
+{
+"name": "출고",
+"date": "2026-01-03"
+}
+]
+},
+{
+"productName": "그로아 40g 튜브용기 단상자",
+"orderNo": "2025120501",
+"orderDate": "2025-12-05",
+"shipRequestDate": "2026-01-03",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "温州 巨福 단상자 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-19"
+},
+{
+"name": "출고",
+"date": "2026-01-03"
+}
+]
+},
+{
+"productName": "네임텍 블랙 3천개",
+"orderNo": "2025121201",
+"orderDate": "2025-12-12",
+"shipRequestDate": "2026-01-03",
+"quantity": 3000,
+"client": "블랙빈테크",
+"factory": "이우 시장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "시작할것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-22"
+},
+{
+"name": "출고",
+"date": "2026-01-03"
+}
+]
+},
+{
+"productName": "장우산 벤츠5000개 BMW3000개",
+"orderNo": "2025121701",
+"orderDate": "2025-12-17",
+"shipRequestDate": "2026-01-03",
+"quantity": 8000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "커버 바뀌는것과 접착제 흘러나오는 불량 확인할것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-19"
+},
+{
+"name": "출고",
+"date": "2026-01-03"
+}
+]
+},
+{
+"productName": "켈리 리빙 쇼핑카트200개",
+"orderNo": "2025122201",
+"orderDate": "2025-12-22",
+"shipRequestDate": "2025-12-31",
+"quantity": 200,
+"client": "자사제품",
+"factory": "台州金猫塑业",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "여유 박스요청",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-22"
+},
+{
+"name": "창고입고",
+"date": "2025-12-31"
+},
+{
+"name": "출고",
+"date": "2025-12-31"
+}
+]
+},
+{
+"productName": "장우산 벤츠6000개 BMW2000개",
+"orderNo": "2025122401",
+"orderDate": "2025-12-24",
+"shipRequestDate": "2026-01-09",
+"quantity": 8000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "1월 9일 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-24"
+},
+{
+"name": "출고",
+"date": "2026-01-09"
+}
+]
+},
+{
+"productName": "30ml 갈색 스포이드 사각용기 3천개",
+"orderNo": "2025112801",
+"orderDate": "2025-11-28",
+"shipRequestDate": "2026-01-19",
+"quantity": 3000,
+"client": "비앤에프솔루션",
+"factory": "광저우 彤心包装",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "스티커 공장으로 보냄 / 1월11일 / 공장에서 받고 18일에 출고가능하다",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-22"
+},
+{
+"name": "생산완료",
+"date": "2026-01-15"
+},
+{
+"name": "창고입고",
+"date": "2026-01-19"
+},
+{
+"name": "출고",
+"date": "2026-01-19"
+}
+]
+},
+{
+"productName": "30ml 튜브 1만개",
+"orderNo": "2025121501",
+"orderDate": "2025-12-15",
+"shipRequestDate": "2026-01-13",
+"quantity": 10000,
+"client": "어웨이크",
+"factory": "광저우 튜브공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "제작 완료",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-22"
+},
+{
+"name": "생산완료",
+"date": "2026-01-13"
+},
+{
+"name": "창고입고",
+"date": "2026-01-19"
+},
+{
+"name": "출고",
+"date": "2026-01-19"
+}
+]
+},
+{
+"productName": "250ml 토너용기",
+"orderNo": "2025122201",
+"orderDate": "2025-12-22",
+"shipRequestDate": "2026-01-24",
+"quantity": 2000,
+"client": "코스메디크",
+"factory": "광저우 旺顺包装",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "한국에서 샘플 확인됨",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-24"
+},
+{
+"name": "생산완료",
+"date": "2026-01-19"
+},
+{
+"name": "창고입고",
+"date": "2026-01-22"
+},
+{
+"name": "출고",
+"date": "2026-01-24"
+},
+{
+"name": "한국도착",
+"date": "2026-01-27"
+},
+{
+"name": "고객인도",
+"date": "2026-01-28"
+}
+]
+},
+{
+"productName": "장우산 벤츠4500개 BMW3500개",
+"orderNo": "2026012301",
+"orderDate": "2026-01-23",
+"shipRequestDate": "2026-01-23",
+"quantity": 8000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "1월23일 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-24"
+},
+{
+"name": "출고",
+"date": "2026-01-23"
+}
+]
+},
+{
+"productName": "장우산 MINI 600개",
+"orderNo": "2026012301",
+"orderDate": "2026-01-23",
+"shipRequestDate": "2026-01-23",
+"quantity": 600,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "1월23일 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-01-08"
+},
+{
+"name": "출고",
+"date": "2026-01-23"
+}
+]
+},
+{
+"productName": "장우산 포르쉐 600개",
+"orderNo": "2026012301",
+"orderDate": "2026-01-23",
+"shipRequestDate": "2026-01-23",
+"quantity": 600,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "1월23일 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-01-08"
+},
+{
+"name": "출고",
+"date": "2026-01-23"
+}
+]
+},
+{
+"productName": "엘럭시 50ml 스포이드 용기 3천개",
+"orderNo": "2026010501",
+"orderDate": "2026-01-05",
+"shipRequestDate": "2026-01-27",
+"quantity": 3000,
+"client": "비엔에프솔루션",
+"factory": "광주",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "생산완료",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-01-08"
+},
+{
+"name": "생산완료",
+"date": "2026-01-22"
+},
+{
+"name": "창고입고",
+"date": "2026-01-26"
+},
+{
+"name": "출고",
+"date": "2026-01-27"
+}
+]
+},
+{
+"productName": "엘럭시 50ml 스포이드 용기 단상자 3천개",
+"orderNo": "2026010501",
+"orderDate": "2026-01-05",
+"shipRequestDate": "2026-01-27",
+"quantity": 3000,
+"client": "비엔에프솔루션",
+"factory": "이우",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "생산완료",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-01-14"
+},
+{
+"name": "생산완료",
+"date": "2026-01-22"
+},
+{
+"name": "창고입고",
+"date": "2026-01-22"
+},
+{
+"name": "출고",
+"date": "2026-01-27"
+}
+]
+},
+{
+"productName": "벨라젠 50ml 사각유리용기 6천개",
+"orderNo": "2026012701",
+"orderDate": "2026-01-09",
+"shipRequestDate": "2026-01-27",
+"quantity": 6000,
+"client": "비엔에프솔루션",
+"factory": "광주",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "OJO는 금박캡 3천개 1월22일 생산완료 24일에 창고입고후 출고가능 / OLG는 은박캡 3천개 1월28일 생산완료",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-01-09"
+},
+{
+"name": "생산완료",
+"date": "2026-01-24"
+},
+{
+"name": "창고입고",
+"date": "2026-01-26"
+},
+{
+"name": "출고",
+"date": "2026-01-27"
+}
+]
+},
+{
+"productName": "150ml 미스트 용기 샘플제작",
+"orderNo": "2025121901",
+"orderDate": "2025-12-19",
+"shipRequestDate": null,
+"quantity": null,
+"client": "레미유코스메틱",
+"factory": "广州  维特力",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작중 / 한국에서 받은 샘플과 똑같이 만들수 있다고 함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-30"
+}
+]
+},
+{
+"productName": "그로아 골드 5종 초자용기(3000세트)",
+"orderNo": "2026010201",
+"orderDate": "2026-01-02",
+"shipRequestDate": "2026-01-31",
+"quantity": 15000,
+"client": "미소코스",
+"factory": "광주 紫顺",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-01-02"
+},
+{
+"name": "출고",
+"date": "2026-01-31"
+}
+]
+},
+{
+"productName": "케리어 가방 200개",
+"orderNo": "2026013001",
+"orderDate": "2026-01-30",
+"shipRequestDate": "2026-01-30",
+"quantity": 200,
+"client": "준트레이드컴퍼니",
+"factory": "嘉兴 意丰箱包",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "1월30일 출고예정 / 준트레이드에서 1/30일 경에 받기를 원함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-29"
+},
+{
+"name": "출고",
+"date": "2026-01-30"
+}
+]
+},
+{
+"productName": "장우산 벤츠4000개 BMW4000개",
+"orderNo": "2026013001",
+"orderDate": "2026-01-30",
+"shipRequestDate": "2026-01-30",
+"quantity": 8000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "1월30일 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-24"
+},
+{
+"name": "출고",
+"date": "2026-01-30"
+}
+]
+},
+{
+"productName": "천국의 계단",
+"orderNo": "2025122201",
+"orderDate": "2025-12-22",
+"shipRequestDate": "2026-02-03",
+"quantity": 200,
+"client": "자사제품",
+"factory": "융캉 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "생산완료",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-22"
+},
+{
+"name": "생산완료",
+"date": "2026-01-31"
+},
+{
+"name": "출고",
+"date": "2026-02-03"
+}
+]
+},
+{
+"productName": "L라인 스크레쳐 (브라운)1000개",
+"orderNo": "2026011401",
+"orderDate": "2026-01-14",
+"shipRequestDate": "2026-02-04",
+"quantity": 1000,
+"client": "나울",
+"factory": "쉬저우 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "생상중",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-01-14"
+},
+{
+"name": "생산완료",
+"date": "2026-02-02"
+},
+{
+"name": "창고입고",
+"date": "2026-02-04"
+},
+{
+"name": "출고",
+"date": "2026-02-04"
+},
+{
+"name": "한국도착",
+"date": "2026-02-09"
+}
+]
+},
+{
+"productName": "145ml 토너용기 1만개",
+"orderNo": "2025120401",
+"orderDate": "2025-12-04",
+"shipRequestDate": "2026-02-08",
+"quantity": 10000,
+"client": "루엠",
+"factory": "쉬저우 신 유리공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "금형완성 / 샘플제작완료 / 샘플확인 완료, 생산진행중",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-05"
+},
+{
+"name": "생산완료",
+"date": "2026-02-05"
+},
+{
+"name": "창고입고",
+"date": "2026-02-08"
+},
+{
+"name": "출고",
+"date": "2026-02-08"
+}
+]
+},
+{
+"productName": "22파이 토너용기 펌프 1만개",
+"orderNo": "2025120401",
+"orderDate": "2025-12-04",
+"shipRequestDate": "2026-02-08",
+"quantity": 10000,
+"client": "루엠",
+"factory": "余姚 金良包装",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "금형완성 / 샘플제작완료 / 샘플확인 완료, 생산진행중",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-01-14"
+},
+{
+"name": "생산완료",
+"date": "2026-02-04"
+},
+{
+"name": "창고입고",
+"date": "2026-02-05"
+},
+{
+"name": "출고",
+"date": "2026-02-08"
+}
+]
+},
+{
+"productName": "145ml 토너용기 박스 1만개",
+"orderNo": "2025120401",
+"orderDate": "2025-12-04",
+"shipRequestDate": "2026-02-08",
+"quantity": 10000,
+"client": "루엠",
+"factory": "温州 巨福 단상자 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플 제작 완료 / 1월26일 오전까지 파일전달해야 설전 출고가능함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-05"
+},
+{
+"name": "생산완료",
+"date": "2026-02-04"
+},
+{
+"name": "창고입고",
+"date": "2026-02-04"
+},
+{
+"name": "출고",
+"date": "2026-02-08"
+}
+]
+},
+{
+"productName": "장우산 벤츠4000개 BMW4000개",
+"orderNo": "2026020601",
+"orderDate": "2026-02-06",
+"shipRequestDate": "2026-02-06",
+"quantity": 8000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "2월 6일 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-24"
+},
+{
+"name": "출고",
+"date": "2026-02-06"
+}
+]
+},
+{
+"productName": "장우산 MINI 400개",
+"orderNo": "2026030701",
+"orderDate": "2026-03-07",
+"shipRequestDate": "2026-03-07",
+"quantity": 400,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "3월 7일 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-01-08"
+},
+{
+"name": "출고",
+"date": "2026-03-07"
+}
+]
+},
+{
+"productName": "50ml 원터치 튜브용기",
+"orderNo": "2026011601",
+"orderDate": "2026-01-16",
+"shipRequestDate": "2026-02-08",
+"quantity": 5000,
+"client": "엔에코렙스",
+"factory": "광주 튜브공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "생산 진행중",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-01-16"
+},
+{
+"name": "생산완료",
+"date": "2026-02-05"
+},
+{
+"name": "창고입고",
+"date": "2026-02-08"
+},
+{
+"name": "출고",
+"date": "2026-02-08"
+}
+]
+},
+{
+"productName": "파우재 캣타워",
+"orderNo": "2026020901",
+"orderDate": "2025-12-26",
+"shipRequestDate": "2026-02-09",
+"quantity": null,
+"client": "나울",
+"factory": "닝보 파우재 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "20피트로 출고될 예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-31"
+},
+{
+"name": "생산완료",
+"date": "2026-02-08"
+},
+{
+"name": "출고",
+"date": "2026-02-09"
+}
+]
+},
+{
+"productName": "40g PE드로퍼 튜브용기",
+"orderNo": "2026030701",
+"orderDate": "2025-12-18",
+"shipRequestDate": "2026-03-07",
+"quantity": 10000,
+"client": "앤어스",
+"factory": "광저우 튜브공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "도착후 창고 보관하고 3월에 출고할것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-29"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-01-14"
+},
+{
+"name": "생산완료",
+"date": "2026-02-02"
+},
+{
+"name": "창고입고",
+"date": "2026-02-08"
+},
+{
+"name": "출고",
+"date": "2026-03-07"
+}
+]
+},
+{
+"productName": "장우산 400개 케이스에 넣어서",
+"orderNo": "2026031101",
+"orderDate": "2026-03-05",
+"shipRequestDate": "2026-03-11",
+"quantity": 400,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "개당 삼각박스 포장 / 테이프 같이 보낼것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-06"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-03-06"
+},
+{
+"name": "출고",
+"date": "2026-03-11"
+}
+]
+},
+{
+"productName": "장우산 벤츠4000개 BMW4000개",
+"orderNo": "2026030702",
+"orderDate": "2026-03-07",
+"shipRequestDate": "2026-03-14",
+"quantity": 8000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "3월 14일 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-24"
+},
+{
+"name": "출고",
+"date": "2026-03-14"
+}
+]
+},
+{
+"productName": "50g 선스크린용기 1만개",
+"orderNo": "2025121001",
+"orderDate": "2025-12-10",
+"shipRequestDate": "2026-03-19",
+"quantity": 10000,
+"client": "루엠",
+"factory": "쏘싱 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "금형 수정완료 / 9000개 창고 보관하고 3월4일에 나머지1000개 받아서 같이출고할것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-05"
+},
+{
+"name": "생산완료",
+"date": "2026-02-07"
+},
+{
+"name": "창고입고",
+"date": "2026-02-08"
+},
+{
+"name": "출고",
+"date": "2026-03-19"
+}
+]
+},
+{
+"productName": "50g 선스크린용기 단상자 1만개",
+"orderNo": "2025121001",
+"orderDate": "2025-12-10",
+"shipRequestDate": "2026-03-19",
+"quantity": 10000,
+"client": "루엠",
+"factory": "温州 巨福 단상자 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "인쇄 진행전 색상수정후 진행해야함 / 설 이후 3월 5일전에 출고할 예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-12-05"
+},
+{
+"name": "출고",
+"date": "2026-03-19"
+}
+]
+},
+{
+"productName": "장우산 미니1000개 아우디1000개 / 3단우산 벤츠 2000개",
+"orderNo": "2026030701",
+"orderDate": "2026-03-07",
+"shipRequestDate": "2026-03-21",
+"quantity": 4000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-03"
+},
+{
+"name": "출고",
+"date": "2026-03-21"
+}
+]
+},
+{
+"productName": "양문형 185 안전문 프리미엄 100개",
+"orderNo": "2026030301",
+"orderDate": "2026-03-03",
+"shipRequestDate": "2026-03-22",
+"quantity": 100,
+"client": "나울",
+"factory": "광저우 불산 안전문 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "부품박스 사진 받아볼것 / 이번주 일요일 (21일)에는 꼭 출고해야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-02"
+},
+{
+"name": "출고",
+"date": "2026-03-22"
+}
+]
+},
+{
+"productName": "80ml PE용기",
+"orderNo": "2026030201",
+"orderDate": "2026-03-02",
+"shipRequestDate": "2026-03-23",
+"quantity": 10000,
+"client": "앤어스",
+"factory": "광저우 PE용기 首信",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "생산시작 / 인쇄시에 사진/동영상으로 확인후 인쇄진행할것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-06"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-03-07"
+},
+{
+"name": "생산완료",
+"date": "2026-03-23"
+},
+{
+"name": "출고",
+"date": "2026-03-26"
+}
+]
+},
+{
+"productName": "80ml 사각 스포이드 용기 샘플제작",
+"orderNo": "2026030401",
+"orderDate": "2026-03-04",
+"shipRequestDate": "2026-03-21",
+"quantity": null,
+"client": "코스메디크",
+"factory": "광저우 美玻包装",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-12"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-03-12"
+},
+{
+"name": "생산완료",
+"date": "2026-03-21"
+}
+]
+},
+{
+"productName": "30ml 미스트 용기 샘플제작",
+"orderNo": "2026031201",
+"orderDate": "2026-03-12",
+"shipRequestDate": "2026-03-23",
+"quantity": null,
+"client": "히워즈본",
+"factory": "광저우 杰盈",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-12"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-03-12"
+},
+{
+"name": "생산완료",
+"date": "2026-03-23"
+}
+]
+},
+{
+"productName": "벨라젠 50ml 사각유리용기 3백개",
+"orderNo": "2026031202",
+"orderDate": "2026-03-12",
+"shipRequestDate": "2026-03-20",
+"quantity": null,
+"client": "비엔에프솔루션",
+"factory": "광주",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "OJO 3백개",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-12"
+},
+{
+"name": "생산완료",
+"date": "2026-03-20"
+},
+{
+"name": "창고입고",
+"date": "2026-03-23"
+}
+]
+},
+{
+"productName": "100ml 볼 튜브 용기 샘플제작",
+"orderNo": "2026031203",
+"orderDate": "2026-03-12",
+"shipRequestDate": "2026-03-12",
+"quantity": 300,
+"client": "주식회사 퓨어럽",
+"factory": "광저우 튜브 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-12"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-03-12"
+}
+]
+},
+{
+"productName": "장우산 랜드로버 1200개",
+"orderNo": "2026031901",
+"orderDate": "2026-03-19",
+"shipRequestDate": "2026-03-19",
+"quantity": 1200,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-19"
+}
+]
+},
+{
+"productName": "100ml 볼 튜브 용기 샘플제작",
+"orderNo": "2026031204",
+"orderDate": "2026-03-12",
+"shipRequestDate": "2026-03-12",
+"quantity": null,
+"client": "주식회사 퓨어럽",
+"factory": "광저우 튜브 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-12"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-03-12"
+}
+]
+},
+{
+"productName": "장우산 랜드로버 1200개",
+"orderNo": "2026031901",
+"orderDate": "2026-03-19",
+"shipRequestDate": "2026-03-19",
+"quantity": 1200,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-19"
+}
+]
+},
+{
+"productName": "24mm 펌프 10100개",
+"orderNo": "2026031001",
+"orderDate": "2026-03-10",
+"shipRequestDate": "2026-03-30",
+"quantity": 10100,
+"client": "미소코스",
+"factory": "宁波 维世",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-12"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-03-12"
+},
+{
+"name": "생산완료",
+"date": "2026-03-30"
+},
+{
+"name": "출고",
+"date": "2026-04-01"
+}
+]
+},
+{
+"productName": "",
+"orderNo": null,
+"orderDate": null,
+"shipRequestDate": null,
+"quantity": null,
+"client": null,
+"factory": null,
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": []
+},
+{
+"productName": "쿨러스텐드 84세트",
+"orderNo": "2025111401",
+"orderDate": "2025-11-14",
+"shipRequestDate": "2026-03-30",
+"quantity": 84,
+"client": "자사상품",
+"factory": "융캉 峰野",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2025-11-14"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2025-11-14"
+},
+{
+"name": "생산완료",
+"date": "2026-03-30"
+},
+{
+"name": "출고",
+"date": "2026-04-01"
+}
+]
+},
+{
+"productName": "150ml 미스트 용기 샘플제작",
+"orderNo": "2026030901",
+"orderDate": "2026-03-09",
+"shipRequestDate": "2026-04-09",
+"quantity": null,
+"client": "레미유코스메틱",
+"factory": "广州  维特力",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "4/5일전에 샘플제작해서 보내주기로 함 / 4/9일 샘플 도착예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-12"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-03-12"
+},
+{
+"name": "창고입고",
+"date": "2026-04-09"
+},
+{
+"name": "출고",
+"date": "2026-04-09"
+}
+]
+},
+{
+"productName": "발갈이 2000개",
+"orderNo": "2026040701",
+"orderDate": "2026-04-07",
+"shipRequestDate": "2026-04-12",
+"quantity": 2000,
+"client": "미소코스",
+"factory": "义乌 발갈이-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-07"
+},
+{
+"name": "생산완료",
+"date": "2026-04-12"
+},
+{
+"name": "출고",
+"date": "2026-04-12"
+}
+]
+},
+{
+"productName": "100ml 에어리스 용기 샘플제작",
+"orderNo": "2026032701",
+"orderDate": "2026-03-27",
+"shipRequestDate": "2026-04-14",
+"quantity": null,
+"client": "블룸미 뷰티상회",
+"factory": "쏘싱 联盛",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "용기 색상샘플 받은후 공장에전달해서 제작 / 샘플 제작 (샘플제작비 300위안)",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-08"
+},
+{
+"name": "생산완료",
+"date": "2026-04-13"
+},
+{
+"name": "출고",
+"date": "2026-04-14"
+}
+]
+},
+{
+"productName": "파우재 2종류",
+"orderNo": "2026031301",
+"orderDate": "2026-03-13",
+"shipRequestDate": "2026-04-18",
+"quantity": null,
+"client": "나울",
+"factory": "宁波파우재스크래쳐贝悠米-韩国 BKBR",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "파우재 위와 아래 호환형 샘플 제작 먼저해서 나울에 보내줄것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-16"
+},
+{
+"name": "출고",
+"date": "2026-04-18"
+}
+]
+},
+{
+"productName": "엘라인 500개",
+"orderNo": "2026031301",
+"orderDate": "2026-03-13",
+"shipRequestDate": "2026-04-18",
+"quantity": 500,
+"client": "나울",
+"factory": "江苏 엘라인스크레쳐 喵派 - 韩国 BKB",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "파우재공장으로 보내서 컨테이너 작업할 예정 / 금요일에 링보로 보낼 예정임",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-19"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-03-20"
+},
+{
+"name": "생산완료",
+"date": "2026-04-12"
+},
+{
+"name": "출고",
+"date": "2026-04-18"
+}
+]
+},
+{
+"productName": "발포렛 콜라겐 30ml 튜브용기 1만개",
+"orderNo": "2026031901",
+"orderDate": "2026-03-19",
+"shipRequestDate": "2026-04-19",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-20"
+},
+{
+"name": "출고",
+"date": "2026-04-19"
+}
+]
+},
+{
+"productName": "발포렛 콜라겐 30ml 튜브용기 단상자 1만개",
+"orderNo": "2026031901",
+"orderDate": "2026-03-19",
+"shipRequestDate": "2026-04-19",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "义乌 박스 嘉桥包装-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "튜브용기 도착후 같이 출고",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-20"
+},
+{
+"name": "생산완료",
+"date": "2026-04-15"
+},
+{
+"name": "창고입고",
+"date": "2026-04-15"
+},
+{
+"name": "출고",
+"date": "2026-04-19"
+}
+]
+},
+{
+"productName": "미백주름 15g 앰플병 21500개",
+"orderNo": "2026040601",
+"orderDate": "2026-04-06",
+"shipRequestDate": "2026-04-19",
+"quantity": 21500,
+"client": "미소코스",
+"factory": "쉬저우 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "창고 입고후 검품하고 4월19일 일요일에 출고 예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-06"
+},
+{
+"name": "생산완료",
+"date": "2026-04-13"
+},
+{
+"name": "출고",
+"date": "2026-04-19"
+}
+]
+},
+{
+"productName": "말랑이 스텝퍼 200개",
+"orderNo": "2026040602",
+"orderDate": "2026-04-06",
+"shipRequestDate": "2026-04-15",
+"quantity": 200,
+"client": "자사 제품",
+"factory": "융캉 宛鑫体育用品有限公司",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "그레이 색상+블랙 펌프",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-06"
+},
+{
+"name": "생산완료",
+"date": "2026-04-14"
+},
+{
+"name": "창고입고",
+"date": "2026-04-14"
+},
+{
+"name": "출고",
+"date": "2026-04-15"
+}
+]
+},
+{
+"productName": "BMW 캐리어 100개",
+"orderNo": "2026041901",
+"orderDate": "2026-04-09",
+"shipRequestDate": "2026-04-19",
+"quantity": 100,
+"client": "준트레이드컴퍼니",
+"factory": "嘉兴 캐리어 가방-韩国 BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "벤츠 로고 300개",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-09"
+},
+{
+"name": "출고",
+"date": "2026-04-19"
+}
+]
+},
+{
+"productName": "아크릴안전문 90개",
+"orderNo": "2026040901",
+"orderDate": "2026-04-09",
+"shipRequestDate": "2026-04-13",
+"quantity": 90,
+"client": "나울",
+"factory": "佛山안전문祥业门栏-韩国BKBRO白总",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-09"
+},
+{
+"name": "생산완료",
+"date": "2026-04-13"
+}
+]
+},
+{
+"productName": "플로랄 우산 1700개",
+"orderNo": "2026041701",
+"orderDate": "2026-04-17",
+"shipRequestDate": "2026-04-19",
+"quantity": 1700,
+"client": "자사 제품",
+"factory": "绍兴 플로랄우산 鸿宬-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-17"
+},
+{
+"name": "출고",
+"date": "2026-04-19"
+}
+]
+},
+{
+"productName": "40파이 선크림 튜브용기 샘플제작",
+"orderNo": "2026032701",
+"orderDate": "2026-03-27",
+"shipRequestDate": "2026-04-20",
+"quantity": null,
+"client": "비저블유스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-30"
+},
+{
+"name": "생산완료",
+"date": "2026-04-20"
+},
+{
+"name": "창고입고",
+"date": "2026-04-20"
+},
+{
+"name": "출고",
+"date": "2026-04-20"
+}
+]
+},
+{
+"productName": "120g 향수병 샘플제작",
+"orderNo": "2026030301",
+"orderDate": "2026-03-03",
+"shipRequestDate": "2026-03-31",
+"quantity": null,
+"client": "엔엠피인터네셔널",
+"factory": "광저우 联馨",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작 완료 / 계속 샘플이 제작될 예정임",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-12"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-03-12"
+},
+{
+"name": "생산완료",
+"date": "2026-03-31"
+},
+{
+"name": "출고",
+"date": "2026-01-14"
+}
+]
+},
+{
+"productName": "BMW 우산4000개 LEXUS 우산 2000개 GMC 우산 400개",
+"orderNo": "2026041001",
+"orderDate": "2026-04-10",
+"shipRequestDate": "2026-04-10",
+"quantity": 6400,
+"client": "준트레이드컴퍼니",
+"factory": "绍兴 벤츠우산-韩国 BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "LEXUS 로고 수정 1000개",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-10"
+}
+]
+},
+{
+"productName": "50g PS 크림용기 샘플제작",
+"orderNo": "2026041401",
+"orderDate": "2026-04-14",
+"shipRequestDate": "2026-06-23",
+"quantity": null,
+"client": "루엠",
+"factory": null,
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-10"
+}
+]
+},
+{
+"productName": "안전문 4종류",
+"orderNo": "2026022701",
+"orderDate": "2026-02-27",
+"shipRequestDate": "2026-04-30",
+"quantity": null,
+"client": "나울",
+"factory": "佛山안전문祥业门栏-韩国BKBRO白总",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "1892 국제로 송금함 (국제 광저우에서 진행할 예정) / 안전문 150, 180과 연장패널 샘플 만들어서 나울로 보내줄것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-04"
+},
+{
+"name": "생산완료",
+"date": "2026-04-30"
+},
+{
+"name": "출고",
+"date": "2026-04-30"
+}
+]
+},
+{
+"productName": "20ml 튜브용기",
+"orderNo": "2026030501",
+"orderDate": "2026-03-05",
+"shipRequestDate": "2026-05-03",
+"quantity": 5000,
+"client": "킵고잉컴퍼니",
+"factory": "광저우 튜브 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "입고 검품후 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-08"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-04-08"
+},
+{
+"name": "생산완료",
+"date": "2026-04-27"
+},
+{
+"name": "창고입고",
+"date": "2026-04-30"
+},
+{
+"name": "출고",
+"date": "2026-05-03"
+}
+]
+},
+{
+"productName": "향수병 50ml 1만개",
+"orderNo": "2026031901",
+"orderDate": "2026-03-19",
+"shipRequestDate": "2026-05-03",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "徐州 유리용기 德丰-韩国 BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "다시 제작후 출고해야함 / 입고 검품후 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-20"
+},
+{
+"name": "생산완료",
+"date": "2026-04-27"
+},
+{
+"name": "창고입고",
+"date": "2026-04-29"
+},
+{
+"name": "출고",
+"date": "2026-05-03"
+}
+]
+},
+{
+"productName": "한방 3종 3천개",
+"orderNo": "2026032701",
+"orderDate": "2026-03-27",
+"shipRequestDate": "2026-05-03",
+"quantity": 9000,
+"client": "미소코스",
+"factory": "广州 유리용기 紫顺 美博城103-韩国BK",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "광저우에서 검품완료 / 출고일 확인후 출고해야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-31"
+},
+{
+"name": "생산완료",
+"date": "2026-04-23"
+},
+{
+"name": "창고입고",
+"date": "2026-04-28"
+},
+{
+"name": "출고",
+"date": "2026-05-03"
+}
+]
+},
+{
+"productName": "스포이드 세럼 30ml 용기 1500개",
+"orderNo": "2026042001",
+"orderDate": "2026-04-20",
+"shipRequestDate": "2026-05-03",
+"quantity": 1500,
+"client": "코리아트레이드",
+"factory": "쉬저우 공장",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-20"
+},
+{
+"name": "생산완료",
+"date": "2026-04-25"
+},
+{
+"name": "창고입고",
+"date": "2026-04-27"
+},
+{
+"name": "출고",
+"date": "2026-05-03"
+}
+]
+},
+{
+"productName": "35파이 50ml 원터치 캡 튜브용기 샘플제작",
+"orderNo": "2026040101",
+"orderDate": "2026-04-01",
+"shipRequestDate": "2026-05-04",
+"quantity": null,
+"client": "무브롱",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "5겹 / 35파이 캡 40개 제작후 발송해야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-01"
+},
+{
+"name": "창고입고",
+"date": "2026-04-28"
+},
+{
+"name": "출고",
+"date": "2026-05-04"
+}
+]
+},
+{
+"productName": "22파이 라미 드로퍼 튜브",
+"orderNo": "2026041001",
+"orderDate": "2026-04-10",
+"shipRequestDate": "2026-05-04",
+"quantity": null,
+"client": "더라미(주)",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플 제작",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-10"
+},
+{
+"name": "창고입고",
+"date": "2026-05-03"
+},
+{
+"name": "출고",
+"date": "2026-05-04"
+}
+]
+},
+{
+"productName": "키보드스위치",
+"orderNo": "2026042201",
+"orderDate": "2026-04-22",
+"shipRequestDate": "2026-05-10",
+"quantity": 20000,
+"client": "블랙빈테크",
+"factory": "1688",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-04"
+},
+{
+"name": "출고",
+"date": "2026-05-10"
+}
+]
+},
+{
+"productName": "20ml 튜브용기 단상자",
+"orderNo": "2026050401",
+"orderDate": "2026-05-04",
+"shipRequestDate": "2026-05-10",
+"quantity": 5000,
+"client": "킵고잉컴퍼니",
+"factory": "义乌 박스 嘉桥包装-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-04"
+},
+{
+"name": "생산완료",
+"date": "2026-05-09"
+},
+{
+"name": "창고입고",
+"date": "2026-05-09"
+},
+{
+"name": "출고",
+"date": "2026-05-10"
+}
+]
+},
+{
+"productName": "40파이 120ml 원터치캡 튜브용기",
+"orderNo": "2026041001",
+"orderDate": "2026-04-10",
+"shipRequestDate": "2026-05-10",
+"quantity": 5000,
+"client": "(주)필츠",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플 제작 / 색상 샘플 제작/인쇄 없음",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-10"
+}
+]
+},
+{
+"productName": "80ml 사각 스포이드 용기",
+"orderNo": "2026040801",
+"orderDate": "2026-04-08",
+"shipRequestDate": "2026-05-17",
+"quantity": 8000,
+"client": "코스메디크",
+"factory": "广州 유리용기 美玻-韩国 BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "6000개 각각2천개씩 인쇄 / 캡은 1만개 / 입고되면 먼저 사진보주고, 제작제품 몇개 한국보내주고, 확인후 본품 출고해주세요",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-08"
+},
+{
+"name": "생산완료",
+"date": "2026-05-17"
+},
+{
+"name": "창고입고",
+"date": "2026-05-22"
+},
+{
+"name": "검품",
+"date": "2026-05-23"
+},
+{
+"name": "출고",
+"date": "2026-05-24"
+}
+]
+},
+{
+"productName": "150ml 미스트 용기 5000개",
+"orderNo": "2026041501",
+"orderDate": "2026-04-15",
+"shipRequestDate": "2026-05-20",
+"quantity": 5000,
+"client": "레미유코스메틱",
+"factory": "广州 플라스틱용기 维特力-韩国 BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "화이트 용기 회이트 캡 화이트 펌프 / 빨때 길이 12.5cm",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-15"
+},
+{
+"name": "생산완료",
+"date": "2026-05-20"
+},
+{
+"name": "창고입고",
+"date": "2026-05-22"
+},
+{
+"name": "검품",
+"date": "2026-05-23"
+},
+{
+"name": "출고",
+"date": "2026-05-24"
+}
+]
+},
+{
+"productName": "장우산 BMW4000개",
+"orderNo": "2026050701",
+"orderDate": "2026-05-07",
+"shipRequestDate": "2026-05-15",
+"quantity": 4000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-07"
+},
+{
+"name": "생산완료",
+"date": "2026-05-15"
+},
+{
+"name": "창고입고",
+"date": "2026-05-16"
+},
+{
+"name": "검품",
+"date": "2026-05-16"
+},
+{
+"name": "출고",
+"date": "2026-05-23"
+}
+]
+},
+{
+"productName": "10ml 스포이드 용기\n8000개",
+"orderNo": "2026051101",
+"orderDate": "2026-05-11",
+"shipRequestDate": "2026-05-20",
+"quantity": 8000,
+"client": "코스메디크",
+"factory": "广州 유리용기 珀利亚-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "금색 알루미늄 캡",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-15"
+},
+{
+"name": "생산완료",
+"date": "2026-05-20"
+}
+]
+},
+{
+"productName": "장우산 아우디2000개 포르쉐 1200개",
+"orderNo": "2026052301",
+"orderDate": "2026-05-14",
+"shipRequestDate": "2026-05-23",
+"quantity": 3200,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-14"
+},
+{
+"name": "생산완료",
+"date": "2026-05-23"
+},
+{
+"name": "창고입고",
+"date": "2026-05-23"
+},
+{
+"name": "검품",
+"date": "2026-05-23"
+},
+{
+"name": "출고",
+"date": "2026-05-23"
+}
+]
+},
+{
+"productName": "키보드스위치 2만개",
+"orderNo": "2026052401",
+"orderDate": "2026-05-21",
+"shipRequestDate": "2026-05-24",
+"quantity": 20000,
+"client": "블랙빈테크",
+"factory": "1688",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-21"
+},
+{
+"name": "창고입고",
+"date": "2026-05-23"
+},
+{
+"name": "검품",
+"date": "2026-05-23"
+},
+{
+"name": "출고",
+"date": "2026-05-24"
+}
+]
+},
+{
+"productName": "50ml 원형캡 튜브용기",
+"orderNo": "2026052601",
+"orderDate": "2026-04-24",
+"shipRequestDate": "2026-05-26",
+"quantity": null,
+"client": "이엔에프코스메디",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "색상 7506C 로 지정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-30"
+},
+{
+"name": "중간검품",
+"date": "2026-05-24"
+},
+{
+"name": "생산완료",
+"date": "2026-05-26"
+},
+{
+"name": "창고입고",
+"date": "2026-05-27"
+},
+{
+"name": "검품",
+"date": "2026-05-27"
+},
+{
+"name": "출고",
+"date": "2026-05-30"
+}
+]
+},
+{
+"productName": "5g 사각 유리 스포이드 용기 샘플제작",
+"orderNo": "2026052901",
+"orderDate": "2026-05-26",
+"shipRequestDate": "2026-05-29",
+"quantity": null,
+"client": "(주)에이원비앤에이치",
+"factory": "广州 유리용기 运来-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플 제작 22개",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-26"
+},
+{
+"name": "생산완료",
+"date": "2026-05-29"
+},
+{
+"name": "창고입고",
+"date": "2026-05-30"
+},
+{
+"name": "출고",
+"date": "2026-05-30"
+}
+]
+},
+{
+"productName": "30ml 미스트 용기 샘플제작 20개",
+"orderNo": "2026053001",
+"orderDate": "2026-05-15",
+"shipRequestDate": "2026-05-30",
+"quantity": null,
+"client": "히워즈본",
+"factory": "广州 플라스틱용기 杰盈-韩国 BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-15"
+},
+{
+"name": "생산완료",
+"date": "2026-05-30"
+},
+{
+"name": "창고입고",
+"date": "2026-06-01"
+},
+{
+"name": "검품",
+"date": "2026-06-01"
+},
+{
+"name": "출고",
+"date": "2026-06-01"
+}
+]
+},
+{
+"productName": "벤츠 텀블러300개",
+"orderNo": "2026030401",
+"orderDate": "2026-03-04",
+"shipRequestDate": "2026-04-13",
+"quantity": 300,
+"client": "준트레이드컴퍼니",
+"factory": "永康 텀블러 轩露-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "한국 검사용 샘플 / 창고 보류/손님께 확인후 출고예정",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-03-04"
+},
+{
+"name": "생산완료",
+"date": "2026-04-13"
+},
+{
+"name": "창고입고",
+"date": "2026-04-15"
+},
+{
+"name": "출고",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "사각버클 2000개",
+"orderNo": "2026042201",
+"orderDate": "2026-04-22",
+"shipRequestDate": "2026-05-15",
+"quantity": 2000,
+"client": "블랙빈테크",
+"factory": "佛山 사각고리 -韩国 BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "인쇄없음",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-30"
+},
+{
+"name": "생산완료",
+"date": "2026-05-15"
+},
+{
+"name": "창고입고",
+"date": "2026-05-18"
+},
+{
+"name": "검품",
+"date": "2026-05-18"
+},
+{
+"name": "출고",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "원형고리 2000개",
+"orderNo": "2026042201",
+"orderDate": "2026-04-22",
+"shipRequestDate": "2026-05-22",
+"quantity": 2000,
+"client": "블랙빈테크",
+"factory": "义乌 원형고리 韩国-BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-30"
+},
+{
+"name": "생산완료",
+"date": "2026-05-22"
+},
+{
+"name": "창고입고",
+"date": "2026-05-23"
+},
+{
+"name": "검품",
+"date": "2026-05-23"
+},
+{
+"name": "출고",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "32파이 펌프",
+"orderNo": "2026042101",
+"orderDate": "2026-04-21",
+"shipRequestDate": "2026-06-01",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "广东 펌프 宝力-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "색상 샘플 확인후 제작진행",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-07"
+},
+{
+"name": "생산완료",
+"date": "2026-06-01"
+},
+{
+"name": "창고입고",
+"date": "2026-06-05"
+},
+{
+"name": "검품",
+"date": "2026-06-05"
+},
+{
+"name": "출고",
+"date": "2026-06-06"
+}
+]
+},
+{
+"productName": "15g 쿠션용기",
+"orderNo": "2026042102",
+"orderDate": "2026-04-21",
+"shipRequestDate": "2026-06-06",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "广州 쿠션 进业-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플 공장으로 발송후 제작진행 / 리필 1만개 추가해서 2만개",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-07"
+},
+{
+"name": "생산완료",
+"date": "2026-06-06"
+},
+{
+"name": "창고입고",
+"date": "2026-06-11"
+},
+{
+"name": "검품",
+"date": "2026-06-11"
+},
+{
+"name": "출고",
+"date": "2026-06-11"
+}
+]
+},
+{
+"productName": "50g 타원형 튜브용기",
+"orderNo": "2025051101",
+"orderDate": "2026-05-11",
+"shipRequestDate": "2026-06-09",
+"quantity": 10000,
+"client": "(주)포에스엔터테인먼트",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "바로 주문할것",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-26"
+},
+{
+"name": "생산완료",
+"date": "2026-06-09"
+},
+{
+"name": "창고입고",
+"date": "2026-06-11"
+},
+{
+"name": "검품",
+"date": "2026-06-11"
+},
+{
+"name": "출고",
+"date": "2026-06-11"
+}
+]
+},
+{
+"productName": "에어스탭퍼 뉴그레이 450 밀키베이지 305 퍼플라벤더 130",
+"orderNo": "2026051801",
+"orderDate": "2026-05-18",
+"shipRequestDate": "2026-05-29",
+"quantity": 885,
+"client": "자사 제품",
+"factory": "永康 스텝퍼 东昊-韩国 BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "박스 150개 추가",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-18"
+},
+{
+"name": "생산완료",
+"date": "2026-05-29"
+},
+{
+"name": "출고",
+"date": "2026-06-07"
+}
+]
+},
+{
+"productName": "25파이 25g 라미튜브용기",
+"orderNo": "2026041001",
+"orderDate": "2026-04-10",
+"shipRequestDate": "2026-06-18",
+"quantity": 10000,
+"client": "코스메디크",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "용기 5천개/캡 1만개 / 입고되면 먼저 사진보주고, 샘플 한국으로 발송해주세요",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-04-10"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-04-10"
+},
+{
+"name": "생산완료",
+"date": "2026-06-18"
+},
+{
+"name": "창고입고",
+"date": "2026-06-20"
+},
+{
+"name": "검품",
+"date": "2026-06-20"
+},
+{
+"name": "출고",
+"date": "2026-06-21"
+}
+]
+},
+{
+"productName": "30ml 튜브용기",
+"orderNo": "2026050401",
+"orderDate": "2026-05-04",
+"shipRequestDate": "2026-06-18",
+"quantity": 10000,
+"client": "(주)팜스메팩",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "1만개 각각 5천개씩 인쇄/ CT용으로 처음 제작되는 제품의 40개 먼저 보내야함",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-29"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-05-29"
+},
+{
+"name": "생산완료",
+"date": "2026-06-18"
+},
+{
+"name": "창고입고",
+"date": "2026-06-20"
+},
+{
+"name": "검품",
+"date": "2026-06-20"
+},
+{
+"name": "출고",
+"date": "2026-06-21"
+}
+]
+},
+{
+"productName": "30g 코어웰 셀뷰르 크림 뾰족토출구 튜브용기",
+"orderNo": "2026052901",
+"orderDate": "2026-05-29",
+"shipRequestDate": "2026-06-18",
+"quantity": 10000,
+"client": "코스메디크",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "무광 튜브/무광 캡/토출구1.5mm",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-29"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-05-29"
+},
+{
+"name": "생산완료",
+"date": "2026-06-18"
+},
+{
+"name": "창고입고",
+"date": "2026-06-18"
+},
+{
+"name": "검품",
+"date": "2026-06-20"
+},
+{
+"name": "출고",
+"date": "2026-06-21"
+}
+]
+},
+{
+"productName": "키보드 스위치",
+"orderNo": "2026061601",
+"orderDate": "2026-06-16",
+"shipRequestDate": "2026-06-20",
+"quantity": 20000,
+"client": "블랙빈테크",
+"factory": "1688",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-06-17"
+},
+{
+"name": "생산완료",
+"date": "2026-06-20"
+},
+{
+"name": "창고입고",
+"date": "2026-06-20"
+},
+{
+"name": "출고",
+"date": "2026-06-21"
+}
+]
+},
+{
+"productName": "40파이 100ml 원터치캡 튜브용기 샘플 제작",
+"orderNo": "2026060801",
+"orderDate": "2026-06-08",
+"shipRequestDate": "2026-06-16",
+"quantity": null,
+"client": "제이네스트 주식회사",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플 제작 - PE 화이트 무광튜브 / 회이트 유광 캡 / 실크2도인쇄",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-06-23"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-06-05"
+},
+{
+"name": "생산완료",
+"date": "2026-06-16"
+},
+{
+"name": "창고입고",
+"date": "2026-06-16"
+},
+{
+"name": "검품",
+"date": "2026-06-16"
+},
+{
+"name": "출고",
+"date": "2026-06-18"
+}
+]
+},
+{
+"productName": "소이랩 허니블랙빈 두피앰플 40ml PE 드로퍼 튜브용기",
+"orderNo": "2026051501",
+"orderDate": "2026-05-15",
+"shipRequestDate": "2026-06-18",
+"quantity": 10000,
+"client": "앤어스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "지난번 바탕색보다 미색이 10%만 더 연하게 / 검은색 문안은 지난번 보다 조금 더 선명하게",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-27"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-05-15"
+},
+{
+"name": "생산완료",
+"date": "2026-06-18"
+},
+{
+"name": "창고입고",
+"date": "2026-06-20"
+},
+{
+"name": "검품",
+"date": "2026-06-20"
+}
+]
+},
+{
+"productName": "소이랩 트리트먼트 150ml 원터치 튜브용기",
+"orderNo": "2026051502",
+"orderDate": "2026-05-15",
+"shipRequestDate": "2026-06-18",
+"quantity": 10000,
+"client": "앤어스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-27"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-05-15"
+},
+{
+"name": "생산완료",
+"date": "2026-06-18"
+},
+{
+"name": "창고입고",
+"date": "2026-06-20"
+},
+{
+"name": "검품",
+"date": "2026-06-20"
+}
+]
+},
+{
+"productName": "소이랩 트리트먼트 30ml 스크류캡 튜브용기",
+"orderNo": "2026051503",
+"orderDate": "2026-05-15",
+"shipRequestDate": "2026-06-18",
+"quantity": 10000,
+"client": "앤어스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-05-27"
+},
+{
+"name": "계약금입금(공장)",
+"date": "2026-05-15"
+},
+{
+"name": "생산완료",
+"date": "2026-06-18"
+},
+{
+"name": "창고입고",
+"date": "2026-06-20"
+},
+{
+"name": "검품",
+"date": "2026-06-20"
+}
+]
+},
+{
+"productName": "립 브러쉬",
+"orderNo": "2026061201",
+"orderDate": "2026-06-12",
+"shipRequestDate": "2026-06-20",
+"quantity": 20000,
+"client": "터치미코리아",
+"factory": "汕头 메이크업 爱博莉 - 韩国BKBRO",
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "제품입고되면 항공특송으로 발송할 예정입니다 / 급한 제품이니 계속 공장에 확인해주세요",
+"steps": [
+{
+"name": "공장주문",
+"date": "2026-06-17"
+},
+{
+"name": "생산완료",
+"date": "2026-06-20"
+},
+{
+"name": "창고입고",
+"date": "2026-06-22"
+},
+{
+"name": "출고",
+"date": "2026-06-22"
+}
+]
+},
+{
+"productName": "120g 향수병",
+"orderNo": "2026041801",
+"orderDate": "2026-04-18",
+"shipRequestDate": "2026-06-25",
+"quantity": 10000,
+"client": "엔엠피인터네셔널",
+"factory": "广州 향수병 联馨-韩国BKBRO",
+"manager": "이수정",
+"productPhoto": null,
+"importantNote": null,
+"note": "5월 20일 무광샘플완성 / 5월 25일 유광샘플완성 / 샘플확인후에 35일 제작기간 (6월28일 제품제작완료 예정)",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-04-18"
+},
+{
+"name": "공장주문",
+"date": "2026-04-23"
+}
+]
+},
+{
+"productName": "전사지",
+"orderNo": "2026042202",
+"orderDate": "2026-04-22",
+"shipRequestDate": "2026-06-11",
+"quantity": null,
+"client": "블랙빈테크",
+"factory": "1688",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "2번으로 주문할것",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-04-22"
+},
+{
+"name": "공장주문",
+"date": "2026-06-08"
+}
+]
+},
+{
+"productName": "밸런스4.5 리프레싱 필링젤150ml 에어리스용기",
+"orderNo": "2026042401",
+"orderDate": "2026-04-24",
+"shipRequestDate": "2026-07-03",
+"quantity": 10000,
+"client": "터치미코리아",
+"factory": "余姚 에어리스용기 汉和-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작 확인후 생산시작 / 샘플 한국으로 발송완료",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-04-24"
+},
+{
+"name": "공장주문",
+"date": "2026-05-21"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-04-25"
+}
+]
+},
+{
+"productName": "50g 크림용기",
+"orderNo": "2026050501",
+"orderDate": "2026-05-05",
+"shipRequestDate": "2026-06-23",
+"quantity": 10000,
+"client": "(주)루엠",
+"factory": "广州 플라스틱 용기 乔盛-韩国 BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "생산중 디자인 파일 전달 받아야함 / ABS캡 샘플 확인후 진행(7월4일 샘플제작 완료예정)",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-05"
+},
+{
+"name": "공장주문",
+"date": "2026-05-08"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-04-13"
+}
+]
+},
+{
+"productName": "제이아라바이탈하이드레이팅밸런서  145ml 토너용기",
+"orderNo": "2026051401",
+"orderDate": "2026-05-14",
+"shipRequestDate": "2026-06-21",
+"quantity": 10000,
+"client": "루엠",
+"factory": "徐州 유리용기 尚礼-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-14"
+},
+{
+"name": "공장주문",
+"date": "2026-05-15"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-05-27"
+}
+]
+},
+{
+"productName": "제이아라바이탈하이드레이팅밸런서  145ml 토너용기 단상자",
+"orderNo": null,
+"orderDate": "2026-05-14",
+"shipRequestDate": "2026-06-23",
+"quantity": 10000,
+"client": "루엠",
+"factory": "义乌 박스 嘉桥包装-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-14"
+},
+{
+"name": "공장주문",
+"date": "2026-05-15"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-05-27"
+}
+]
+},
+{
+"productName": "루엠제이아라톤업유브이 선스크린 50G 아크릴용기",
+"orderNo": "2026051402",
+"orderDate": "2026-05-14",
+"shipRequestDate": "2026-06-15",
+"quantity": 10000,
+"client": "루엠",
+"factory": "绍兴 아크릴용기 日尚-韩国 BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-14"
+},
+{
+"name": "공장주문",
+"date": "2026-05-15"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-05-27"
+}
+]
+},
+{
+"productName": "루엠제이아라톤업유브이 선스크린 50G 단상자",
+"orderNo": null,
+"orderDate": "2026-05-14",
+"shipRequestDate": "2026-06-15",
+"quantity": 10000,
+"client": "루엠",
+"factory": "义乌 박스 嘉桥包装-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-14"
+},
+{
+"name": "공장주문",
+"date": "2026-05-15"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-05-27"
+}
+]
+},
+{
+"productName": "40파이 20ml 선크림 라미 튜브용기",
+"orderNo": "2026051504",
+"orderDate": "2026-05-15",
+"shipRequestDate": "2026-06-15",
+"quantity": 10000,
+"client": "비저블유스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "용시 색상 4204C / 캡 투명 무광",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-15"
+},
+{
+"name": "공장주문",
+"date": "2026-05-18"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-05-18"
+}
+]
+},
+{
+"productName": "미니 화로대",
+"orderNo": "2026051505",
+"orderDate": "2026-05-15",
+"shipRequestDate": "2026-06-10",
+"quantity": 200,
+"client": "자사 제품",
+"factory": "永康峰野화로-韩国kelly&stephan",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "무지 박스 / 스티커 작업해야함",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-15"
+},
+{
+"name": "공장주문",
+"date": "2026-05-18"
+},
+{
+"name": "생산완료",
+"date": "2026-06-17"
+},
+{
+"name": "창고입고",
+"date": "2026-06-17"
+}
+]
+},
+{
+"productName": "30ml 그로아 스피큘 샷500 용기",
+"orderNo": "2026052701",
+"orderDate": "2026-05-27",
+"shipRequestDate": "2026-06-07",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "徐州 유리용기-韩国 精油",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "주문할것",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-27"
+},
+{
+"name": "공장주문",
+"date": "2026-05-29"
+},
+{
+"name": "생산완료",
+"date": "2026-06-08"
+},
+{
+"name": "창고입고",
+"date": "2026-06-10"
+},
+{
+"name": "검품",
+"date": "2026-06-10"
+}
+]
+},
+{
+"productName": "30ml 그로아 스피큘 샷500 용기 펌프 단상자",
+"orderNo": null,
+"orderDate": "2026-05-27",
+"shipRequestDate": "2026-06-20",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "义乌 박스 嘉桥包装-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "주문할것",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-27"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "생산완료",
+"date": "2026-06-16"
+},
+{
+"name": "창고입고",
+"date": "2026-06-16"
+},
+{
+"name": "검품",
+"date": "2026-06-16"
+}
+]
+},
+{
+"productName": "30ml 그로아 스피큘 샷500 용기 펌프",
+"orderNo": null,
+"orderDate": "2026-05-27",
+"shipRequestDate": "2026-06-17",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "宁波 펌프 维世-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "주문할것",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-27"
+},
+{
+"name": "공장주문",
+"date": "2026-05-29"
+},
+{
+"name": "생산완료",
+"date": "2026-06-17"
+},
+{
+"name": "창고입고",
+"date": "2026-06-21"
+}
+]
+},
+{
+"productName": "와이퍼",
+"orderNo": "2026053001",
+"orderDate": "2026-05-30",
+"shipRequestDate": "2026-07-10",
+"quantity": null,
+"client": "김준근 팀장님",
+"factory": "厦门 와이퍼공장-韩国BKBRO",
+"manager": "이수정",
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작 7월10일 예정",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-30"
+},
+{
+"name": "공장주문",
+"date": "2026-05-29"
+}
+]
+},
+{
+"productName": "안전문 5종류",
+"orderNo": "2026052101",
+"orderDate": "2026-05-21",
+"shipRequestDate": "2026-06-25",
+"quantity": null,
+"client": "나울",
+"factory": "佛山안전문祥业门栏-韩国BKBRO白总",
+"manager": "이수정",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-05-21"
+},
+{
+"name": "공장주문",
+"date": "2026-05-21"
+}
+]
+},
+{
+"productName": "400ml 원터치캡 튜브용기",
+"orderNo": "2026060101",
+"orderDate": "2026-06-01",
+"shipRequestDate": "2026-07-05",
+"quantity": 20000,
+"client": "코스메디크",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "디자인 칼선 받아야함 / 공장 방문후 포장방식 상의해야함",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-01"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-09"
+},
+{
+"name": "파일전달(공장)",
+"date": "2026-06-10"
+}
+]
+},
+{
+"productName": "200ml 스프레이 PE 용기",
+"orderNo": "2026060102",
+"orderDate": "2026-06-01",
+"shipRequestDate": "2026-06-25",
+"quantity": 10000,
+"client": "코스메디크",
+"factory": "沧州 PE용기 佳铭塑业-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작 6월 14일까지 완성",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-01"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-09"
+},
+{
+"name": "파일전달(공장)",
+"date": "2026-06-10"
+}
+]
+},
+{
+"productName": "500ml 펌프 PE 용기 (드메드 시카 타마누 클렌징 워터)",
+"orderNo": null,
+"orderDate": "2026-06-01",
+"shipRequestDate": "2026-06-28",
+"quantity": 22000,
+"client": "코스메디크",
+"factory": "河北 PE용기 鑫茂塑业-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "샘플제작 6월 14일까지 완성 / 2가지 디자인 1만1천개씩",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-01"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-09"
+},
+{
+"name": "파일전달(공장)",
+"date": "2026-06-10"
+}
+]
+},
+{
+"productName": "파우재스크래쳐",
+"orderNo": "2026060401",
+"orderDate": "2026-06-04",
+"shipRequestDate": "2026-07-10",
+"quantity": null,
+"client": "나울",
+"factory": "宁波파우재스크래쳐贝悠米-韩国 BKBR",
+"manager": "이수정",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-04"
+},
+{
+"name": "공장주문",
+"date": "2026-06-04"
+}
+]
+},
+{
+"productName": "그로아데일리라이트 선크림 55ml 용기",
+"orderNo": "2026060501",
+"orderDate": "2026-06-05",
+"shipRequestDate": "2026-06-21",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "라미튜브 / 용기무광 / 단상자 무광",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-05"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "그로아데일리라이트 선크림 55ml 단상자",
+"orderNo": null,
+"orderDate": "2026-06-05",
+"shipRequestDate": "2026-06-20",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "义乌 박스 嘉桥包装-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "라미튜브 / 용기무광 / 단상자 무광",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-05"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "그로아 콜라겐 비비크림 55ml 용기",
+"orderNo": null,
+"orderDate": "2026-06-05",
+"shipRequestDate": "2026-06-20",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "라미튜브 / 용기무광 / 단상자 무광",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-05"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "그로아 콜라겐 비비크림 55ml 단상자",
+"orderNo": null,
+"orderDate": "2026-06-05",
+"shipRequestDate": "2026-06-20",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "义乌 박스 嘉桥包装-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "라미튜브 / 용기무광 / 단상자 무광",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-05"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "크로아 콜라겐 씨씨크림 55ml 용기",
+"orderNo": "2026060502",
+"orderDate": "2026-06-05",
+"shipRequestDate": "2026-06-20",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "라미튜브 / 용기무광 / 단상자 무광",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-05"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "크로아 콜라겐 씨씨크림 55ml 용기기 단상자",
+"orderNo": null,
+"orderDate": "2026-06-05",
+"shipRequestDate": "2026-06-20",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "义乌 박스 嘉桥包装-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "라미튜브 / 용기무광 / 단상자 무광",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-05"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "크로아 콜라겐 썬톤업 크림 55ml 용기",
+"orderNo": null,
+"orderDate": "2026-06-05",
+"shipRequestDate": "2026-06-20",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "라미튜브 / 용기무광 / 단상자 무광",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-05"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "크로아 콜라겐 썬톤업 크림 55ml 용기 단상자",
+"orderNo": null,
+"orderDate": "2026-06-05",
+"shipRequestDate": "2026-06-20",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "义乌 박스 嘉桥包装-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "라미튜브 / 용기무광 / 단상자 무광",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-05"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-03"
+}
+]
+},
+{
+"productName": "40ml PE 원통형 튜브용기",
+"orderNo": "2026060801",
+"orderDate": "2026-06-08",
+"shipRequestDate": "2026-07-03",
+"quantity": 5000,
+"client": "미쁘다",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "PE 화이트 무광튜브 / 회이트 유광 캡 / 옵셋인쇄",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-08"
+},
+{
+"name": "공장주문",
+"date": "2026-06-05"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-16"
+}
+]
+},
+{
+"productName": "40ml PE 원통형 튜브용기 단상자",
+"orderNo": null,
+"orderDate": "2026-06-08",
+"shipRequestDate": "2026-07-02",
+"quantity": 5000,
+"client": "미쁘다",
+"factory": "义乌 박스 嘉桥包装-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-08"
+},
+{
+"name": "공장주문",
+"date": "2026-06-19"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-18"
+}
+]
+},
+{
+"productName": "120ml PE 원터치캡 튜브용기",
+"orderNo": "2026060803",
+"orderDate": "2026-06-08",
+"shipRequestDate": "2026-07-05",
+"quantity": 6000,
+"client": "코스메디크",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-08"
+},
+{
+"name": "공장주문",
+"date": "2026-06-10"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-10"
+},
+{
+"name": "파일전달(공장)",
+"date": "2026-06-10"
+}
+]
+},
+{
+"productName": "50ml ABL 라미 스크류캡 튜브용기",
+"orderNo": null,
+"orderDate": "2026-06-08",
+"shipRequestDate": "2026-07-05",
+"quantity": 6000,
+"client": "코스메디크",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-08"
+},
+{
+"name": "공장주문",
+"date": "2026-06-10"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-10"
+},
+{
+"name": "파일전달(공장)",
+"date": "2026-06-10"
+}
+]
+},
+{
+"productName": "15g ABS 자석형 쿠션 컴팩트 용기 샘플제작",
+"orderNo": "2026061001",
+"orderDate": "2026-06-10",
+"shipRequestDate": "2026-06-27",
+"quantity": 20,
+"client": "엠에이치글로벌",
+"factory": "汕头 쿠션용기 卓灏 - 韩国 BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "6월25일까지는 샘플제작완성을 해야함",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-10"
+},
+{
+"name": "공장주문",
+"date": "2026-06-18"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-08"
+}
+]
+},
+{
+"productName": "100파이 100ml 원터치캡 튜브용기",
+"orderNo": "2026061202",
+"orderDate": "2026-06-12",
+"shipRequestDate": "2026-07-04",
+"quantity": 10000,
+"client": "미라클스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "먼저 CT샘플 제작을 한후에 한국에 확인하고 본품 제작할것 / 샘플제작 우선 20개",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-12"
+},
+{
+"name": "공장주문",
+"date": "2026-06-18"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-16"
+}
+]
+},
+{
+"productName": "그로아 콜라겐 30ml 튜브용기",
+"orderNo": "2026061401",
+"orderDate": "2026-06-14",
+"shipRequestDate": "2026-07-04",
+"quantity": 10000,
+"client": "미소코스",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "잠시 보류",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-14"
+}
+]
+},
+{
+"productName": "그로아 콜라겐 30ml 튜브용기 단상자",
+"orderNo": null,
+"orderDate": "2026-06-14",
+"shipRequestDate": "2026-07-04",
+"quantity": 10000,
+"client": "미소코스",
+"factory": null,
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "잠시 보류",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-14"
+}
+]
+},
+{
+"productName": "5g 사각 스포이드 용기",
+"orderNo": "2026061201",
+"orderDate": "2026-06-12",
+"shipRequestDate": "2026-07-06",
+"quantity": 12000,
+"client": "에이원비앤에이치",
+"factory": "广州 유리용기 运来-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "박킹관련 이슈가 있었고, 제작 시작되면 입고되면 바킹을 끼워서 캡이 완전히 잘 닫히는지 꼭 확인헐것",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-12"
+},
+{
+"name": "공장주문",
+"date": "2026-06-18"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-05-26"
+}
+]
+},
+{
+"productName": "30ml 원형 갈색 스포이드 용기",
+"orderNo": "2026061202",
+"orderDate": "2026-06-12",
+"shipRequestDate": "2026-07-05",
+"quantity": 3000,
+"client": "에이에스비",
+"factory": "广州 유리용기 中达包装-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "디자인 칼선 받아야함",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-12"
+},
+{
+"name": "공장주문",
+"date": "2026-06-19"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-11"
+}
+]
+},
+{
+"productName": "50g 아크릴 크림용기",
+"orderNo": "2026061601",
+"orderDate": "2026-06-16",
+"shipRequestDate": "2026-07-10",
+"quantity": 3000,
+"client": "코스메디크",
+"factory": "余姚 아크릴 용기 巨好塑制-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "1천개씩 2가지 디자인 인쇄, 나머지 1천개는 인쇄하지 않고 보관",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-16"
+},
+{
+"name": "공장주문",
+"date": "2026-06-18"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-16"
+}
+]
+},
+{
+"productName": "100g PP 이중 크림용기",
+"orderNo": "2026061701",
+"orderDate": "2026-06-17",
+"shipRequestDate": "2026-07-10",
+"quantity": 10000,
+"client": "코스메디크",
+"factory": null,
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "디자인 파일 이미지 확인하고 시작할것",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-17"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-09"
+}
+]
+},
+{
+"productName": "25파이 50ml라미 튜브용기 샘플제작",
+"orderNo": "2026061801",
+"orderDate": "2026-06-18",
+"shipRequestDate": "2026-07-05",
+"quantity": 20,
+"client": "리오라 (퍼스트파브)",
+"factory": null,
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-18"
+}
+]
+},
+{
+"productName": "펌프용기 펌프보호 완충제",
+"orderNo": "2026061901",
+"orderDate": "2026-06-19",
+"shipRequestDate": "2026-06-27",
+"quantity": 20000,
+"client": "앤어스",
+"factory": null,
+"manager": null,
+"productPhoto": null,
+"importantNote": null,
+"note": "금형 떠서 완성하고 초도 제품 한국으로 보내주어야 함",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-19"
+}
+]
+},
+{
+"productName": "50g 타원형 튜브용기",
+"orderNo": "2026062001",
+"orderDate": "2026-06-20",
+"shipRequestDate": "2026-07-04",
+"quantity": 10000,
+"client": "(주)포에스엔터테인먼트",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-20"
+},
+{
+"name": "공장주문",
+"date": "2026-06-22"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-19"
+}
+]
+},
+{
+"productName": "25파이 50ml 라미튜브용기\n샘플 제작",
+"orderNo": "2026062301",
+"orderDate": "2026-06-23",
+"shipRequestDate": "2026-07-08",
+"quantity": 20,
+"client": "리오라",
+"factory": "广州 튜브용기 昕鸿-韩国BKBRO",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": "25파이 50ml 은박 라미 튜브용기 은박 스크류캡 옵샛인쇄",
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-23"
+},
+{
+"name": "공장주문",
+"date": "2026-06-23"
+},
+{
+"name": "파일수령(업체)",
+"date": "2026-06-18"
+}
+]
+},
+{
+"productName": "장우산 BMW5000개",
+"orderNo": "2026062302",
+"orderDate": "2026-06-23",
+"shipRequestDate": "2026-07-04",
+"quantity": 5000,
+"client": "준트레이드컴퍼니",
+"factory": "万虹伞业（绍兴）\n绍兴 벤츠우산",
+"manager": "이수림",
+"productPhoto": null,
+"importantNote": null,
+"note": null,
+"steps": [
+{
+"name": "고객의뢰",
+"date": "2026-06-23"
+},
+{
+"name": "공장주문",
+"date": "2026-06-23"
+}
+]
+}
+]
