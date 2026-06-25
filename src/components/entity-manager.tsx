@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -7,10 +7,20 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, ChevronRight, ChevronDown } from "lucide-react";
+import { STEP_ORDER } from "@/lib/steps";
+import { cn } from "@/lib/utils";
 
 type Entity = { id: string; [k: string]: any };
 type FieldDef = { key: string; label: string; placeholder?: string; primary?: boolean; textarea?: boolean };
+
+const SHIPPING_STEPS = new Set(["창고입고", "검품", "출고", "한국도착", "고객인도"]);
+function currentStepName(p: { status?: string | null; steps?: { name: string; done: boolean }[] }) {
+  if (p.status && STEP_ORDER.includes(p.status)) return p.status;
+  const done = new Set((p.steps ?? []).filter((s) => s.done).map((s) => s.name));
+  for (let i = STEP_ORDER.length - 1; i >= 0; i--) if (done.has(STEP_ORDER[i])) return STEP_ORDER[i];
+  return "";
+}
 
 export function EntityManager({ endpoint, fields, rows, countKey, linkBase }: {
   endpoint: string; fields: FieldDef[]; rows: Entity[]; countKey?: string; linkBase?: string;
@@ -21,6 +31,8 @@ export function EntityManager({ endpoint, fields, rows, countKey, linkBase }: {
   const [adding, setAdding] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Record<string, string>>({});
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const toggle = (id: string) => setExpanded((prev) => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
 
   // 표에 보일 주요 컬럼 (primary 표시, 없으면 앞 4개)
   const primary = fields.filter((f) => f.primary);
@@ -84,24 +96,61 @@ export function EntityManager({ endpoint, fields, rows, countKey, linkBase }: {
           </TableHeader>
           <TableBody>
             {rows.length === 0 && <TableRow><TableCell colSpan={cols.length + 2} className="py-8 text-center text-muted-foreground">데이터가 없습니다.</TableCell></TableRow>}
-            {rows.map((r) => (
-              <TableRow key={r.id}>
-                {cols.map((f, fi) => (
-                  <TableCell key={f.key} className={fi === 0 ? "font-medium" : "text-sm text-muted-foreground"}>
-                    {fi === 0 && linkBase
-                      ? <Link href={`${linkBase}/${r.id}`} className="text-primary hover:underline">{r[f.key] ?? "-"}</Link>
-                      : (r[f.key] || "-")}
-                  </TableCell>
-                ))}
-                {countKey && <TableCell className="text-right text-muted-foreground">{r._count?.[countKey] ?? 0}</TableCell>}
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-1">
-                    <Button size="icon" variant="ghost" onClick={() => { setEditId(r.id); setAdding(false); setEditForm(Object.fromEntries(fields.map((f) => [f.key, r[f.key] ?? ""]))); }}><Pencil className="h-4 w-4" /></Button>
-                    <Button size="icon" variant="ghost" onClick={() => remove(r.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+            {rows.map((r) => {
+              const projects: any[] = r.projects ?? [];
+              const count = r._count?.[countKey ?? ""] ?? projects.length;
+              const canExpand = !!countKey && projects.length > 0;
+              const isOpen = expanded.has(r.id);
+              return (
+                <Fragment key={r.id}>
+                  <TableRow className={isOpen ? "border-b-0" : ""}>
+                    {cols.map((f, fi) => (
+                      <TableCell key={f.key} className={fi === 0 ? "font-medium" : "text-sm text-muted-foreground"}>
+                        {fi === 0 && linkBase
+                          ? <Link href={`${linkBase}/${r.id}`} className="text-primary hover:underline">{r[f.key] ?? "-"}</Link>
+                          : (r[f.key] || "-")}
+                      </TableCell>
+                    ))}
+                    {countKey && (
+                      <TableCell className="text-right">
+                        {canExpand ? (
+                          <button onClick={() => toggle(r.id)} className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-accent hover:text-foreground">
+                            {isOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+                            {count}건
+                          </button>
+                        ) : <span className="text-muted-foreground">{count}</span>}
+                      </TableCell>
+                    )}
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
+                        <Button size="icon" variant="ghost" onClick={() => { setEditId(r.id); setAdding(false); setEditForm(Object.fromEntries(fields.map((f) => [f.key, r[f.key] ?? ""]))); }}><Pencil className="h-4 w-4" /></Button>
+                        <Button size="icon" variant="ghost" onClick={() => remove(r.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                  {isOpen && (
+                    <TableRow className="bg-muted/20 hover:bg-muted/20">
+                      <TableCell colSpan={cols.length + 2} className="py-2">
+                        <div className="space-y-1">
+                          {projects.map((p) => {
+                            const cur = currentStepName(p);
+                            return (
+                              <div key={p.id} className="flex items-center gap-2 rounded-md px-2 py-1 text-sm">
+                                <span className={cn("rounded-full border px-2 py-0.5 text-xs font-semibold",
+                                  cur && SHIPPING_STEPS.has(cur) ? "border-emerald-200 bg-emerald-50 text-emerald-700" : cur ? "border-blue-200 bg-blue-50 text-blue-700" : "text-muted-foreground")}>
+                                  {cur || "단계 미정"}
+                                </span>
+                                <Link href={`/projects/${p.id}`} className="font-medium hover:underline">{p.productName}</Link>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </Fragment>
+              );
+            })}
           </TableBody>
         </Table>
       </Card>

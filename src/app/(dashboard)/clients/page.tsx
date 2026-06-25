@@ -5,7 +5,11 @@ export const dynamic = "force-dynamic";
 
 export default async function ClientsPage() {
   const clients = await prisma.client.findMany({
-    orderBy: { name: "asc" }, include: { _count: { select: { projects: true } } },
+    orderBy: { name: "asc" },
+    include: {
+      _count: { select: { projects: true } },
+      projects: { orderBy: { orderDate: "desc" }, select: { id: true, productName: true, status: true, steps: { select: { name: true, done: true } } } },
+    },
   });
   return (
     <div className="space-y-4 p-6">
