@@ -13,7 +13,7 @@ type Opt = { id: string; name: string };
 type Product = {
   id: string; name: string; code: string | null; supplyPrice: any; salesPrice: any; quantity: number | null; note: string | null;
   projectId: string | null; factoryId: string | null; clientId: string | null;
-  project?: { id: string; productName: string } | null; factory?: Opt | null; client?: Opt | null;
+  project?: { id: string; productName: string } | null; factory?: (Opt & { wechatGroup?: string | null }) | null; client?: Opt | null;
 };
 
 const GROUPS = [
@@ -122,6 +122,7 @@ export function ProductManager({ products, projects, factories, clients }: {
                     <TableHead>품목명</TableHead>
                     <TableHead>프로젝트</TableHead>
                     <TableHead>공장</TableHead>
+                    <TableHead>위쳇단체방</TableHead>
                     <TableHead>업체</TableHead>
                     <TableHead className="text-right">공급단가</TableHead>
                     <TableHead className="text-right">판매단가</TableHead>
@@ -142,6 +143,7 @@ export function ProductManager({ products, projects, factories, clients }: {
                         </TableCell>
                         <TableCell className="max-w-[12rem] truncate text-xs text-muted-foreground">{r.project?.productName ?? "-"}</TableCell>
                         <TableCell className="text-xs text-muted-foreground">{r.factory?.name ?? "-"}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground">{r.factory?.wechatGroup || "-"}</TableCell>
                         <TableCell className="text-xs text-muted-foreground">{r.client?.name ?? "-"}</TableCell>
                         <TableCell className="text-right">
                           <input type="number" value={r.supplyPrice ?? ""} placeholder="-" step="0.01"
