@@ -35,7 +35,7 @@ export function FilePanel({ projectId, files }: { projectId: string; files: PFil
         {files.length === 0 && <p className="text-sm text-muted-foreground">첨부 파일이 없습니다.</p>}
         {files.map((f) => (
           <div key={f.id} className="group flex items-center justify-between rounded-md border p-2 text-sm">
-            <a href={f.filePath} target="_blank" rel="noreferrer" className="flex min-w-0 items-center gap-2 hover:underline">
+            <a href={`/api/files/${f.id}`} target="_blank" rel="noreferrer" className="flex min-w-0 items-center gap-2 hover:underline">
               <FileIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
               <span className="truncate">{f.fileName}</span>
               <span className="shrink-0 text-xs text-muted-foreground">{f.fileSize ? `${Math.round(f.fileSize / 1024)}KB` : ""}</span>

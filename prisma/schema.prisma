@@ -233,9 +233,10 @@ model ProjectFile {
   projectId  String
   project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   fileName   String   // 원본 파일명
-  filePath   String   // 저장 경로
+  filePath   String   // 서빙 경로 (/api/files/<id>)
   fileType   String?  // mime
   fileSize   Int?     // bytes
+  data       Bytes?   // 파일 내용 (DB 저장)
   createdAt  DateTime @default(now())
 
   @@index([projectId])
