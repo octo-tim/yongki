@@ -30,7 +30,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     include: {
       client: true, factory: true, manager: true,
       steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
-      files: { orderBy: { createdAt: "desc" } },
+      files: { orderBy: { createdAt: "desc" }, select: { id: true, fileName: true, filePath: true, fileType: true, fileSize: true, createdAt: true } },
       notes: { orderBy: { createdAt: "desc" }, include: { author: true } },
       meetings: { orderBy: { meetingDate: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } }, files: true } },
       clientRequests: { orderBy: { requestDate: "desc" }, include: { createdBy: { select: { name: true } } } },

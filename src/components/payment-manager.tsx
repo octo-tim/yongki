@@ -23,7 +23,7 @@ export function PaymentManager({ projectId, payments, totals }: {
   const router = useRouter();
   const find = (side: string, type: string) => payments.find((p) => p.side === side && p.type === type);
   const init: Record<string, Row> = {};
-  for (const side of ["SALES", "PURCHASE"]) for (const type of ["DEPOSIT", "BALANCE"]) init[`${side}_${type}`] = rowFrom(find(side, type));
+  for (const side of ["SALES", "PURCHASE"]) for (const type of ["DEPOSIT", "INTERIM", "BALANCE"]) init[`${side}_${type}`] = rowFrom(find(side, type));
   const [rows, setRows] = useState<Record<string, Row>>(init);
   const [busy, setBusy] = useState(false);
   const [savedMsg, setSavedMsg] = useState("");
@@ -32,7 +32,7 @@ export function PaymentManager({ projectId, payments, totals }: {
 
   async function saveSide(side: string) {
     setBusy(true); setSavedMsg("");
-    for (const type of ["DEPOSIT", "BALANCE"]) {
+    for (const type of ["DEPOSIT", "INTERIM", "BALANCE"]) {
       const r = rows[`${side}_${type}`];
       await fetch(`/api/projects/${projectId}/payments`, {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -44,14 +44,14 @@ export function PaymentManager({ projectId, payments, totals }: {
   }
 
   const sideTotal = (side: string) =>
-    ["DEPOSIT", "BALANCE"].reduce((a, t) => a + (Number(rows[`${side}_${t}`].amount) || 0), 0);
+    ["DEPOSIT", "INTERIM", "BALANCE"].reduce((a, t) => a + (Number(rows[`${side}_${t}`].amount) || 0), 0);
 
   return (
     <div className="space-y-4">
       {([["SALES", "판매", "업체"], ["PURCHASE", "구매", "공장"]] as const).map(([side, ko, who]) => {
         const totalAmt = side === "SALES" ? totals?.salesTotal : totals?.purchaseTotal;
         const totalCcy = side === "SALES" ? (totals?.salesCurrency ?? "RMB") : (totals?.purchaseCurrency ?? "RMB");
-        const paid = ["DEPOSIT", "BALANCE"].reduce((a, t) => a + (Number(rows[`${side}_${t}`].amount) || 0), 0);
+        const paid = ["DEPOSIT", "INTERIM", "BALANCE"].reduce((a, t) => a + (Number(rows[`${side}_${t}`].amount) || 0), 0);
         return (
         <div key={side} className="rounded-lg border">
           <div className="flex items-center justify-between border-b bg-muted/30 px-3 py-2">
@@ -71,7 +71,7 @@ export function PaymentManager({ projectId, payments, totals }: {
             </span>
           </div>
           <div className="divide-y">
-            {([["DEPOSIT", "계약금"], ["BALANCE", "잔금"]] as const).map(([type, tko]) => {
+            {([["DEPOSIT", "계약금"], ["INTERIM", "중도금"], ["BALANCE", "잔금"]] as const).map(([type, tko]) => {
               const key = `${side}_${type}`;
               const r = rows[key];
               return (

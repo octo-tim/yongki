@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 const SIDES = ["PURCHASE", "SALES"];
-const TYPES = ["DEPOSIT", "BALANCE"];
+const TYPES = ["DEPOSIT", "INTERIM", "BALANCE"];
 
 // 결재관리: (구매/판매)×(계약금/잔금) 슬롯 업서트
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     : await prisma.payment.create({ data: { projectId: params.id, side, type, ...data } });
 
   const sideKo = side === "SALES" ? "판매" : "구매";
-  const typeKo = type === "DEPOSIT" ? "계약금" : "잔금";
+  const typeKo = type === "DEPOSIT" ? "계약금" : type === "INTERIM" ? "중도금" : "잔금";
   await prisma.projectLog.create({
     data: { projectId: params.id, actorId: (session.user as any).id, action: "PAYMENT", message: `결재관리 ${sideKo} ${typeKo} ${data.amount != null ? data.amount.toLocaleString() + "원" : "-"}` },
   });

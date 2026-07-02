@@ -72,23 +72,17 @@ export function WorkRequestPanel({
   const [query, setQuery] = useState("");
   const [statusF, setStatusF] = useState<"all" | "open" | "done">("all");
   const [catF, setCatF] = useState<string>("all");
-  const [assignF, setAssignF] = useState<string>("all");
   const q = query.trim().toLowerCase();
   const visible = requests.filter((r) => {
     if (statusF === "open" && r.done) return false;
     if (statusF === "done" && !r.done) return false;
     if (catF !== "all" && (r.category ?? "") !== catF) return false;
-    if (assignF === "none" && r.assignee) return false;
-    if (assignF !== "all" && assignF !== "none" && (r.assignee?.id ?? "") !== assignF) return false;
     if (!q) return true;
     const hay = [r.content, r.category, r.client?.name, r.factory?.name, r.project?.productName, r.assignee?.name, r.requester?.name]
       .filter(Boolean).join(" ").toLowerCase();
     return hay.includes(q);
   });
   const catCount = (c: string) => requests.filter((r) => (r.category ?? "") === c).length;
-  const assignees = Array.from(new Map(requests.filter((r) => r.assignee).map((r) => [r.assignee!.id, r.assignee!.name])).entries());
-  const assignCount = (id: string) => requests.filter((r) => r.assignee?.id === id).length;
-  const noAssignCount = requests.filter((r) => !r.assignee).length;
 
   return (
     <div className="space-y-3">
@@ -106,13 +100,6 @@ export function WorkRequestPanel({
             <Chip active={catF === "all"} onClick={() => setCatF("all")}>구분 전체</Chip>
             {CATEGORIES.map((c) => <Chip key={c} active={catF === c} onClick={() => setCatF(c)}>{c} {catCount(c)}</Chip>)}
           </div>
-          {assignees.length > 0 && (
-            <div className="flex flex-wrap items-center gap-1.5">
-              <Chip active={assignF === "all"} onClick={() => setAssignF("all")}>담당 전체</Chip>
-              {assignees.map(([id, name]) => <Chip key={id} active={assignF === id} onClick={() => setAssignF(id)}>{name} {assignCount(id)}</Chip>)}
-              {noAssignCount > 0 && <Chip active={assignF === "none"} onClick={() => setAssignF("none")}>미지정 {noAssignCount}</Chip>}
-            </div>
-          )}
         </div>
       )}
 

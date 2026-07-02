@@ -70,7 +70,7 @@ export function ProductInfoPanel({ projectId, projectName, factoryId, clientId, 
       <div className="flex items-end gap-2">
         <div className="flex-1 space-y-1">
           <span className="text-xs text-muted-foreground">구매단가 (공장)</span>
-          <Input type="number" value={supplyPrice} step="0.01" onChange={(e) => setSupplyPrice(e.target.value)} className="text-right" />
+          <Input type="number" value={supplyPrice} step="0.001" onChange={(e) => setSupplyPrice(e.target.value)} className="text-right" />
         </div>
         <div className="space-y-1">
           <span className="text-xs text-muted-foreground">통화</span>
@@ -84,7 +84,7 @@ export function ProductInfoPanel({ projectId, projectName, factoryId, clientId, 
       <div className="flex items-end gap-2">
         <div className="flex-1 space-y-1">
           <span className="text-xs text-muted-foreground">판매단가 (업체)</span>
-          <Input type="number" value={salesPrice} step="0.01" onChange={(e) => setSalesPrice(e.target.value)} className="text-right" />
+          <Input type="number" value={salesPrice} step="0.001" onChange={(e) => setSalesPrice(e.target.value)} className="text-right" />
         </div>
         <div className="space-y-1">
           <span className="text-xs text-muted-foreground">통화</span>

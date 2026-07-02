@@ -16,7 +16,6 @@ enum StepType {
 
 enum PaymentType {
   DEPOSIT // 계약금
-  INTERIM // 중도금
   BALANCE // 잔금
 }
 
@@ -89,7 +88,6 @@ model User {
 model Client {
   id        String   @id @default(cuid())
   name      String
-  code      Int?     @unique // 업체 번호
   representative String? // 대표자
   contact   String?  // 담당자
   position  String?  // 직책
@@ -117,7 +115,6 @@ model Client {
 model Factory {
   id          String   @id @default(cuid())
   name        String   // 공장명 / 微信群名
-  code        Int?     @unique // 공장 번호
   region      String?  // 지역 (广州, 余姚 등)
   category    String?  // (구) 품목 - 미사용
   mainProducts String? // 주요품목 (자유입력)
@@ -234,10 +231,9 @@ model ProjectFile {
   projectId  String
   project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   fileName   String   // 원본 파일명
-  filePath   String   // 서빙 경로 (/api/files/<id>)
+  filePath   String   // 저장 경로
   fileType   String?  // mime
   fileSize   Int?     // bytes
-  data       Bytes?   // 파일 내용 (DB 저장)
   createdAt  DateTime @default(now())
 
   @@index([projectId])
@@ -456,8 +452,8 @@ model Product {
   id          String   @id @default(cuid())
   name        String   // 상품명
   code        String?  // 상품코드
-  supplyPrice Decimal? @db.Decimal(14, 4) // 공급단가 (공장 → 당사)
-  salesPrice  Decimal? @db.Decimal(14, 4) // 판매단가 (당사 → 업체)
+  supplyPrice Decimal? @db.Decimal(14, 2) // 공급단가 (공장 → 당사)
+  salesPrice  Decimal? @db.Decimal(14, 2) // 판매단가 (당사 → 업체)
   supplyCurrency String? @default("RMB") // 구매단가 통화 (RMB/USD)
   salesCurrency  String? @default("RMB") // 판매단가 통화 (USD/RMB/KRW)
   exchangeRate   Decimal? @db.Decimal(14, 4) // 판매단가 → RMB 환율 (RMB per 1 통화)
