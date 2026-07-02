@@ -18,7 +18,14 @@ type P = Awaited<ReturnType<typeof getProjects>>[number];
 async function getProjects(where: Prisma.ProjectWhereInput) {
   return prisma.project.findMany({
     where, orderBy: { orderDate: "desc" },
-    include: { client: true, factory: true, manager: true, steps: { select: { name: true, done: true } } },
+    select: {
+      id: true, status: true, orderNo: true, productName: true, productPhoto: true,
+      quantity: true, shipRequestDate: true,
+      client: { select: { name: true } },
+      factory: { select: { name: true, wechatGroup: true } },
+      manager: { select: { name: true } },
+      steps: { select: { name: true, done: true } },
+    },
   });
 }
 // 현재 단계: status(명시적 선택)를 우선, 없으면 단계기록에서 계산 → 분류/드롭다운/타일 동일 기준
@@ -155,7 +162,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
                 <div className="overflow-hidden rounded-2xl border bg-card shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg">
                   <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/40 to-muted/10">
                     {p.productPhoto ? (
-                      <img src={p.productPhoto} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                      <img src={p.productPhoto} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center"><Package className="h-10 w-10 text-muted-foreground/30" /></div>
                     )}
@@ -177,7 +184,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
                     </div>
                     <dl className="space-y-1.5 text-xs">
                       <Meta icon={Building2} label="업체" value={p.client?.name} />
-                      <Meta icon={Factory} label="공장" value={p.factory?.name} />
+                      <Meta icon={Factory} label="공장" value={p.factory?.wechatGroup || undefined} />
                       <Meta icon={CalendarDays} label="완료예정" value={fmtDate(p.shipRequestDate)} />
                       <div className="flex items-center justify-between pt-1">
                         <span className="flex items-center gap-1.5 text-muted-foreground"><User className="h-3.5 w-3.5" /> {p.manager?.name ?? "-"}</span>
@@ -220,7 +227,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
                       <td className="px-3 py-2.5">
                         <Link href={`/projects/${p.id}`} className="block">
                           {p.productPhoto ? (
-                            <img src={p.productPhoto} alt="" className="h-10 w-10 rounded-lg border object-cover" />
+                            <img src={p.productPhoto} alt="" loading="lazy" decoding="async" className="h-10 w-10 rounded-lg border object-cover" />
                           ) : (
                             <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-dashed bg-muted/30"><Package className="h-4 w-4 text-muted-foreground/40" /></div>
                           )}
@@ -231,7 +238,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
                       </td>
                       <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums">{fmtMoney(p.quantity)}</td>
                       <td className="px-3 py-2.5">{p.client?.name ?? "-"}</td>
-                      <td className="max-w-[12rem] truncate px-3 py-2.5 text-muted-foreground">{p.factory?.name ?? "-"}</td>
+                      <td className="max-w-[12rem] truncate px-3 py-2.5 text-muted-foreground">{p.factory?.wechatGroup ?? "-"}</td>
                       <td className="whitespace-nowrap px-3 py-2.5">{fmtDate(p.shipRequestDate)}</td>
                       <td className="whitespace-nowrap px-3 py-2.5">{p.manager?.name ?? "-"}</td>
                       <td className="px-2 py-2.5 text-right"><ProjectRowDelete projectId={p.id} /></td>
