@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { fmtPrice } from "@/lib/utils";
+import { fmtPrice, fmtUnit } from "@/lib/utils";
 
 type Product = {
   id: string; name: string; quantity: number | null;
@@ -70,7 +70,7 @@ export function ProductInfoPanel({ projectId, projectName, factoryId, clientId, 
       <div className="flex items-end gap-2">
         <div className="flex-1 space-y-1">
           <span className="text-xs text-muted-foreground">구매단가 (공장)</span>
-          <Input type="number" value={supplyPrice} step="0.001" onChange={(e) => setSupplyPrice(e.target.value)} className="text-right" />
+          <Input type="number" value={supplyPrice} step="any" onChange={(e) => setSupplyPrice(e.target.value)} className="text-right" />
         </div>
         <div className="space-y-1">
           <span className="text-xs text-muted-foreground">통화</span>
@@ -84,7 +84,7 @@ export function ProductInfoPanel({ projectId, projectName, factoryId, clientId, 
       <div className="flex items-end gap-2">
         <div className="flex-1 space-y-1">
           <span className="text-xs text-muted-foreground">판매단가 (업체)</span>
-          <Input type="number" value={salesPrice} step="0.001" onChange={(e) => setSalesPrice(e.target.value)} className="text-right" />
+          <Input type="number" value={salesPrice} step="any" onChange={(e) => setSalesPrice(e.target.value)} className="text-right" />
         </div>
         <div className="space-y-1">
           <span className="text-xs text-muted-foreground">통화</span>
@@ -100,8 +100,9 @@ export function ProductInfoPanel({ projectId, projectName, factoryId, clientId, 
 
       {/* 변환/합계 요약 */}
       <div className="rounded-md border bg-muted/30 p-2.5 text-xs">
-        <div className="flex justify-between"><span className="text-muted-foreground">판매단가{salesConverted && salesCurrency !== "RMB" ? "(RMB 환산)" : ""}</span><span className="font-medium">{fmtPrice(salesUnitShown)} {salesCcy}</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">판매단가{salesConverted && salesCurrency !== "RMB" ? "(RMB 환산)" : ""}</span><span className="font-medium">{fmtUnit(salesUnitShown)} {salesCcy}</span></div>
         <div className="mt-1 flex justify-between"><span className="text-muted-foreground">판매 전체금액</span><span className="font-semibold text-blue-700">{fmtPrice(salesTotal)} {salesCcy}</span></div>
+        <div className="mt-1 flex justify-between"><span className="text-muted-foreground">구매단가</span><span className="font-medium">{fmtUnit(n(supplyPrice))} {supplyCurrency}</span></div>
         <div className="mt-1 flex justify-between"><span className="text-muted-foreground">구매 전체금액</span><span className="font-semibold text-orange-700">{fmtPrice(purchaseTotal)} {supplyCurrency}</span></div>
         {!salesConverted && <p className="mt-1 text-[11px] text-muted-foreground">※ 환율 미입력 — 판매금액을 {salesCurrency}로 표시 (환율 입력 시 RMB 환산)</p>}
       </div>

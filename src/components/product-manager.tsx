@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { SearchableSelect } from "@/components/searchable-select";
-import { fmtPrice, cn } from "@/lib/utils";
+import { fmtPrice, fmtUnit, cn } from "@/lib/utils";
 import { Plus, Trash2 } from "lucide-react";
 
 type Opt = { id: string; name: string };
@@ -146,17 +146,17 @@ export function ProductManager({ products, projects, factories, clients }: {
                         <TableCell className="text-xs text-muted-foreground">{r.factory?.wechatGroup || "-"}</TableCell>
                         <TableCell className="text-xs text-muted-foreground">{r.client?.name ?? "-"}</TableCell>
                         <TableCell className="text-right">
-                          <input type="number" value={r.supplyPrice ?? ""} placeholder="-" step="0.01"
+                          <input type="number" value={r.supplyPrice ?? ""} placeholder="-" step="any"
                             onChange={(e) => editLocal(r.id, "supplyPrice", e.target.value)} onBlur={(e) => saveField(r.id, "supplyPrice", e.target.value)}
                             className="w-24 rounded bg-transparent px-1 py-0.5 text-right outline-none focus:bg-accent" />
                         </TableCell>
                         <TableCell className="text-right">
-                          <input type="number" value={r.salesPrice ?? ""} placeholder="-" step="0.01"
+                          <input type="number" value={r.salesPrice ?? ""} placeholder="-" step="any"
                             onChange={(e) => editLocal(r.id, "salesPrice", e.target.value)} onBlur={(e) => saveField(r.id, "salesPrice", e.target.value)}
                             className="w-24 rounded bg-transparent px-1 py-0.5 text-right outline-none focus:bg-accent" />
                         </TableCell>
                         <TableCell className={cn("text-right font-medium", margin > 0 ? "text-emerald-700" : margin < 0 ? "text-red-600" : "text-muted-foreground")}>
-                          {fmtPrice(margin)}
+                          {fmtUnit(margin)}
                         </TableCell>
                         <TableCell className="text-right">
                           <input type="number" value={r.quantity ?? ""} placeholder="-"
