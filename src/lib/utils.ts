@@ -34,10 +34,10 @@ export function fmtPrice(v?: number | string | null) {
   return n.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-// 단가 표시: 소수 최대 4자리, 끝자리 0은 생략 (2.245 → "2.245", 2.25 → "2.25", 5 → "5")
+// RMB 등 단가·금액 표시: 소수 최소 2 ~ 최대 4자리 (2.245 → "2.245", 6540 → "6,540.00", 0.245 → "0.245")
 export function fmtUnit(v?: number | string | null) {
   if (v === null || v === undefined || v === "") return "-";
   const n = typeof v === "string" ? Number(v) : v;
   if (isNaN(n)) return "-";
-  return n.toLocaleString("ko-KR", { maximumFractionDigits: 4 });
+  return n.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 4 });
 }

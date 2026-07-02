@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { fmtPrice } from "@/lib/utils";
+import { fmtUnit } from "@/lib/utils";
 import { Plus, Trash2 } from "lucide-react";
 
 type Item = { id: string; name: string; amount: any };
@@ -49,13 +49,13 @@ export function PurchaseCostPanel({ projectId, items, currency = "RMB", productA
           <tbody>
             <tr className="border-b">
               <td className="px-3 py-2 text-muted-foreground">제품금액 (수량×단가)</td>
-              <td className="px-3 py-2 text-right tabular-nums">{fmtPrice(productAmount)}</td>
+              <td className="px-3 py-2 text-right tabular-nums">{fmtUnit(productAmount)}</td>
               <td></td>
             </tr>
             {items.map((it) => (
               <tr key={it.id} className="group border-b last:border-0">
                 <td className="px-3 py-2">{it.name}</td>
-                <td className="px-3 py-2 text-right tabular-nums">{fmtPrice(Number(it.amount ?? 0))}</td>
+                <td className="px-3 py-2 text-right tabular-nums">{fmtUnit(Number(it.amount ?? 0))}</td>
                 <td className="px-2 py-2 text-right">
                   <button onClick={() => del(it.id)} className="text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100">
                     <Trash2 className="h-3.5 w-3.5" />
@@ -70,7 +70,7 @@ export function PurchaseCostPanel({ projectId, items, currency = "RMB", productA
           <tfoot>
             <tr className="bg-muted/40 font-semibold">
               <td className="px-3 py-2">구매 합계</td>
-              <td className="px-3 py-2 text-right tabular-nums text-orange-700">{fmtPrice(total)} {currency}</td>
+              <td className="px-3 py-2 text-right tabular-nums text-orange-700">{fmtUnit(total)} {currency}</td>
               <td></td>
             </tr>
           </tfoot>
@@ -84,7 +84,7 @@ export function PurchaseCostPanel({ projectId, items, currency = "RMB", productA
         </div>
         <div className="w-36">
           <label className="mb-1 block text-xs text-muted-foreground">금액</label>
-          <Input type="number" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0.00" className="h-9 text-right" />
+          <Input type="number" step="any" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0.00" className="h-9 text-right" />
         </div>
         <Button onClick={add} disabled={busy} className="h-9"><Plus className="h-4 w-4" /> 추가</Button>
       </div>

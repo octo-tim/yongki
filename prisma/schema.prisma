@@ -304,7 +304,7 @@ model Payment {
   project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   side       PaymentSide @default(SALES) // 구매(공장) / 판매(업체)
   type       PaymentType // 계약금 / 잔금
-  amount     Decimal?    @db.Decimal(14, 2) // 결재금액
+  amount     Decimal?    @db.Decimal(14, 4) // 결재금액
   receivedAt DateTime?   // 결재일
   method     String?     // 결재방법 (현금/계좌이체/위챗/스프/카드)
   account    String?     // (미사용) 과거 호환
@@ -321,7 +321,7 @@ model CostItem {
   projectId String
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   name      String   // 비용 항목 (운임, 금형비, 검품비 등)
-  amount    Decimal  @db.Decimal(14, 2) // 금액 (구매통화 기준)
+  amount    Decimal  @db.Decimal(14, 4) // 금액 (구매통화 기준)
   createdAt DateTime @default(now())
 
   @@map("cost_items")

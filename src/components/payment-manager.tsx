@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { fmtPrice } from "@/lib/utils";
+import { fmtUnit } from "@/lib/utils";
 
 type Pay = { id: string; side: string; type: string; amount: any; receivedAt: any; method: string | null; memo: string | null };
 type Row = { amount: string; receivedAt: string; method: string; memo: string };
@@ -66,8 +66,8 @@ export function PaymentManager({ projectId, payments, totals }: {
           {/* 전체금액 (제품정보 자동 반영) */}
           <div className="flex items-center justify-between border-b px-3 py-2 text-sm">
             <span className="font-semibold">전체금액</span>
-            <span className="text-base font-bold">{totalAmt != null ? `${fmtPrice(totalAmt)} ${totalCcy}` : "-"}
-              <span className="ml-2 text-xs font-normal text-muted-foreground">결재합 {fmtPrice(paid)}</span>
+            <span className="text-base font-bold">{totalAmt != null ? `${fmtUnit(totalAmt)} ${totalCcy}` : "-"}
+              <span className="ml-2 text-xs font-normal text-muted-foreground">결재합 {fmtUnit(paid)}</span>
             </span>
           </div>
           <div className="divide-y">
@@ -78,7 +78,7 @@ export function PaymentManager({ projectId, payments, totals }: {
                 <div key={key} className="grid grid-cols-12 items-center gap-2 px-3 py-2">
                   <div className="col-span-2 text-sm font-medium">{tko}</div>
                   <div className="col-span-3">
-                    <Input type="number" inputMode="numeric" value={r.amount} placeholder="결재금액"
+                    <Input type="number" inputMode="decimal" step="any" value={r.amount} placeholder="결재금액"
                       onChange={(e) => set(key, "amount", e.target.value)} className="h-9" />
                   </div>
                   <div className="col-span-3">
