@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { EntityProjects } from "@/components/entity-projects";
 import { ProgressPhotoGrid } from "@/components/progress-photo-grid";
 import { WorkRequestPanel } from "@/components/work-request-panel";
+import { ProposalManager } from "@/components/proposal-manager";
 
 export const dynamic = "force-dynamic";
 
@@ -33,10 +34,14 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
   const statusCfg = await getStatusConfig();
   const session = await getServerSession(authOptions);
   const uid = (session?.user as any)?.id as string | undefined;
-  const [users, factories, projects] = await Promise.all([
+  const [users, factories, projects, proposals] = await Promise.all([
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.factory.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.project.findMany({ orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
+    prisma.proposal.findMany({
+      where: { clientId: client.id }, orderBy: { createdAt: "desc" },
+      select: { id: true, title: true, sentDate: true, note: true, fileName: true, fileSize: true, createdAt: true, client: { select: { id: true, name: true } }, creator: { select: { name: true } } },
+    }),
   ]);
 
   return (
@@ -80,6 +85,13 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
             showCreate fixedClientId={client.id}
             users={users} factories={factories}
             projects={projects.map((p) => ({ id: p.id, name: p.productName }))} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4">
+          <h2 className="mb-3 text-sm font-semibold">제안서발송 ({proposals.length})</h2>
+          <ProposalManager proposals={proposals as any} clients={[]} fixedClientId={client.id} />
         </CardContent>
       </Card>
 

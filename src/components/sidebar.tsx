@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/components/i18n-provider";
 import { LanguageToggle } from "@/components/language-toggle";
-import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Settings, BarChart3, Wallet, ChevronLeft, ChevronRight, ClipboardList, FileText, Image as ImageIcon, Tag } from "lucide-react";
+import { LayoutDashboard, Package, Building2, Factory, LogOut, PlusCircle, Settings, BarChart3, Wallet, ChevronLeft, ChevronRight, ClipboardList, FileText, Image as ImageIcon, Tag, HelpCircle, Archive, Send } from "lucide-react";
 
 const baseNav = [
   { href: "/dashboard", key: "nav.dashboard", icon: LayoutDashboard },
@@ -17,6 +17,9 @@ const baseNav = [
   { href: "/products", key: "nav.products", icon: Tag },
   { href: "/clients", key: "nav.clients", icon: Building2 },
   { href: "/factories", key: "nav.factories", icon: Factory },
+  { href: "/proposals", key: "nav.proposals", icon: Send },
+  { href: "/library", key: "nav.library", icon: Archive },
+  { href: "/faq", key: "nav.faq", icon: HelpCircle },
   { href: "/sales", key: "nav.sales", icon: Wallet },
   { href: "/stats", key: "nav.stats", icon: BarChart3 },
 ];

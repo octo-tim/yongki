@@ -8,8 +8,8 @@ export default async function ProductsPage() {
     prisma.product.findMany({
       orderBy: { createdAt: "desc" },
       include: {
-        project: { select: { id: true, productName: true } },
-        factory: { select: { id: true, name: true } },
+        project: { select: { id: true, productName: true, productPhoto: true } },
+        factory: { select: { id: true, name: true, wechatGroup: true } },
         client: { select: { id: true, name: true } },
       },
     }),

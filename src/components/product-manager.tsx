@@ -1,19 +1,20 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { SearchableSelect } from "@/components/searchable-select";
 import { fmtPrice, fmtUnit, cn } from "@/lib/utils";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Package } from "lucide-react";
 
 type Opt = { id: string; name: string };
 type Product = {
   id: string; name: string; code: string | null; supplyPrice: any; salesPrice: any; quantity: number | null; note: string | null;
   projectId: string | null; factoryId: string | null; clientId: string | null;
-  project?: { id: string; productName: string } | null; factory?: (Opt & { wechatGroup?: string | null }) | null; client?: Opt | null;
+  project?: { id: string; productName: string; productPhoto?: string | null } | null; factory?: (Opt & { wechatGroup?: string | null }) | null; client?: Opt | null;
 };
 
 const GROUPS = [
@@ -119,6 +120,7 @@ export function ProductManager({ products, projects, factories, clients }: {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-14">사진</TableHead>
                     <TableHead>품목명</TableHead>
                     <TableHead>프로젝트</TableHead>
                     <TableHead>공장</TableHead>
@@ -136,9 +138,26 @@ export function ProductManager({ products, projects, factories, clients }: {
                     const margin = numOr0(r.salesPrice) - numOr0(r.supplyPrice);
                     return (
                       <TableRow key={r.id}>
+                        <TableCell>
+                          {r.project?.productPhoto ? (
+                            r.projectId ? (
+                              <Link href={`/projects/${r.projectId}`} className="block h-10 w-10 overflow-hidden rounded-lg border">
+                                <img src={r.project.productPhoto} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                              </Link>
+                            ) : (
+                              <div className="h-10 w-10 overflow-hidden rounded-lg border"><img src={r.project.productPhoto} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" /></div>
+                            )
+                          ) : (
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-dashed bg-muted/30"><Package className="h-4 w-4 text-muted-foreground/40" /></div>
+                          )}
+                        </TableCell>
                         <TableCell className="min-w-[10rem]">
-                          <input value={r.name ?? ""} onChange={(e) => editLocal(r.id, "name", e.target.value)} onBlur={(e) => saveField(r.id, "name", e.target.value)}
-                            className="w-full bg-transparent font-medium outline-none focus:rounded focus:bg-accent focus:px-1" />
+                          {r.projectId ? (
+                            <Link href={`/projects/${r.projectId}`} className="font-medium hover:underline">{r.name}</Link>
+                          ) : (
+                            <input value={r.name ?? ""} onChange={(e) => editLocal(r.id, "name", e.target.value)} onBlur={(e) => saveField(r.id, "name", e.target.value)}
+                              className="w-full bg-transparent font-medium outline-none focus:rounded focus:bg-accent focus:px-1" />
+                          )}
                           {r.code && <span className="ml-1 text-xs text-muted-foreground">{r.code}</span>}
                         </TableCell>
                         <TableCell className="max-w-[12rem] truncate text-xs text-muted-foreground">{r.project?.productName ?? "-"}</TableCell>

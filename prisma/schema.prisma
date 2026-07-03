@@ -81,6 +81,9 @@ model User {
   workRequestsAssigned WorkRequest[]       @relation("RequestAssignee")
   workRequestUpdates   WorkRequestUpdate[] @relation("RequestUpdateCreator")
   logs            ProjectLog[]
+  faqItems        FaqItem[]
+  libraryDocs     LibraryDoc[]
+  proposals       Proposal[]
 
   @@map("users")
 }
@@ -109,6 +112,7 @@ model Client {
   progressPhotos ProgressPhoto[]
   workRequests WorkRequest[]
   products Product[]
+  proposals Proposal[]
 
   @@map("clients")
 }
@@ -478,4 +482,54 @@ model Product {
   @@index([factoryId])
   @@index([clientId])
   @@map("products")
+}
+
+model FaqItem {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String? // 예: 결재/배송/제작 등
+  authorId  String?
+  author    User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@map("faq_items")
+}
+
+model LibraryDoc {
+  id         String   @id @default(cuid())
+  title      String
+  category   String? // 예: 출고서식/샘플서식/영수증 등
+  fileName   String
+  fileType   String?
+  fileSize   Int?
+  data       Bytes
+  uploaderId String?
+  uploader   User?    @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now())
+
+  @@index([uploaderId])
+  @@map("library_docs")
+}
+
+model Proposal {
+  id        String    @id @default(cuid())
+  title     String
+  sentDate  DateTime?
+  note      String?
+  fileName  String?
+  fileType  String?
+  fileSize  Int?
+  data      Bytes?
+  clientId  String?
+  client    Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  creatorId String?
+  creator   User?     @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  createdAt DateTime  @default(now())
+
+  @@index([clientId])
+  @@index([creatorId])
+  @@map("proposals")
 }
