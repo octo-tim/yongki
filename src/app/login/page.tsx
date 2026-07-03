@@ -10,8 +10,8 @@ import { Package } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("관리자");
-  const [password, setPassword] = useState("2345");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -52,11 +52,7 @@ export default function LoginPage() {
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "로그인 중..." : "로그인"}
-            </Button>
-            <p className="text-center text-xs text-muted-foreground">
-              관리자 계정: 관리자 / 2345
-            </p>
-          </form>
+            </Button>          </form>
         </CardContent>
       </Card>
     </div>
