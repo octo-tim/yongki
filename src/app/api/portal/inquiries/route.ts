@@ -29,12 +29,14 @@ export async function POST(req: NextRequest) {
     if (!clientId) return NextResponse.json({ error: "업체 정보 필요" }, { status: 400 });
   }
 
+  if (!clientId) return NextResponse.json({ error: "업체 정보 필요" }, { status: 400 });
+
   const senderType = role === "CLIENT" ? "CLIENT" : "STAFF";
   const senderName = session.user?.name ?? (role === "CLIENT" ? "고객" : "담당자");
 
   const inquiry = await prisma.clientInquiry.create({
     data: {
-      subject, clientId, projectId,
+      subject, clientId: clientId as string, projectId,
       status: senderType === "STAFF" ? "답변완료" : "답변대기",
       messages: { create: { senderType, senderName, content } },
     },

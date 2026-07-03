@@ -24,8 +24,8 @@ export async function POST(req: NextRequest) {
     if (project.clientId !== clientId) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
   } else {
     clientId = project.clientId ?? String(form.get("clientId") || "");
-    if (!clientId) return NextResponse.json({ error: "업체 정보 없음" }, { status: 400 });
   }
+  if (!clientId) return NextResponse.json({ error: "업체 정보 없음" }, { status: 400 });
 
   const file = form.get("file") as File | null;
   let fileData: { fileName: string; fileType: string; fileSize: number; data: Buffer } | null = null;
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
   const saved = await prisma.clientPortalRequest.create({
     data: {
-      projectId, clientId, content,
+      projectId, clientId: clientId as string, content,
       ...(fileData ? { fileName: fileData.fileName, fileType: fileData.fileType, fileSize: fileData.fileSize, data: fileData.data } : {}),
     },
   });
