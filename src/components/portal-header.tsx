@@ -12,7 +12,7 @@ export function PortalHeader({ clientName, userName }: { clientName?: string; us
       </Link>
       <div className="flex items-center gap-3 text-sm text-muted-foreground">
         <span>{userName}</span>
-        <button onClick={() => signOut({ callbackUrl: "/portal/login" })} className="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-accent hover:text-foreground">
+        <button onClick={() => signOut({ callbackUrl: "/portal-login" })} className="flex items-center gap-1 rounded-md px-2 py-1 hover:bg-accent hover:text-foreground">
           <LogOut className="h-4 w-4" />로그아웃
         </button>
       </div>

@@ -5,7 +5,7 @@ import { PortalHeader } from "@/components/portal-header";
 
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
-  if (!session || (session.user as any).role !== "CLIENT") redirect("/portal/login");
+  if (!session || (session.user as any).role !== "CLIENT") redirect("/portal-login");
 
   return (
     <div className="min-h-screen bg-muted/20">
