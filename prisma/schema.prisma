@@ -113,6 +113,9 @@ model Client {
   workRequests WorkRequest[]
   products Product[]
   proposals Proposal[]
+  clientUsers ClientUser[]
+  portalRequests ClientPortalRequest[]
+  inquiries ClientInquiry[]
 
   @@map("clients")
 }
@@ -202,6 +205,8 @@ model Project {
   logs  ProjectLog[]
   products Product[]
   costItems CostItem[]
+  portalRequests ClientPortalRequest[]
+  inquiries ClientInquiry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -532,4 +537,69 @@ model Proposal {
   @@index([clientId])
   @@index([creatorId])
   @@map("proposals")
+}
+
+/* ── 고객 포털 (업체 로그인) ── */
+
+model ClientUser {
+  id        String   @id @default(cuid())
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+
+  @@index([clientId])
+  @@map("client_users")
+}
+
+model ClientPortalRequest {
+  id         String   @id @default(cuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  clientId   String
+  client     Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  content    String
+  fileName   String?
+  fileType   String?
+  fileSize   Int?
+  data       Bytes?
+  status     String   @default("접수") // 접수/확인중/처리완료
+  createdAt  DateTime @default(now())
+
+  @@index([projectId])
+  @@index([clientId])
+  @@map("client_portal_requests")
+}
+
+model ClientInquiry {
+  id        String   @id @default(cuid())
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  subject   String
+  status    String   @default("답변대기") // 답변대기/답변완료
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages ClientInquiryMessage[]
+
+  @@index([projectId])
+  @@index([clientId])
+  @@map("client_inquiries")
+}
+
+model ClientInquiryMessage {
+  id         String        @id @default(cuid())
+  inquiryId  String
+  inquiry    ClientInquiry @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  senderType String // CLIENT / STAFF
+  senderName String
+  content    String
+  createdAt  DateTime      @default(now())
+
+  @@index([inquiryId])
+  @@map("client_inquiry_messages")
 }

@@ -1,0 +1,88 @@
+import { getServerSession } from "next-auth";
+import { notFound, redirect } from "next/navigation";
+import Link from "next/link";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { STEP_ORDER } from "@/lib/steps";
+import { Card, CardContent } from "@/components/ui/card";
+import { PortalProgress } from "@/components/portal-progress";
+import { PortalRequestPanel } from "@/components/portal-request-panel";
+import { InquiryPanel } from "@/components/inquiry-panel";
+import { ArrowLeft, Package } from "lucide-react";
+
+export const dynamic = "force-dynamic";
+
+export default async function PortalProjectDetail({ params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions);
+  const clientId = (session!.user as any).clientId as string;
+
+  const project = await prisma.project.findUnique({
+    where: { id: params.id },
+    select: {
+      id: true, productName: true, productPhoto: true, orderNo: true, orderDate: true, shipRequestDate: true,
+      quantity: true, importantNote: true, status: true, clientId: true,
+      steps: { select: { name: true, done: true, doneAt: true } },
+      factory: { select: { name: true } },
+      portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
+      inquiries: {
+        orderBy: { createdAt: "desc" },
+        select: { id: true, subject: true, status: true, createdAt: true, messages: { orderBy: { createdAt: "asc" }, select: { id: true, senderType: true, senderName: true, content: true, createdAt: true } } },
+      },
+    },
+  });
+  if (!project || project.clientId !== clientId) notFound();
+
+  const curStep = (() => {
+    if (project.status && STEP_ORDER.includes(project.status)) return project.status;
+    for (let i = STEP_ORDER.length - 1; i >= 0; i--) if (project.steps.some((s) => s.name === STEP_ORDER[i] && s.done)) return STEP_ORDER[i];
+    return STEP_ORDER[0];
+  })();
+
+  return (
+    <div className="space-y-5">
+      <Link href="/portal" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" />목록으로</Link>
+
+      {/* 1. 제품정보 */}
+      <Card>
+        <CardContent className="flex gap-4 p-4">
+          <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg border bg-muted/30">
+            {project.productPhoto ? <img src={project.productPhoto} alt="" className="h-full w-full object-cover" /> : <div className="flex h-full w-full items-center justify-center"><Package className="h-8 w-8 text-muted-foreground/40" /></div>}
+          </div>
+          <div className="min-w-0 flex-1 space-y-1">
+            <h1 className="text-lg font-bold">{project.productName}</h1>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-muted-foreground sm:grid-cols-3">
+              <span>주문번호: {project.orderNo ?? "-"}</span>
+              <span>수량: {project.quantity?.toLocaleString() ?? "-"}</span>
+              <span>완료예정일: {project.shipRequestDate ? new Date(project.shipRequestDate).toISOString().slice(0, 10) : "-"}</span>
+            </div>
+            {project.importantNote && <p className="mt-1 whitespace-pre-wrap rounded-md bg-amber-50 px-2 py-1 text-xs text-amber-800">{project.importantNote}</p>}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 4. 진행현황 */}
+      <Card>
+        <CardContent className="p-4">
+          <h2 className="mb-3 text-sm font-semibold">프로젝트 진행현황 <span className="font-normal text-muted-foreground">— 현재: {curStep}</span></h2>
+          <PortalProgress steps={project.steps as any} currentStep={curStep} />
+        </CardContent>
+      </Card>
+
+      {/* 2. 요청 및 파일 올리기 */}
+      <Card>
+        <CardContent className="p-4">
+          <h2 className="mb-3 text-sm font-semibold">제품제작 관련 요청 및 파일 올리기</h2>
+          <PortalRequestPanel projectId={project.id} requests={project.portalRequests as any} canCreate />
+        </CardContent>
+      </Card>
+
+      {/* 3. 문의 및 답변 */}
+      <Card>
+        <CardContent className="p-4">
+          <h2 className="mb-3 text-sm font-semibold">제품제작 문의 및 답변</h2>
+          <InquiryPanel projectId={project.id} clientId={clientId} inquiries={project.inquiries as any} role="CLIENT" />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

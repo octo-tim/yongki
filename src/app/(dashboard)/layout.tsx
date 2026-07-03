@@ -9,6 +9,7 @@ import { Locale, DEFAULT_LOCALE, LOCALES } from "@/lib/i18n";
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
+  if ((session.user as any).role === "CLIENT") redirect("/portal");
 
   const cookieLocale = cookies().get("locale")?.value as Locale | undefined;
   const locale: Locale = cookieLocale && LOCALES.includes(cookieLocale) ? cookieLocale : DEFAULT_LOCALE;

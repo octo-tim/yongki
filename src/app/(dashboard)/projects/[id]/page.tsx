@@ -18,6 +18,8 @@ import { ProductInfoPanel } from "@/components/product-info-panel";
 import { PurchaseCostPanel } from "@/components/purchase-cost-panel";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
+import { PortalRequestPanel } from "@/components/portal-request-panel";
+import { InquiryPanel } from "@/components/inquiry-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
 import { fmtDate } from "@/lib/utils";
 import { Pencil } from "lucide-react";
@@ -31,6 +33,11 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       client: true, factory: true, manager: true,
       steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
       files: { orderBy: { createdAt: "desc" }, select: { id: true, fileName: true, filePath: true, fileType: true, fileSize: true, createdAt: true } },
+      portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
+      inquiries: {
+        orderBy: { createdAt: "desc" },
+        select: { id: true, subject: true, status: true, createdAt: true, messages: { orderBy: { createdAt: "asc" }, select: { id: true, senderType: true, senderName: true, content: true, createdAt: true } } },
+      },
       notes: { orderBy: { createdAt: "desc" }, include: { author: true } },
       meetings: { orderBy: { meetingDate: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } }, files: true } },
       clientRequests: { orderBy: { requestDate: "desc" }, include: { createdBy: { select: { name: true } } } },
@@ -262,6 +269,20 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             <CardHeader><CardTitle className="text-base">메모</CardTitle></CardHeader>
             <CardContent>
               <MemoPanel projectId={p.id} memos={p.memos as any} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle className="text-base">고객 요청사항 (고객 공유 페이지)</CardTitle></CardHeader>
+            <CardContent>
+              <PortalRequestPanel projectId={p.id} requests={p.portalRequests as any} canCreate={false} canManage />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle className="text-base">고객 문의 (고객 공유 페이지)</CardTitle></CardHeader>
+            <CardContent>
+              <InquiryPanel projectId={p.id} clientId={p.clientId ?? undefined} inquiries={p.inquiries as any} role="STAFF" />
             </CardContent>
           </Card>
 

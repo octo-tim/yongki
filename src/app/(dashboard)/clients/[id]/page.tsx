@@ -9,6 +9,7 @@ import { EntityProjects } from "@/components/entity-projects";
 import { ProgressPhotoGrid } from "@/components/progress-photo-grid";
 import { WorkRequestPanel } from "@/components/work-request-panel";
 import { ProposalManager } from "@/components/proposal-manager";
+import { ClientPortalAccounts } from "@/components/client-portal-accounts";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +35,7 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
   const statusCfg = await getStatusConfig();
   const session = await getServerSession(authOptions);
   const uid = (session?.user as any)?.id as string | undefined;
-  const [users, factories, projects, proposals] = await Promise.all([
+  const [users, factories, projects, proposals, portalUsers] = await Promise.all([
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.factory.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.project.findMany({ orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
@@ -42,6 +43,7 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
       where: { clientId: client.id }, orderBy: { createdAt: "desc" },
       select: { id: true, title: true, sentDate: true, note: true, fileName: true, fileSize: true, createdAt: true, client: { select: { id: true, name: true } }, creator: { select: { name: true } } },
     }),
+    prisma.clientUser.findMany({ where: { clientId: client.id }, orderBy: { createdAt: "desc" }, select: { id: true, email: true, name: true, createdAt: true } }),
   ]);
 
   return (
@@ -85,6 +87,13 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
             showCreate fixedClientId={client.id}
             users={users} factories={factories}
             projects={projects.map((p) => ({ id: p.id, name: p.productName }))} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4">
+          <h2 className="mb-3 text-sm font-semibold">고객 포털 계정 ({portalUsers.length})</h2>
+          <ClientPortalAccounts clientId={client.id} users={portalUsers as any} />
         </CardContent>
       </Card>
 
