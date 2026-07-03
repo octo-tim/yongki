@@ -18,6 +18,10 @@ export async function POST(req: NextRequest) {
   const clientId = String(form.get("clientId") || "").trim() || null;
   const sentDate = String(form.get("sentDate") || "").trim() || null;
   const note = String(form.get("note") || "").trim() || null;
+  const validUntil = String(form.get("validUntil") || "").trim() || null;
+  const vatApplied = String(form.get("vatApplied") || "true") === "true";
+  let items: any = null;
+  try { const raw = String(form.get("items") || ""); if (raw) items = JSON.parse(raw); } catch { items = null; }
   const file = form.get("file") as File | null;
   if (!title) return NextResponse.json({ error: "제목 필수" }, { status: 400 });
 
@@ -32,6 +36,7 @@ export async function POST(req: NextRequest) {
     data: {
       title, clientId, note, sentDate: sentDate ? new Date(sentDate) : null,
       productName, amount: amount != null && !isNaN(amount) ? amount : null, currency,
+      items: items ?? undefined, vatApplied, validUntil: validUntil ? new Date(validUntil) : null,
       creatorId: (session.user as any).id,
       ...(fileData ? { fileName: fileData.fileName, fileType: fileData.fileType, fileSize: fileData.fileSize, data: fileData.data } : {}),
     },

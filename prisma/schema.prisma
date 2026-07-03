@@ -526,6 +526,9 @@ model Proposal {
   amount      Decimal?  @db.Decimal(16, 4) // 제안금액
   currency    String?   @default("KRW") // KRW/RMB/USD
   status      String    @default("발송완료") // 발송완료/검토중/수주/무산
+  items       Json? // 견적 항목 [{name,spec,qty,unitPrice}]
+  vatApplied  Boolean   @default(true) // 부가세 10% 적용
+  validUntil  DateTime? // 견적 유효기간
   sentDate    DateTime?
   note        String?
   fileName    String?

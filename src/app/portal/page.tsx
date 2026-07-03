@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { STEP_ORDER } from "@/lib/steps";
 import { Card, CardContent } from "@/components/ui/card";
-import { Package, ChevronRight } from "lucide-react";
+import { Package, ChevronRight, FileText } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -12,10 +12,16 @@ export default async function PortalHome() {
   const session = await getServerSession(authOptions);
   const clientId = (session!.user as any).clientId as string;
 
-  const projects = await prisma.project.findMany({
-    where: { clientId }, orderBy: { orderDate: "desc" },
-    select: { id: true, productName: true, productPhoto: true, orderNo: true, quantity: true, shipRequestDate: true, status: true, steps: { select: { name: true, done: true } } },
-  });
+  const [projects, proposals] = await Promise.all([
+    prisma.project.findMany({
+      where: { clientId }, orderBy: { orderDate: "desc" },
+      select: { id: true, productName: true, productPhoto: true, orderNo: true, quantity: true, shipRequestDate: true, status: true, steps: { select: { name: true, done: true } } },
+    }),
+    prisma.proposal.findMany({
+      where: { clientId }, orderBy: { createdAt: "desc" },
+      select: { id: true, title: true, amount: true, currency: true, status: true, sentDate: true },
+    }),
+  ]);
 
   function curStep(p: (typeof projects)[number]) {
     if (p.status && STEP_ORDER.includes(p.status)) return p.status;
@@ -64,6 +70,27 @@ export default async function PortalHome() {
           </Link>
         ))}
       </div>
+
+      {proposals.length > 0 && (
+        <div className="space-y-3">
+          <h2 className="text-base font-bold">받은 견적서</h2>
+          <div className="divide-y rounded-lg border bg-card">
+            {proposals.map((q) => (
+              <Link key={q.id} href={`/quote/${q.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-accent/50">
+                <FileText className="h-4 w-4 shrink-0 text-violet-600" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium">{q.title}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {q.sentDate ? `견적일 ${new Date(q.sentDate).toISOString().slice(0, 10)}` : ""}
+                    {q.amount != null && ` · ${Number(q.amount).toLocaleString()} ${q.currency ?? "KRW"}`}
+                  </p>
+                </div>
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
