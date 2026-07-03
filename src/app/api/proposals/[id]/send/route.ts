@@ -32,6 +32,11 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   });
 
   const transporter = nodemailer.createTransport({ service: "gmail", auth: { user, pass } });
+  try {
+    await transporter.verify();
+  } catch (e: any) {
+    return NextResponse.json({ error: `Gmail 인증 실패 — GMAIL_USER/GMAIL_APP_PASSWORD 확인 필요 (${e.message})` }, { status: 500 });
+  }
   const attachments: any[] = [];
   if (p.fileName && p.data) attachments.push({ filename: p.fileName, content: Buffer.from(p.data as any) });
 
