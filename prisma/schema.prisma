@@ -539,7 +539,7 @@ model Proposal {
   @@map("proposals")
 }
 
-/* ── 고객 포털 (업체 로그인) ── */
+// ── 고객 포털 (업체 로그인) ──
 
 model ClientUser {
   id        String   @id @default(cuid())
