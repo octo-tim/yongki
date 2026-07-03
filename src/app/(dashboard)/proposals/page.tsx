@@ -9,7 +9,7 @@ export default async function ProposalsPage() {
     prisma.proposal.findMany({
       orderBy: { createdAt: "desc" },
       select: {
-        id: true, title: true, sentDate: true, note: true, fileName: true, fileSize: true, createdAt: true,
+        id: true, title: true, productName: true, amount: true, currency: true, status: true, sentDate: true, note: true, fileName: true, fileSize: true, createdAt: true,
         client: { select: { id: true, name: true } }, creator: { select: { name: true } },
       },
     }),

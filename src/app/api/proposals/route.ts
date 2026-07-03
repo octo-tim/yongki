@@ -11,6 +11,10 @@ export async function POST(req: NextRequest) {
 
   const form = await req.formData();
   const title = String(form.get("title") || "").trim();
+  const productName = String(form.get("productName") || "").trim() || null;
+  const amountRaw = String(form.get("amount") || "").trim();
+  const amount = amountRaw === "" ? null : Number(amountRaw);
+  const currency = String(form.get("currency") || "KRW").trim() || "KRW";
   const clientId = String(form.get("clientId") || "").trim() || null;
   const sentDate = String(form.get("sentDate") || "").trim() || null;
   const note = String(form.get("note") || "").trim() || null;
@@ -27,6 +31,7 @@ export async function POST(req: NextRequest) {
   const saved = await prisma.proposal.create({
     data: {
       title, clientId, note, sentDate: sentDate ? new Date(sentDate) : null,
+      productName, amount: amount != null && !isNaN(amount) ? amount : null, currency,
       creatorId: (session.user as any).id,
       ...(fileData ? { fileName: fileData.fileName, fileType: fileData.fileType, fileSize: fileData.fileSize, data: fileData.data } : {}),
     },
