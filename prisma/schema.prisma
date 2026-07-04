@@ -578,6 +578,8 @@ model ClientPortalRequest {
   fileSize   Int?
   data       Bytes?
   status     String   @default("접수") // 접수/확인중/처리완료
+  fileCheckedAt DateTime? // 파일 확인 시각
+  fileCheckedBy String? // 파일 확인자
   createdAt  DateTime @default(now())
 
   @@index([projectId])
