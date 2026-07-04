@@ -527,6 +527,7 @@ model Proposal {
   currency    String?   @default("KRW") // KRW/RMB/USD
   status      String    @default("발송완료") // 발송완료/검토중/수주/무산
   docType     String    @default("PROPOSAL") // PROPOSAL(제안서) | INVOICE(인보이스)
+  sourceId    String?
   depositPct  Int       @default(30) // 계약금 비율 퍼센트
   sentTo      String? // 최근 메일 발송 주소
   sentAt      DateTime? // 최근 메일 발송 시각
