@@ -8,7 +8,7 @@ export function PortalHeader({ clientName, userName }: { clientName?: string; us
     <header className="flex h-14 items-center justify-between border-b bg-card px-4 sm:px-6">
       <Link href="/portal" className="flex items-center gap-2">
         <Building2 className="h-5 w-5 text-primary" />
-        <span className="font-semibold">{clientName ?? "고객 공유 페이지"}</span>
+        <span className="font-semibold">{clientName ?? "코스메팩 파트너센터"}</span>
       </Link>
       <div className="flex items-center gap-3 text-sm text-muted-foreground">
         <span>{userName}</span>

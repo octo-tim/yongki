@@ -32,7 +32,7 @@ export function ClientPortalAccounts({ clientId, users }: { clientId: string; us
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-xs text-muted-foreground">고객이 이 계정으로 <span className="font-medium text-foreground">고객 공유 페이지</span>(/portal)에 로그인해 진행현황을 확인합니다.</p>
+        <p className="text-xs text-muted-foreground">고객이 이 계정으로 <span className="font-medium text-foreground">코스메팩 파트너센터</span>(/portal)에 로그인해 진행현황을 확인합니다.</p>
         <Button size="sm" variant="outline" onClick={() => setAdding((v) => !v)}>{adding ? <X className="mr-1 h-4 w-4" /> : <Plus className="mr-1 h-4 w-4" />}{adding ? "닫기" : "계정 발급"}</Button>
       </div>
 

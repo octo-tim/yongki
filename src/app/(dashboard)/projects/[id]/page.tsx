@@ -273,14 +273,14 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           </Card>
 
           <Card>
-            <CardHeader><CardTitle className="text-base">고객 요청사항 (고객 공유 페이지)</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">고객 요청사항 (코스메팩 파트너센터)</CardTitle></CardHeader>
             <CardContent>
               <PortalRequestPanel projectId={p.id} requests={p.portalRequests as any} canCreate={false} canManage />
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader><CardTitle className="text-base">고객 문의 (고객 공유 페이지)</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">고객 문의 (코스메팩 파트너센터)</CardTitle></CardHeader>
             <CardContent>
               <InquiryPanel projectId={p.id} clientId={p.clientId ?? undefined} inquiries={p.inquiries as any} role="STAFF" />
             </CardContent>
