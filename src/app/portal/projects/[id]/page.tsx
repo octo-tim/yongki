@@ -9,7 +9,7 @@ import { PortalProgress } from "@/components/portal-progress";
 import { PortalRequestPanel } from "@/components/portal-request-panel";
 import { PortalPayments } from "@/components/portal-payments";
 import { InquiryPanel } from "@/components/inquiry-panel";
-import { ArrowLeft, Package } from "lucide-react";
+import { ArrowLeft, Package, AlertTriangle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -57,10 +57,22 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
               <span>수량: {project.quantity?.toLocaleString() ?? "-"}</span>
               <span>완료예정일: {project.shipRequestDate ? new Date(project.shipRequestDate).toISOString().slice(0, 10) : "-"}</span>
             </div>
-            {project.importantNote && <p className="mt-1 whitespace-pre-wrap rounded-md bg-amber-50 px-2 py-1 text-xs text-amber-800">{project.importantNote}</p>}
+            {project.orderDate && <p className="text-xs text-muted-foreground">주문일자: {new Date(project.orderDate).toISOString().slice(0, 10)}</p>}
           </div>
         </CardContent>
       </Card>
+
+      {/* 제품제작 중요사항 */}
+      {project.importantNote && (
+        <Card className="border-amber-300 bg-amber-50/60">
+          <CardContent className="p-4">
+            <h2 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-amber-800">
+              <AlertTriangle className="h-4 w-4" />제품제작 중요사항
+            </h2>
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-amber-900">{project.importantNote}</p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 진행현황 */}
       <Card>
