@@ -20,8 +20,8 @@ export function quotationHtml(p: {
   const notes = isInvoice ? INVOICE_NOTES : PROPOSAL_NOTES;
 
   const rows = p.items.length
-    ? p.items.map((it, i) => `<tr><td ${tdC}>${i + 1}</td><td ${tdC}><b>${it.name}</b></td><td ${tdC}><span style="white-space:pre-wrap;font-size:12px">${it.spec || "-"}</span></td><td ${tdR}>${won(Number(it.qty) || 0)}</td><td ${tdR}>${Number(it.unitPrice ?? 0).toLocaleString("ko-KR", { maximumFractionDigits: 4 })}</td><td ${tdR}>${won((Number(it.qty) || 0) * (Number(it.unitPrice) || 0))}</td><td ${tdC}><span style="white-space:pre-wrap;font-size:12px">${it.remark || ""}</span></td></tr>`).join("")
-    : `<tr><td colspan="7" ${tdC}>${p.productName ?? p.title}</td></tr>`;
+    ? p.items.map((it, i) => `<tr><td ${tdC}>${i + 1}</td><td ${tdC}>${it.photo ? `<img src="${it.photo}" width="60" style="max-height:60px;object-fit:cover"/>` : "-"}</td><td ${tdC}><b>${it.name}</b></td><td ${tdC}><span style="white-space:pre-wrap;font-size:12px">${it.spec || "-"}</span></td><td ${tdR}>${won(Number(it.qty) || 0)}</td><td ${tdR}>${Number(it.unitPrice ?? 0).toLocaleString("ko-KR", { maximumFractionDigits: 4 })}</td><td ${tdR}>${won((Number(it.qty) || 0) * (Number(it.unitPrice) || 0))}</td><td ${tdC}><span style="white-space:pre-wrap;font-size:12px">${it.remark || ""}</span></td></tr>`).join("")
+    : `<tr><td colspan="8" ${tdC}>${p.productName ?? p.title}</td></tr>`;
 
   return `<!DOCTYPE html><html><body style="font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:#111;max-width:840px;margin:0 auto;padding:24px">
   <table width="100%" style="border-bottom:4px double #111;margin-bottom:14px"><tr>
@@ -43,14 +43,14 @@ export function quotationHtml(p: {
     </td>
   </tr></table>
   <table width="100%" style="border-collapse:collapse">
-    <thead><tr><th ${th} width="30">No</th><th ${th}>제품명</th><th ${th} width="120">재원</th><th ${th} width="70">주문수량</th><th ${th} width="80">단가(ea)</th><th ${th} width="95">금액(₩)</th><th ${th} width="200">비고</th></tr></thead>
+    <thead><tr><th ${th} width="30">No</th><th ${th} width="70">제품사진</th><th ${th}>제품명</th><th ${th} width="120">재원</th><th ${th} width="70">주문수량</th><th ${th} width="80">단가(ea)</th><th ${th} width="95">금액(₩)</th><th ${th} width="200">비고</th></tr></thead>
     <tbody>${rows}</tbody>
     <tfoot>
-      <tr><td colspan="5" ${tdC}><b>합 계</b></td><td ${tdR}>${won(t.supply)}</td><td ${td}></td></tr>
-      ${p.vatApplied ? `<tr><td colspan="5" ${tdC}>부가가치세</td><td ${tdR}>${won(t.vat)}</td><td ${td}></td></tr>
-      <tr><td colspan="5" ${tdC}><b>합계금액</b></td><td ${tdR}><b>${won(t.total)}</b></td><td ${td}></td></tr>` : ""}
-      ${isInvoice ? `<tr style="background:#fff59d;font-weight:bold"><td colspan="5" ${tdC}>계약금 청구금액 (${p.depositPct}%)</td><td ${tdR}>${won(deposit)}</td><td ${td}></td></tr>
-      <tr><td colspan="5" ${tdC}><b>잔금 청구금액 (${100 - p.depositPct}%)</b></td><td ${tdR}>${won(balance)}</td><td ${td}></td></tr>` : ""}
+      <tr><td colspan="6" ${tdC}><b>합 계</b></td><td ${tdR}>${won(t.supply)}</td><td ${td}></td></tr>
+      ${p.vatApplied ? `<tr><td colspan="6" ${tdC}>부가가치세</td><td ${tdR}>${won(t.vat)}</td><td ${td}></td></tr>
+      <tr><td colspan="6" ${tdC}><b>합계금액</b></td><td ${tdR}><b>${won(t.total)}</b></td><td ${td}></td></tr>` : ""}
+      ${isInvoice ? `<tr style="background:#fff59d;font-weight:bold"><td colspan="6" ${tdC}>계약금 청구금액 (${p.depositPct}%)</td><td ${tdR}>${won(deposit)}</td><td ${td}></td></tr>
+      <tr><td colspan="6" ${tdC}><b>잔금 청구금액 (${100 - p.depositPct}%)</b></td><td ${tdR}>${won(balance)}</td><td ${td}></td></tr>` : ""}
     </tfoot>
   </table>
   <div style="margin-top:16px;font-size:12px;line-height:1.7">

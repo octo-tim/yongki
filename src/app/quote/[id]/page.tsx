@@ -81,6 +81,7 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
             <thead>
               <tr className="bg-muted/40 text-xs">
                 <th className="w-8 border px-1 py-2">No</th>
+                <th className="w-24 border px-2 py-2">제품사진</th>
                 <th className="border px-2 py-2">제품명</th>
                 <th className="w-32 border px-2 py-2">재원</th>
                 <th className="w-16 border px-2 py-2">주문수량</th>
@@ -90,10 +91,13 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
               </tr>
             </thead>
             <tbody>
-              {items.length === 0 && <tr><td colSpan={7} className="border px-2 py-6 text-center text-muted-foreground">{p.productName ?? p.title}</td></tr>}
+              {items.length === 0 && <tr><td colSpan={8} className="border px-2 py-6 text-center text-muted-foreground">{p.productName ?? p.title}</td></tr>}
               {items.map((it, i) => (
                 <tr key={i}>
                   <td className="border px-1 py-2 text-center">{i + 1}</td>
+                  <td className="border p-1 text-center">
+                    {it.photo ? <img src={it.photo} alt="" className="mx-auto h-16 w-16 object-cover" /> : <span className="text-xs text-muted-foreground">-</span>}
+                  </td>
                   <td className="border px-2 py-2 text-center font-medium">{it.name}</td>
                   <td className="whitespace-pre-wrap border px-2 py-2 text-center text-xs">{it.spec || "-"}</td>
                   <td className="border px-2 py-2 text-right">{won(Number(it.qty) || 0)}</td>
@@ -104,14 +108,14 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
               ))}
             </tbody>
             <tfoot className="font-medium">
-              <tr><td colSpan={5} className="border px-2 py-1.5 text-center font-bold">합  계</td><td className="border px-2 py-1.5 text-right">{won(t.supply)}</td><td className="border" /></tr>
+              <tr><td colSpan={6} className="border px-2 py-1.5 text-center font-bold">합  계</td><td className="border px-2 py-1.5 text-right">{won(t.supply)}</td><td className="border" /></tr>
               {vat && <>
-                <tr><td colSpan={5} className="border px-2 py-1.5 text-center">부가가치세</td><td className="border px-2 py-1.5 text-right">{won(t.vat)}</td><td className="border" /></tr>
-                <tr><td colSpan={5} className="border px-2 py-1.5 text-center font-bold">합계금액</td><td className="border px-2 py-1.5 text-right font-bold">{won(t.total)}</td><td className="border" /></tr>
+                <tr><td colSpan={6} className="border px-2 py-1.5 text-center">부가가치세</td><td className="border px-2 py-1.5 text-right">{won(t.vat)}</td><td className="border" /></tr>
+                <tr><td colSpan={6} className="border px-2 py-1.5 text-center font-bold">합계금액</td><td className="border px-2 py-1.5 text-right font-bold">{won(t.total)}</td><td className="border" /></tr>
               </>}
               {isInvoice && <>
-                <tr className="bg-yellow-200 font-bold"><td colSpan={5} className="border px-2 py-2 text-center">계약금 청구금액 ({depositPct}%)</td><td className="border px-2 py-2 text-right">{won(deposit)}</td><td className="border" /></tr>
-                <tr><td colSpan={5} className="border px-2 py-1.5 text-center font-semibold">잔금 청구금액 ({100 - depositPct}%)</td><td className="border px-2 py-1.5 text-right">{won(balance)}</td><td className="border" /></tr>
+                <tr className="bg-yellow-200 font-bold"><td colSpan={6} className="border px-2 py-2 text-center">계약금 청구금액 ({depositPct}%)</td><td className="border px-2 py-2 text-right">{won(deposit)}</td><td className="border" /></tr>
+                <tr><td colSpan={6} className="border px-2 py-1.5 text-center font-semibold">잔금 청구금액 ({100 - depositPct}%)</td><td className="border px-2 py-1.5 text-right">{won(balance)}</td><td className="border" /></tr>
               </>}
             </tfoot>
           </table>

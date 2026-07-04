@@ -15,14 +15,14 @@ type Proposal = {
   client?: { id: string; name: string } | null; creator?: { name: string } | null;
 };
 type Opt = { id: string; name: string };
-type Row = { name: string; spec: string; qty: string; unitPrice: string; remark: string };
+type Row = { name: string; spec: string; qty: string; unitPrice: string; remark: string; photo: string };
 
 const STATUSES = ["발송완료", "검토중", "수주", "무산"];
 const statusColor: Record<string, string> = {
   발송완료: "bg-blue-100 text-blue-700", 검토중: "bg-amber-100 text-amber-700",
   수주: "bg-emerald-100 text-emerald-700", 무산: "bg-zinc-200 text-zinc-600",
 };
-const emptyRow = (): Row => ({ name: "", spec: "", qty: "", unitPrice: "", remark: "" });
+const emptyRow = (): Row => ({ name: "", spec: "", qty: "", unitPrice: "", remark: "", photo: "" });
 
 function fmtSize(n: number | null) {
   if (!n) return null;
@@ -71,6 +71,31 @@ export function ProposalManager({ proposals, clients, fixedClientId, docType }: 
     setRows((rs) => rs.map((r, idx) => (idx === i ? { ...r, [key]: v } : r)));
   }
 
+  async function setPhoto(i: number, file: File | null) {
+    if (!file) return;
+    // 캔버스로 축소(가로 최대 320px)하여 data URL로 저장 → 문서에 임베드
+    const dataUrl = await new Promise<string>((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = () => { img.src = String(reader.result); };
+      reader.onerror = reject;
+      img.onload = () => {
+        const max = 320;
+        const scale = Math.min(1, max / img.width);
+        const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+        const c = document.createElement("canvas");
+        c.width = w; c.height = h;
+        const ctx = c.getContext("2d");
+        if (!ctx) return reject(new Error("canvas"));
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL("image/jpeg", 0.8));
+      };
+      img.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+    setRows((rs) => rs.map((r, idx) => (idx === i ? { ...r, photo: dataUrl } : r)));
+  }
+
   async function submit() {
     if (!title.trim()) return alert("제목을 입력하세요");
     setBusy(true);
@@ -78,7 +103,7 @@ export function ProposalManager({ proposals, clients, fixedClientId, docType }: 
     fd.append("title", title);
     fd.append("docType", docType ?? "PROPOSAL");
     fd.append("depositPct", String(depPct));
-    const items = rows.filter((r) => r.name.trim()).map((r) => ({ name: r.name.trim(), spec: r.spec.trim(), qty: num(r.qty), unitPrice: num(r.unitPrice), remark: r.remark.trim() }));
+    const items = rows.filter((r) => r.name.trim()).map((r) => ({ name: r.name.trim(), spec: r.spec.trim(), qty: num(r.qty), unitPrice: num(r.unitPrice), remark: r.remark.trim(), photo: r.photo || undefined }));
     if (items.length) {
       fd.append("items", JSON.stringify(items));
       fd.append("productName", items.map((i) => i.name).join(", ").slice(0, 100));
@@ -150,6 +175,7 @@ export function ProposalManager({ proposals, clients, fixedClientId, docType }: 
             <table className="w-full text-xs">
               <thead className="bg-muted/40">
                 <tr>
+                  <th className="w-16 px-2 py-1.5">사진</th>
                   <th className="px-2 py-1.5 text-left">제품명 *</th>
                   <th className="w-32 px-2 py-1.5 text-left">재원 (사이즈·재질)</th>
                   <th className="w-16 px-2 py-1.5">수량</th>
@@ -162,6 +188,12 @@ export function ProposalManager({ proposals, clients, fixedClientId, docType }: 
               <tbody>
                 {rows.map((r, i) => (
                   <tr key={i} className="border-t align-top">
+                    <td className="p-1">
+                      <label className="flex h-12 w-12 cursor-pointer items-center justify-center overflow-hidden rounded border bg-muted/30 hover:bg-accent">
+                        {r.photo ? <img src={r.photo} alt="" className="h-full w-full object-cover" /> : <span className="text-[10px] text-muted-foreground">사진</span>}
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => setPhoto(i, e.target.files?.[0] ?? null)} />
+                      </label>
+                    </td>
                     <td className="p-1"><input value={r.name} onChange={(e) => setRow(i, "name", e.target.value)} placeholder="제품명" className="w-full bg-transparent px-1 py-1 outline-none" /></td>
                     <td className="p-1"><textarea value={r.spec} onChange={(e) => setRow(i, "spec", e.target.value)} placeholder={"사이즈: \n재질: "} rows={2} className="w-full resize-y bg-transparent px-1 py-1 outline-none" /></td>
                     <td className="p-1"><input type="number" value={r.qty} onChange={(e) => setRow(i, "qty", e.target.value)} className="w-full bg-transparent px-1 py-1 text-right outline-none" /></td>
@@ -175,14 +207,14 @@ export function ProposalManager({ proposals, clients, fixedClientId, docType }: 
                 ))}
               </tbody>
               <tfoot className="border-t bg-muted/20 font-medium">
-                <tr><td colSpan={4} className="px-2 py-1.5 text-right">합계</td><td className="px-2 py-1.5 text-right tabular-nums">{supply.toLocaleString()}</td><td colSpan={2} /></tr>
+                <tr><td colSpan={5} className="px-2 py-1.5 text-right">합계</td><td className="px-2 py-1.5 text-right tabular-nums">{supply.toLocaleString()}</td><td colSpan={2} /></tr>
                 {vatApplied && <>
-                  <tr><td colSpan={4} className="px-2 py-1.5 text-right">부가가치세</td><td className="px-2 py-1.5 text-right tabular-nums">{vat.toLocaleString()}</td><td colSpan={2} /></tr>
-                  <tr className="font-bold"><td colSpan={4} className="px-2 py-1.5 text-right">합계금액</td><td className="px-2 py-1.5 text-right tabular-nums">{total.toLocaleString()}</td><td colSpan={2} /></tr>
+                  <tr><td colSpan={5} className="px-2 py-1.5 text-right">부가가치세</td><td className="px-2 py-1.5 text-right tabular-nums">{vat.toLocaleString()}</td><td colSpan={2} /></tr>
+                  <tr className="font-bold"><td colSpan={5} className="px-2 py-1.5 text-right">합계금액</td><td className="px-2 py-1.5 text-right tabular-nums">{total.toLocaleString()}</td><td colSpan={2} /></tr>
                 </>}
                 {isInvoice && <>
-                  <tr className="bg-yellow-100 font-bold"><td colSpan={4} className="px-2 py-1.5 text-right">계약금 ({depPct}%)</td><td className="px-2 py-1.5 text-right tabular-nums">{deposit.toLocaleString()}</td><td colSpan={2} /></tr>
-                  <tr><td colSpan={4} className="px-2 py-1.5 text-right">잔금 ({100 - depPct}%)</td><td className="px-2 py-1.5 text-right tabular-nums">{(total - deposit).toLocaleString()}</td><td colSpan={2} /></tr>
+                  <tr className="bg-yellow-100 font-bold"><td colSpan={5} className="px-2 py-1.5 text-right">계약금 ({depPct}%)</td><td className="px-2 py-1.5 text-right tabular-nums">{deposit.toLocaleString()}</td><td colSpan={2} /></tr>
+                  <tr><td colSpan={5} className="px-2 py-1.5 text-right">잔금 ({100 - depPct}%)</td><td className="px-2 py-1.5 text-right tabular-nums">{(total - deposit).toLocaleString()}</td><td colSpan={2} /></tr>
                 </>}
               </tfoot>
             </table>

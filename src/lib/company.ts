@@ -49,7 +49,7 @@ export const INVOICE_NOTES = [
   "해당 제안사의 유효기간은 30일 입니다. 해외 제작인 관계로 원재료상승, 환율변동에 의하여 유효기간이 지난 후에 주문을 하시는 경우에는 다시 인보이스를 보내드리는 점 양해부탁드립니다.",
 ];
 
-export type QuoteItem = { name: string; spec?: string; qty: number; unitPrice: number; remark?: string };
+export type QuoteItem = { name: string; spec?: string; qty: number; unitPrice: number; remark?: string; photo?: string };
 
 export function quoteTotals(items: QuoteItem[], vatApplied: boolean) {
   const supply = items.reduce((a, it) => a + (Number(it.qty) || 0) * (Number(it.unitPrice) || 0), 0);
