@@ -290,7 +290,7 @@ export function ProposalManager({ proposals, clients, fixedClientId, docType }: 
                 <button onClick={() => issueInvoice(p)} className="flex shrink-0 items-center gap-1 rounded-full border border-rose-300 px-2 py-1 text-[11px] font-medium text-rose-600 hover:bg-rose-50" title="이 제안서로 인보이스 발행"><Receipt className="h-3 w-3" />인보이스 발행</button>
               );
             })()}
-            {(p.docType ?? "PROPOSAL") === "PROPOSAL" && <ProposalEditDialog proposal={p as any} />}
+            <ProposalEditDialog proposal={p as any} clients={clients} />
             <Link href={`/quote/${p.id}`} className="shrink-0 rounded p-1 text-muted-foreground hover:bg-accent" title="문서 보기/인쇄/메일"><Printer className="h-3.5 w-3.5" /></Link>
             <select value={p.status} onChange={(e) => setStatus(p.id, e.target.value)} className={cn("shrink-0 rounded-full border-0 px-2 py-1 text-xs font-medium", statusColor[p.status] ?? "bg-muted")}>
               {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
