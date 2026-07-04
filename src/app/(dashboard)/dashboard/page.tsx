@@ -1,3 +1,4 @@
+import { PortalUploads } from "@/components/portal-uploads";
 import { ReplyRequests } from "@/components/reply-requests";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
@@ -93,6 +94,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
       </section>
 
       <ReplyRequests />
+
+      <PortalUploads />
 
       {/* 단계별 프로젝트: 검품 / 생산완료 */}
       <section className="grid gap-4 lg:grid-cols-2">
