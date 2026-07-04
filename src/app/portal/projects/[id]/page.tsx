@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PortalProgress } from "@/components/portal-progress";
 import { PortalRequestPanel } from "@/components/portal-request-panel";
 import { PortalPayments } from "@/components/portal-payments";
+import { PortalProgressPhotos } from "@/components/portal-progress-photos";
 import { InquiryPanel } from "@/components/inquiry-panel";
 import { ArrowLeft, Package, AlertTriangle } from "lucide-react";
 
@@ -25,6 +26,7 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
       steps: { select: { name: true, done: true, doneAt: true } },
       factory: { select: { name: true } },
       payments: { where: { side: "SALES" }, select: { id: true, type: true, amount: true, receivedAt: true, method: true } },
+      progressPhotos: { orderBy: { createdAt: "desc" } },
       portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
       inquiries: {
         orderBy: { createdAt: "desc" },
@@ -87,6 +89,14 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
         <CardContent className="p-4">
           <h2 className="mb-3 text-sm font-semibold">결재관리</h2>
           <PortalPayments payments={project.payments as any} />
+        </CardContent>
+      </Card>
+
+      {/* 진행사진 (읽기 전용) */}
+      <Card>
+        <CardContent className="p-4">
+          <h2 className="mb-3 text-sm font-semibold">진행사진 ({(project as any).progressPhotos?.length ?? 0})</h2>
+          <PortalProgressPhotos photos={(project as any).progressPhotos ?? []} />
         </CardContent>
       </Card>
 
