@@ -10,7 +10,9 @@ function captionOf(p: Photo): string {
 }
 
 export function PortalProgressPhotos({ photos }: { photos: Photo[] }) {
-  const list = (photos ?? []).map((p) => ({ ...p, _url: urlOf(p) })).filter((p) => p._url);
+  const list: Photo[] = (photos ?? [])
+    .map((p) => ({ ...p, _url: urlOf(p) }))
+    .filter((p) => p._url);
   if (list.length === 0) return <p className="py-4 text-center text-sm text-muted-foreground">등록된 진행사진이 없습니다.</p>;
 
   return (
