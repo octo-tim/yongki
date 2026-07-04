@@ -526,6 +526,7 @@ model Proposal {
   amount      Decimal?  @db.Decimal(16, 4) // 제안금액
   currency    String?   @default("KRW") // KRW/RMB/USD
   status      String    @default("발송완료") // 발송완료/검토중/수주/무산
+  revisionNo  Int       @default(1) // 현재 버전 번호
   docType     String    @default("PROPOSAL") // PROPOSAL(제안서) | INVOICE(인보이스)
   sourceId    String?
   depositPct  Int       @default(30) // 계약금 비율 퍼센트
@@ -550,6 +551,8 @@ model Proposal {
   @@index([clientId])
   @@index([creatorId])
   @@map("proposals")
+  revisions   ProposalRevision[]
+
 }
 
 // ── 고객 포털 (업체 로그인) ──
@@ -617,4 +620,27 @@ model ClientInquiryMessage {
 
   @@index([inquiryId])
   @@map("client_inquiry_messages")
+}
+
+
+model ProposalRevision {
+  id          String   @id @default(cuid())
+  proposalId  String
+  proposal    Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  revisionNo  Int
+  title       String
+  productName String?
+  amount      Decimal? @db.Decimal(16, 4)
+  currency    String?
+  depositPct  Int?
+  vatApplied  Boolean  @default(true)
+  items       Json?
+  note        String?
+  editedById  String?
+  editedByName String?
+  invoiceId   String? // 이 버전에서 발행된 인보이스 id
+  createdAt   DateTime @default(now())
+
+  @@index([proposalId])
+  @@map("proposal_revisions")
 }

@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { SearchableSelect } from "@/components/searchable-select";
 import { Send, FileText, Trash2, Download, Plus, X, Printer, Receipt, Mail } from "lucide-react";
 import { cn, fmtUnit } from "@/lib/utils";
+import { ProposalEditDialog } from "@/components/proposal-edit-dialog";
 
 type Proposal = {
   id: string; title: string; productName: string | null; amount: any; currency: string | null; status: string;
-  docType?: string | null; depositPct?: number | null; sentTo?: string | null; sentAt?: string | null; sourceId?: string | null;
+  docType?: string | null; depositPct?: number | null; sentTo?: string | null; sentAt?: string | null; sourceId?: string | null; revisionNo?: number | null; vatApplied?: boolean | null; items?: any;
   sentDate: string | null; note: string | null; fileName: string | null; fileSize: number | null; createdAt: string;
   client?: { id: string; name: string } | null; creator?: { name: string } | null;
 };
@@ -289,6 +290,7 @@ export function ProposalManager({ proposals, clients, fixedClientId, docType }: 
                 <button onClick={() => issueInvoice(p)} className="flex shrink-0 items-center gap-1 rounded-full border border-rose-300 px-2 py-1 text-[11px] font-medium text-rose-600 hover:bg-rose-50" title="이 제안서로 인보이스 발행"><Receipt className="h-3 w-3" />인보이스 발행</button>
               );
             })()}
+            {(p.docType ?? "PROPOSAL") === "PROPOSAL" && <ProposalEditDialog proposal={p as any} />}
             <Link href={`/quote/${p.id}`} className="shrink-0 rounded p-1 text-muted-foreground hover:bg-accent" title="문서 보기/인쇄/메일"><Printer className="h-3.5 w-3.5" /></Link>
             <select value={p.status} onChange={(e) => setStatus(p.id, e.target.value)} className={cn("shrink-0 rounded-full border-0 px-2 py-1 text-xs font-medium", statusColor[p.status] ?? "bg-muted")}>
               {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
