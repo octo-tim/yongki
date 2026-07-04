@@ -18,6 +18,7 @@ import { ProductInfoPanel } from "@/components/product-info-panel";
 import { PurchaseCostPanel } from "@/components/purchase-cost-panel";
 import { MemoPanel } from "@/components/memo-panel";
 import { FilePanel } from "@/components/file-panel";
+import { StaffFilePanel } from "@/components/staff-file-panel";
 import { PortalRequestPanel } from "@/components/portal-request-panel";
 import { InquiryPanel } from "@/components/inquiry-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
@@ -32,7 +33,8 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     include: {
       client: true, factory: true, manager: true,
       steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
-      files: { orderBy: { createdAt: "desc" }, select: { id: true, fileName: true, filePath: true, fileType: true, fileSize: true, createdAt: true } },
+      files: { orderBy: { createdAt: "desc" },
+      staffFiles: { orderBy: { createdAt: "desc" } }, select: { id: true, fileName: true, filePath: true, fileType: true, fileSize: true, createdAt: true } },
       portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
       inquiries: {
         orderBy: { createdAt: "desc" },
@@ -283,6 +285,14 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             <CardHeader><CardTitle className="text-base">고객 문의 (코스메팩 파트너센터)</CardTitle></CardHeader>
             <CardContent>
               <InquiryPanel projectId={p.id} clientId={p.clientId ?? undefined} inquiries={p.inquiries as any} role="STAFF" />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <Card>
+            <CardHeader><CardTitle className="text-base">고객 확인요청 파일</CardTitle></CardHeader>
+            <CardContent>
+              <StaffFilePanel projectId={p.id} files={(p as any).staffFiles ?? []} />
             </CardContent>
           </Card>
 

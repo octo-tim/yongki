@@ -7,6 +7,7 @@ import { STEP_ORDER } from "@/lib/steps";
 import { Card, CardContent } from "@/components/ui/card";
 import { PortalProgress } from "@/components/portal-progress";
 import { PortalRequestPanel } from "@/components/portal-request-panel";
+import { PortalFileConfirm } from "@/components/portal-file-confirm";
 import { PortalPayments } from "@/components/portal-payments";
 import { PortalProgressPhotos } from "@/components/portal-progress-photos";
 import { InquiryPanel } from "@/components/inquiry-panel";
@@ -27,7 +28,8 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
       factory: { select: { name: true } },
       payments: { where: { side: "SALES" }, select: { id: true, type: true, amount: true, receivedAt: true, method: true } },
       progressPhotos: { orderBy: { createdAt: "desc" } },
-      portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
+      portalRequests: { orderBy: { createdAt: "desc" },
+      staffFiles: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, memo: true, fileName: true, fileSize: true, confirmedAt: true, confirmedBy: true, createdAt: true } }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
       inquiries: {
         orderBy: { createdAt: "desc" },
         select: { id: true, subject: true, status: true, createdAt: true, messages: { orderBy: { createdAt: "asc" }, select: { id: true, senderType: true, senderName: true, content: true, createdAt: true } } },
@@ -103,6 +105,13 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
       </Card>
 
       {/* 요청 및 파일 올리기 */}
+      <Card>
+        <CardContent className="p-4">
+          <h2 className="mb-3 text-sm font-semibold">고객 확인요청 파일</h2>
+          <PortalFileConfirm files={(project as any).staffFiles ?? []} />
+        </CardContent>
+      </Card>
+
       <Card>
         <CardContent className="p-4">
           <h2 className="mb-3 text-sm font-semibold">제품제작 관련 요청 및 파일 올리기</h2>

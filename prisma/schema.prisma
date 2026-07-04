@@ -207,6 +207,7 @@ model Project {
   costItems CostItem[]
   portalRequests ClientPortalRequest[]
   inquiries ClientInquiry[]
+  staffFiles     StaffFileRequest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -643,4 +644,27 @@ model ProposalRevision {
 
   @@index([proposalId])
   @@map("proposal_revisions")
+}
+
+
+model StaffFileRequest {
+  id            String    @id @default(cuid())
+  projectId     String
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  clientId      String?
+  title         String
+  memo          String?
+  fileName      String
+  fileType      String?
+  fileSize      Int?
+  data          Bytes
+  uploaderId    String?
+  uploaderName  String?
+  confirmedAt   DateTime? // 고객 확인 시각
+  confirmedBy   String? // 확인한 고객 계정명
+  createdAt     DateTime  @default(now())
+
+  @@index([projectId])
+  @@index([clientId])
+  @@map("staff_file_requests")
 }
