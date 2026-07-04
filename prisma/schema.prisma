@@ -207,6 +207,7 @@ model Project {
   costItems CostItem[]
   portalRequests ClientPortalRequest[]
   inquiries ClientInquiry[]
+  proposals      Proposal[] @relation("ProjectInvoices")
   staffFiles     StaffFileRequest[]
 
   createdAt DateTime @default(now())
@@ -530,6 +531,8 @@ model Proposal {
   revisionNo  Int       @default(1) // 현재 버전 번호
   docType     String    @default("PROPOSAL") // PROPOSAL(제안서) | INVOICE(인보이스)
   sourceId    String?
+  projectId   String? // 연결된 프로젝트
+  invoiceKind String? // DEPOSIT(계약금) | BALANCE(잔금) | FULL(전체)
   depositPct  Int       @default(30) // 계약금 비율 퍼센트
   sentTo      String? // 최근 메일 발송 주소
   sentAt      DateTime? // 최근 메일 발송 시각
@@ -546,6 +549,7 @@ model Proposal {
   client      Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
   creatorId   String?
   creator     User?     @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  project     Project?  @relation("ProjectInvoices", fields: [projectId], references: [id], onDelete: SetNull)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 

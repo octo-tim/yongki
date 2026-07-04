@@ -1,3 +1,4 @@
+import { ProjectSalesPanel } from "@/components/project-sales-panel";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
@@ -33,8 +34,9 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     include: {
       client: true, factory: true, manager: true,
       steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
-      files: { orderBy: { createdAt: "desc" },
-      staffFiles: { orderBy: { createdAt: "desc" } }, select: { id: true, fileName: true, filePath: true, fileType: true, fileSize: true, createdAt: true } },
+      files: { orderBy: { createdAt: "desc" }, select: { id: true, fileName: true, filePath: true, fileType: true, fileSize: true, createdAt: true } },
+      proposals: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, docType: true, invoiceKind: true, amount: true, currency: true, status: true, sentDate: true, sentTo: true } },
+      staffFiles: { orderBy: { createdAt: "desc" } },
       portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
       inquiries: {
         orderBy: { createdAt: "desc" },
@@ -289,7 +291,13 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           </Card>
 
           <Card>
-            <Card>
+            <CardHeader><CardTitle className="text-base">영업 (제안서 · 인보이스)</CardTitle></CardHeader>
+            <CardContent>
+              <ProjectSalesPanel projectId={p.id} productName={p.productName} docs={(p as any).proposals ?? []} />
+            </CardContent>
+          </Card>
+
+          <Card>
             <CardHeader><CardTitle className="text-base">고객 확인요청 파일</CardTitle></CardHeader>
             <CardContent>
               <StaffFilePanel projectId={p.id} files={(p as any).staffFiles ?? []} />
