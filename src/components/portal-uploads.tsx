@@ -50,7 +50,10 @@ export async function PortalUploads() {
                     <span className="shrink-0 text-[11px] text-muted-foreground">{fmtSize(f.fileSize)}</span>
                   </a>
                   <span className="hidden max-w-[16rem] truncate text-xs text-muted-foreground sm:block">
-                    {f.client?.name}{f.project ? ` · ${f.project.productName}` : ""}
+                    {f.client?.name}
+                    {f.project && (
+                      <> · <Link href={`/projects/${f.project.id}`} className="text-foreground hover:underline">{f.project.productName}</Link></>
+                    )}
                   </span>
                   <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium", statusColor[f.status] ?? "bg-muted")}>{f.status}</span>
                   <span className="shrink-0 text-[11px] text-muted-foreground">{dt(f.createdAt as any)}</span>
