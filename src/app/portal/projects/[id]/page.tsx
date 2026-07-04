@@ -28,8 +28,8 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
       factory: { select: { name: true } },
       payments: { where: { side: "SALES" }, select: { id: true, type: true, amount: true, receivedAt: true, method: true } },
       progressPhotos: { orderBy: { createdAt: "desc" } },
-      portalRequests: { orderBy: { createdAt: "desc" },
-      staffFiles: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, memo: true, fileName: true, fileSize: true, confirmedAt: true, confirmedBy: true, createdAt: true } }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
+      portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
+      staffFiles: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, memo: true, fileName: true, fileSize: true, confirmedAt: true, confirmedBy: true, createdAt: true } },
       inquiries: {
         orderBy: { createdAt: "desc" },
         select: { id: true, subject: true, status: true, createdAt: true, messages: { orderBy: { createdAt: "asc" }, select: { id: true, senderType: true, senderName: true, content: true, createdAt: true } } },
