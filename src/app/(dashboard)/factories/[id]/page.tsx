@@ -34,11 +34,6 @@ export default async function FactoryDetailPage({ params }: { params: { id: stri
   const statusCfg = await getStatusConfig();
   const session = await getServerSession(authOptions);
   const uid = (session?.user as any)?.id as string | undefined;
-  const [users, clients, projects] = await Promise.all([
-    prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
-    prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
-    prisma.project.findMany({ orderBy: { orderDate: "desc" }, select: { id: true, productName: true } }),
-  ]);
 
   const meta = [factory.region, (factory as any).mainProducts, (factory as any).contactType].filter(Boolean).join(" · ");
 
@@ -49,7 +44,7 @@ export default async function FactoryDetailPage({ params }: { params: { id: stri
           <Link href="/factories" className="hover:underline">공장 관리</Link>
           <span>/</span>
         </div>
-        <h1 className="text-2xl font-bold">{(factory as any).code ? `#${(factory as any).code} ` : ""}{factory.name}</h1>
+        <h1 className="text-2xl font-bold">{factory.name}</h1>
         <p className="text-sm text-muted-foreground">
           전체 프로젝트 {factory.projects.length}건{meta ? ` · ${meta}` : ""}
         </p>
@@ -69,11 +64,8 @@ export default async function FactoryDetailPage({ params }: { params: { id: stri
 
       <Card>
         <CardContent className="p-4">
-          <h2 className="mb-3 text-sm font-semibold">업무 (이 공장 · 프로젝트 무관 포함)</h2>
-          <WorkRequestPanel requests={factory.workRequests as any} currentUserId={uid}
-            showCreate fixedFactoryId={factory.id}
-            users={users} clients={clients}
-            projects={projects.map((p) => ({ id: p.id, name: p.productName }))} />
+          <h2 className="mb-3 text-sm font-semibold">업무요청</h2>
+          <WorkRequestPanel requests={factory.workRequests as any} currentUserId={uid} showCreate={false} />
         </CardContent>
       </Card>
 
