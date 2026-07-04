@@ -1,59 +1,63 @@
-import { COMPANY, quoteTotals, type QuoteItem } from "@/lib/company";
+import { COMPANY, quoteTotals, PROPOSAL_GREETINGS, INVOICE_GREETINGS, PROPOSAL_NOTES, INVOICE_NOTES, type QuoteItem } from "@/lib/company";
 
 const won = (n: number) => n.toLocaleString("ko-KR");
 
 export function quotationHtml(p: {
-  title: string; sentDate: Date | null; validUntil: Date | null; note: string | null;
+  title: string; docType: string; depositPct: number; sentDate: Date | null; validUntil: Date | null; note: string | null;
   vatApplied: boolean; currency: string | null; items: QuoteItem[]; productName: string | null;
   clientName: string; clientContact?: string | null; creatorName?: string | null;
 }) {
-  const { supply, vat, total } = quoteTotals(p.items, p.vatApplied);
-  const ccy = p.currency ?? "KRW";
+  const isInvoice = p.docType === "INVOICE";
+  const t = quoteTotals(p.items, p.vatApplied);
+  const deposit = Math.round((t.total * p.depositPct) / 100);
+  const balance = t.total - deposit;
   const d = (v: Date | null) => (v ? new Date(v).toISOString().slice(0, 10) : "-");
-  const td = 'style="border:1px solid #ccc;padding:6px 8px;font-size:13px"';
-  const tdR = 'style="border:1px solid #ccc;padding:6px 8px;font-size:13px;text-align:right"';
-  const tdC = 'style="border:1px solid #ccc;padding:6px 8px;font-size:13px;text-align:center"';
-  const th = 'style="border:1px solid #ccc;padding:6px 8px;font-size:12px;background:#f3f4f6;text-align:center"';
+  const td = 'style="border:1px solid #bbb;padding:6px 8px;font-size:13px"';
+  const tdR = 'style="border:1px solid #bbb;padding:6px 8px;font-size:13px;text-align:right"';
+  const tdC = 'style="border:1px solid #bbb;padding:6px 8px;font-size:13px;text-align:center"';
+  const th = 'style="border:1px solid #bbb;padding:6px 8px;font-size:12px;background:#f3f4f6;text-align:center"';
+  const greetings = isInvoice ? INVOICE_GREETINGS : PROPOSAL_GREETINGS;
+  const notes = isInvoice ? INVOICE_NOTES : PROPOSAL_NOTES;
 
   const rows = p.items.length
-    ? p.items.map((it, i) => `<tr><td ${tdC}>${i + 1}</td><td ${td}>${it.name}</td><td ${tdC}>${it.spec || "-"}</td><td ${tdR}>${won(Number(it.qty) || 0)}</td><td ${tdR}>${Number(it.unitPrice ?? 0).toLocaleString("ko-KR", { maximumFractionDigits: 4 })}</td><td ${tdR}>${won((Number(it.qty) || 0) * (Number(it.unitPrice) || 0))}</td></tr>`).join("")
-    : `<tr><td colspan="6" ${tdC}>${p.productName ?? p.title}</td></tr>`;
+    ? p.items.map((it, i) => `<tr><td ${tdC}>${i + 1}</td><td ${tdC}><b>${it.name}</b></td><td ${tdC}><span style="white-space:pre-wrap;font-size:12px">${it.spec || "-"}</span></td><td ${tdR}>${won(Number(it.qty) || 0)}</td><td ${tdR}>${Number(it.unitPrice ?? 0).toLocaleString("ko-KR", { maximumFractionDigits: 4 })}</td><td ${tdR}>${won((Number(it.qty) || 0) * (Number(it.unitPrice) || 0))}</td><td ${tdC}><span style="white-space:pre-wrap;font-size:12px">${it.remark || ""}</span></td></tr>`).join("")
+    : `<tr><td colspan="7" ${tdC}>${p.productName ?? p.title}</td></tr>`;
 
-  return `<!DOCTYPE html><html><body style="font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:#111;max-width:720px;margin:0 auto;padding:24px">
-  <h1 style="text-align:center;letter-spacing:0.4em;font-size:26px;margin-bottom:24px">견 적 서</h1>
-  <table width="100%" style="margin-bottom:16px"><tr>
+  return `<!DOCTYPE html><html><body style="font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:#111;max-width:840px;margin:0 auto;padding:24px">
+  <table width="100%" style="border-bottom:4px double #111;margin-bottom:14px"><tr>
+    <td><h1 style="margin:6px 0;font-size:24px">${isInvoice ? "INVOICE" : "상품공급 제안서"}</h1></td>
+    <td align="right"><span style="font-size:22px;font-weight:bold">Cosme<span style="color:#777">Pack</span></span><br/><b>코스메팩</b></td>
+  </tr></table>
+  <table width="100%" style="margin-bottom:14px"><tr>
     <td valign="top" style="font-size:14px;line-height:1.8">
-      <strong style="font-size:17px">${p.clientName}</strong> 貴中<br/>
-      ${p.clientContact ? `담당: ${p.clientContact}<br/>` : ""}
-      견적일자: ${d(p.sentDate)}<br/>
-      ${p.validUntil ? `유효기간: ${d(p.validUntil)} 까지<br/>` : ""}
-      <span style="color:#666">아래와 같이 견적합니다.</span>
+      <b style="font-size:16px;border-bottom:1px solid #333">${p.clientName}</b> 貴下<br/>
+      <b>${isInvoice ? "청구금액" : "제안금액"} :</b> <b style="font-size:16px">₩${won(t.total)}</b> <span style="color:#666">${p.vatApplied ? "(부가세 포함)" : "(부가세 별도)"}</span><br/>
+      <b>작성일자 :</b> ${d(p.sentDate)} <span style="color:#666">(유효기간:30일)</span><br/>
+      <span style="color:#555">${greetings.map((g) => "◎ " + g).join("<br/>")}</span>
     </td>
-    <td valign="top" width="300">
+    <td valign="top" width="330">
       <table width="100%" style="border-collapse:collapse;font-size:12px">
-        ${[["등록번호", COMPANY.bizNo], ["상호", COMPANY.name], ["대표자", COMPANY.ceo], ["주소", COMPANY.address], ["전화", COMPANY.tel], ["담당", p.creatorName ?? "-"]]
-          .map(([k, v]) => `<tr><td style="border:1px solid #ccc;background:#f3f4f6;padding:4px 8px;width:64px;text-align:center">${k}</td><td style="border:1px solid #ccc;padding:4px 8px">${v}</td></tr>`).join("")}
+        ${[["사업자NO", `<b>${COMPANY.bizNo}</b>`], ["업체명", `${COMPANY.name} &nbsp; 대표 ${COMPANY.ceo} (인)`], ["주소", COMPANY.address], ["업태", `${COMPANY.bizType} &nbsp; 종목 ${COMPANY.bizItem}`], ["전화", `${COMPANY.tel} &nbsp; 팩스 ${COMPANY.fax}`], ...(isInvoice ? [["입금계좌", COMPANY.bank]] : []), ["담당", p.creatorName ?? "-"]]
+          .map(([k, v]) => `<tr><td style="border:1px solid #bbb;background:#f3f4f6;padding:4px 8px;width:60px;text-align:center">${k}</td><td style="border:1px solid #bbb;padding:4px 8px">${v}</td></tr>`).join("")}
       </table>
     </td>
   </tr></table>
-  <div style="border:2px solid #111;border-radius:6px;padding:10px 16px;margin-bottom:14px;display:flex;justify-content:space-between">
-    <strong>합계금액 ${p.vatApplied ? "(부가세 포함)" : "(부가세 별도)"}</strong>
-    <strong style="font-size:18px;float:right">${won(total)} ${ccy === "KRW" ? "원" : ccy}</strong>
-  </div>
   <table width="100%" style="border-collapse:collapse">
-    <thead><tr><th ${th} width="36">No</th><th ${th}>품목</th><th ${th} width="100">규격</th><th ${th} width="60">수량</th><th ${th} width="90">단가</th><th ${th} width="100">공급가액</th></tr></thead>
+    <thead><tr><th ${th} width="30">No</th><th ${th}>제품명</th><th ${th} width="120">재원</th><th ${th} width="70">주문수량</th><th ${th} width="80">단가(ea)</th><th ${th} width="95">금액(₩)</th><th ${th} width="200">비고</th></tr></thead>
     <tbody>${rows}</tbody>
     <tfoot>
-      <tr><td colspan="5" ${tdR}>공급가액</td><td ${tdR}>${won(supply)}</td></tr>
-      <tr><td colspan="5" ${tdR}>부가세 (10%)</td><td ${tdR}>${p.vatApplied ? won(vat) : "-"}</td></tr>
-      <tr style="background:#f3f4f6;font-weight:bold"><td colspan="5" ${tdR}>합계</td><td ${tdR}>${won(total)}</td></tr>
+      <tr><td colspan="5" ${tdC}><b>합 계</b></td><td ${tdR}>${won(t.supply)}</td><td ${td}></td></tr>
+      ${p.vatApplied ? `<tr><td colspan="5" ${tdC}>부가가치세</td><td ${tdR}>${won(t.vat)}</td><td ${td}></td></tr>
+      <tr><td colspan="5" ${tdC}><b>합계금액</b></td><td ${tdR}><b>${won(t.total)}</b></td><td ${td}></td></tr>` : ""}
+      ${isInvoice ? `<tr style="background:#fff59d;font-weight:bold"><td colspan="5" ${tdC}>계약금 청구금액 (${p.depositPct}%)</td><td ${tdR}>${won(deposit)}</td><td ${td}></td></tr>
+      <tr><td colspan="5" ${tdC}><b>잔금 청구금액 (${100 - p.depositPct}%)</b></td><td ${tdR}>${won(balance)}</td><td ${td}></td></tr>` : ""}
     </tfoot>
   </table>
-  ${p.note ? `<p style="font-size:13px;margin-top:14px"><strong>비고</strong><br/><span style="color:#555;white-space:pre-wrap">${p.note}</span></p>` : ""}
-  <div style="margin-top:28px;border-top:1px solid #ddd;padding-top:10px;text-align:center;font-size:11px;color:#777;line-height:1.7">
-    <strong style="color:#111">${COMPANY.name}</strong><br/>
-    ${COMPANY.address} · Tel ${COMPANY.tel} · 사업자등록번호 ${COMPANY.bizNo}<br/>
-    통신판매업 신고번호 ${COMPANY.mailOrderNo} · 개인정보보호책임자 ${COMPANY.privacyOfficer}
+  <div style="margin-top:16px;font-size:12px;line-height:1.7">
+    <b>◎ 참고사항</b><br/>
+    ${notes.map((n, i) => `${i + 1}. ${n.replace(/\n/g, "<br/>&nbsp;&nbsp;&nbsp;")}`).join("<br/>")}
+    ${p.note ? `<br/><b>※ ${p.note}</b>` : ""}
   </div>
+  <p style="margin-top:22px;border-top:1px solid #ccc;padding-top:8px;text-align:right;font-size:12px"><b>${COMPANY.footer}</b></p>
 </body></html>`;
 }

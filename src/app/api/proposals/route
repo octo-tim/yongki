@@ -7,10 +7,12 @@ const MAX = 25 * 1024 * 1024; // 25MB
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!session || (session.user as any).role === "CLIENT") return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const form = await req.formData();
   const title = String(form.get("title") || "").trim();
+  const docType = String(form.get("docType") || "PROPOSAL") === "INVOICE" ? "INVOICE" : "PROPOSAL";
+  const depositPct = Math.min(100, Math.max(0, Number(form.get("depositPct") || 30) || 30));
   const productName = String(form.get("productName") || "").trim() || null;
   const amountRaw = String(form.get("amount") || "").trim();
   const amount = amountRaw === "" ? null : Number(amountRaw);
@@ -36,6 +38,7 @@ export async function POST(req: NextRequest) {
     data: {
       title, clientId, note, sentDate: sentDate ? new Date(sentDate) : null,
       productName, amount: amount != null && !isNaN(amount) ? amount : null, currency,
+      docType, depositPct,
       items: items ?? undefined, vatApplied, validUntil: validUntil ? new Date(validUntil) : null,
       creatorId: (session.user as any).id,
       ...(fileData ? { fileName: fileData.fileName, fileType: fileData.fileType, fileSize: fileData.fileSize, data: fileData.data } : {}),

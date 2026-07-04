@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Printer, Mail, ArrowLeft, X } from "lucide-react";
 
-export function QuotationActions({ proposalId, defaultEmail, isStaff }: { proposalId: string; defaultEmail: string; isStaff: boolean }) {
+export function QuotationActions({ proposalId, defaultEmail, isStaff, sentTo, sentAt }: {
+  proposalId: string; defaultEmail: string; isStaff: boolean; sentTo?: string | null; sentAt?: string | null;
+}) {
   const router = useRouter();
   const [emailOpen, setEmailOpen] = useState(false);
   const [to, setTo] = useState(defaultEmail);
@@ -19,7 +21,7 @@ export function QuotationActions({ proposalId, defaultEmail, isStaff }: { propos
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ to }),
     });
     setBusy(false);
-    if (res.ok) { setMsg("✓ 전송 완료"); setEmailOpen(false); }
+    if (res.ok) { setMsg("✓ 전송 완료"); setEmailOpen(false); router.refresh(); }
     else { const j = await res.json().catch(() => ({})); setMsg(j.error || "전송 실패 — SMTP 설정을 확인하세요"); }
   }
 
@@ -27,6 +29,7 @@ export function QuotationActions({ proposalId, defaultEmail, isStaff }: { propos
     <div className="space-y-2">
       <div className="flex flex-wrap items-center gap-2">
         <Button size="sm" variant="outline" onClick={() => router.back()}><ArrowLeft className="mr-1 h-4 w-4" />뒤로</Button>
+        {sentTo && <span className="text-xs text-muted-foreground">최근 발송: {sentTo}{sentAt ? ` · ${sentAt}` : ""}</span>}
         <div className="flex-1" />
         {isStaff && (
           <Button size="sm" variant="outline" onClick={() => setEmailOpen((v) => !v)}>

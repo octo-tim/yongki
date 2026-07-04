@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { notFound, redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { COMPANY, quoteTotals, type QuoteItem } from "@/lib/company";
+import { COMPANY, quoteTotals, PROPOSAL_GREETINGS, INVOICE_GREETINGS, PROPOSAL_NOTES, INVOICE_NOTES, type QuoteItem } from "@/lib/company";
 import { QuotationActions } from "@/components/quotation-actions";
 
 export const dynamic = "force-dynamic";
@@ -16,112 +16,114 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
 
   const p = await prisma.proposal.findUnique({
     where: { id: params.id },
-    include: { client: { select: { id: true, name: true, representative: true, contact: true, phone: true, email: true, address: true, bizNo: true } }, creator: { select: { name: true } } },
+    include: { client: { select: { id: true, name: true, contact: true, email: true } }, creator: { select: { name: true } } },
   });
   if (!p) notFound();
   if (role === "CLIENT" && p.clientId !== (session.user as any).clientId) notFound();
 
+  const isInvoice = (p as any).docType === "INVOICE";
   const items = (Array.isArray(p.items) ? p.items : []) as unknown as QuoteItem[];
-  const { supply, vat, total } = quoteTotals(items, p.vatApplied ?? true);
+  const vat = p.vatApplied ?? isInvoice;
+  const t = quoteTotals(items, vat);
+  const depositPct: number = (p as any).depositPct ?? 30;
+  const deposit = Math.round((t.total * depositPct) / 100);
+  const balance = t.total - deposit;
   const ccy = p.currency ?? "KRW";
+  const won2 = (n: number) => `${won(n)}${ccy === "KRW" ? "" : " " + ccy}`;
   const d = (v: Date | null) => (v ? new Date(v).toISOString().slice(0, 10) : "-");
+  const greetings = isInvoice ? INVOICE_GREETINGS : PROPOSAL_GREETINGS;
+  const notes = isInvoice ? INVOICE_NOTES : PROPOSAL_NOTES;
 
   return (
     <div className="min-h-screen bg-muted/30 py-6 print:bg-white print:py-0">
-      <div className="mx-auto max-w-3xl space-y-3 px-4 print:max-w-none print:px-0">
+      <div className="mx-auto max-w-4xl space-y-3 px-4 print:max-w-none print:px-0">
         <div className="print:hidden">
-          <QuotationActions proposalId={p.id} defaultEmail={p.client?.email ?? ""} isStaff={role !== "CLIENT"} />
+          <QuotationActions proposalId={p.id} defaultEmail={p.client?.email ?? ""} isStaff={role !== "CLIENT"}
+            sentTo={(p as any).sentTo ?? null} sentAt={(p as any).sentAt ? new Date((p as any).sentAt).toISOString().slice(0, 16).replace("T", " ") : null} />
         </div>
 
-        <div className="rounded-lg border bg-white p-8 shadow-sm print:rounded-none print:border-0 print:p-6 print:shadow-none">
-          {/* 제목 */}
-          <h1 className="mb-6 text-center text-3xl font-bold tracking-[0.5em]">견 적 서</h1>
+        <div className="rounded-lg border bg-white p-8 text-[13px] shadow-sm print:rounded-none print:border-0 print:p-4 print:shadow-none">
+          {/* 헤더: 제목 + 브랜드 */}
+          <div className="mb-4 flex items-start justify-between border-b-4 border-double border-foreground pb-2">
+            <h1 className="pt-2 text-2xl font-black tracking-tight">{isInvoice ? "INVOICE" : "상품공급 제안서"}</h1>
+            <div className="text-right">
+              <p className="text-2xl font-bold tracking-tight"><span className="text-foreground">Cosme</span><span className="text-muted-foreground">Pack</span></p>
+              <p className="text-sm font-semibold">코스메팩</p>
+            </div>
+          </div>
 
-          {/* 상단: 수신 / 공급자 */}
-          <div className="mb-6 grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5 text-sm">
-              <p className="text-lg font-semibold">{p.client?.name ?? "-"} <span className="text-sm font-normal">貴中</span></p>
-              {p.client?.contact && <p>담당: {p.client.contact}</p>}
-              <p>견적일자: {d(p.sentDate)}</p>
-              {p.validUntil && <p>유효기간: {d(p.validUntil)} 까지</p>}
-              <p className="pt-2 text-muted-foreground">아래와 같이 견적합니다.</p>
+          {/* 수신/금액 + 공급자 박스 */}
+          <div className="mb-4 grid gap-4 sm:grid-cols-[1fr_340px]">
+            <div className="space-y-1.5">
+              <p className="border-b pb-1 text-base font-semibold">{p.client?.name ?? "-"} <span className="text-sm font-normal">貴下</span></p>
+              <p><span className="font-semibold">{isInvoice ? "청구금액" : "제안금액"} :</span> <span className="text-base font-bold">₩{won(t.total)}</span> <span className="text-muted-foreground">{vat ? "(부가세 포함)" : "(부가세 별도)"}</span></p>
+              <p><span className="font-semibold">작성일자 :</span> {d(p.sentDate)} <span className="text-muted-foreground">(유효기간:30일)</span></p>
+              <div className="pt-2 space-y-0.5 text-muted-foreground">
+                {greetings.map((g, i) => <p key={i}>◎ {g}</p>)}
+              </div>
             </div>
             <table className="h-fit w-full border-collapse text-xs">
               <tbody>
-                {[
-                  ["등록번호", COMPANY.bizNo],
-                  ["상호", COMPANY.name],
-                  ["대표자", COMPANY.ceo],
-                  ["주소", COMPANY.address],
-                  ["전화", COMPANY.tel],
-                  ["담당", p.creator?.name ?? "-"],
-                ].map(([k, v]) => (
-                  <tr key={k}>
-                    <td className="w-20 border bg-muted/40 px-2 py-1.5 text-center font-medium">{k}</td>
-                    <td className="border px-2 py-1.5">{v}</td>
-                  </tr>
-                ))}
+                <tr><td rowSpan={isInvoice ? 7 : 6} className="w-8 border bg-muted/40 px-1 py-1 text-center font-semibold">공<br/>급<br/>자</td>
+                  <td className="w-16 border bg-muted/40 px-2 py-1 text-center">사업자NO</td><td className="border px-2 py-1 font-semibold tracking-wider">{COMPANY.bizNo}</td></tr>
+                <tr><td className="border bg-muted/40 px-2 py-1 text-center">업체명</td><td className="border px-2 py-1">{COMPANY.name} <span className="float-right">대표 {COMPANY.ceo} (인)</span></td></tr>
+                <tr><td className="border bg-muted/40 px-2 py-1 text-center">주소</td><td className="border px-2 py-1">{COMPANY.address}</td></tr>
+                <tr><td className="border bg-muted/40 px-2 py-1 text-center">업태</td><td className="border px-2 py-1">{COMPANY.bizType} <span className="float-right">종목 {COMPANY.bizItem}</span></td></tr>
+                <tr><td className="border bg-muted/40 px-2 py-1 text-center">전화</td><td className="border px-2 py-1">{COMPANY.tel} <span className="float-right">팩스 {COMPANY.fax}</span></td></tr>
+                {isInvoice && <tr><td className="border bg-muted/40 px-2 py-1 text-center">입금계좌</td><td className="border px-2 py-1">{COMPANY.bank}</td></tr>}
+                <tr><td className="border bg-muted/40 px-2 py-1 text-center">담당</td><td className="border px-2 py-1">{p.creator?.name ?? "-"}</td></tr>
               </tbody>
             </table>
           </div>
 
-          {/* 합계 강조 */}
-          <div className="mb-4 flex items-center justify-between rounded-md border-2 border-foreground px-4 py-2.5">
-            <span className="font-semibold">합계금액 {p.vatApplied ? "(부가세 포함)" : "(부가세 별도)"}</span>
-            <span className="text-xl font-bold">{won(total)} {ccy === "KRW" ? "원" : ccy}</span>
-          </div>
-
           {/* 항목 테이블 */}
-          <table className="w-full border-collapse text-sm">
+          <table className="w-full border-collapse">
             <thead>
               <tr className="bg-muted/40 text-xs">
-                <th className="border px-2 py-2 w-10">No</th>
-                <th className="border px-2 py-2">품목</th>
-                <th className="border px-2 py-2 w-28">규격</th>
-                <th className="border px-2 py-2 w-16">수량</th>
-                <th className="border px-2 py-2 w-24">단가</th>
-                <th className="border px-2 py-2 w-28">공급가액</th>
+                <th className="w-8 border px-1 py-2">No</th>
+                <th className="border px-2 py-2">제품명</th>
+                <th className="w-32 border px-2 py-2">재원</th>
+                <th className="w-16 border px-2 py-2">주문수량</th>
+                <th className="w-20 border px-2 py-2">단가(ea)</th>
+                <th className="w-24 border px-2 py-2">금액(₩)</th>
+                <th className="w-56 border px-2 py-2">비고</th>
               </tr>
             </thead>
             <tbody>
-              {items.length === 0 && (
-                <tr><td colSpan={6} className="border px-2 py-6 text-center text-muted-foreground">{p.productName ?? p.title}</td></tr>
-              )}
+              {items.length === 0 && <tr><td colSpan={7} className="border px-2 py-6 text-center text-muted-foreground">{p.productName ?? p.title}</td></tr>}
               {items.map((it, i) => (
                 <tr key={i}>
-                  <td className="border px-2 py-1.5 text-center">{i + 1}</td>
-                  <td className="border px-2 py-1.5">{it.name}</td>
-                  <td className="border px-2 py-1.5 text-center">{it.spec || "-"}</td>
-                  <td className="border px-2 py-1.5 text-right">{won(Number(it.qty) || 0)}</td>
-                  <td className="border px-2 py-1.5 text-right">{Number(it.unitPrice ?? 0).toLocaleString("ko-KR", { maximumFractionDigits: 4 })}</td>
-                  <td className="border px-2 py-1.5 text-right">{won((Number(it.qty) || 0) * (Number(it.unitPrice) || 0))}</td>
+                  <td className="border px-1 py-2 text-center">{i + 1}</td>
+                  <td className="border px-2 py-2 text-center font-medium">{it.name}</td>
+                  <td className="whitespace-pre-wrap border px-2 py-2 text-center text-xs">{it.spec || "-"}</td>
+                  <td className="border px-2 py-2 text-right">{won(Number(it.qty) || 0)}</td>
+                  <td className="border px-2 py-2 text-right">{Number(it.unitPrice ?? 0).toLocaleString("ko-KR", { maximumFractionDigits: 4 })}</td>
+                  <td className="border px-2 py-2 text-right">{won((Number(it.qty) || 0) * (Number(it.unitPrice) || 0))}</td>
+                  <td className="whitespace-pre-wrap border px-2 py-2 text-center text-xs">{it.remark || ""}</td>
                 </tr>
               ))}
-              {Array.from({ length: Math.max(0, 5 - items.length) }).map((_, i) => (
-                <tr key={`e${i}`}><td className="border px-2 py-1.5">&nbsp;</td><td className="border" /><td className="border" /><td className="border" /><td className="border" /><td className="border" /></tr>
-              ))}
             </tbody>
-            <tfoot className="text-sm font-medium">
-              <tr><td colSpan={5} className="border px-2 py-1.5 text-right">공급가액</td><td className="border px-2 py-1.5 text-right">{won(supply)}</td></tr>
-              <tr><td colSpan={5} className="border px-2 py-1.5 text-right">부가세 (10%)</td><td className="border px-2 py-1.5 text-right">{p.vatApplied ? won(vat) : "-"}</td></tr>
-              <tr className="bg-muted/40 font-bold"><td colSpan={5} className="border px-2 py-2 text-right">합계</td><td className="border px-2 py-2 text-right">{won(total)}</td></tr>
+            <tfoot className="font-medium">
+              <tr><td colSpan={5} className="border px-2 py-1.5 text-center font-bold">합  계</td><td className="border px-2 py-1.5 text-right">{won(t.supply)}</td><td className="border" /></tr>
+              {vat && <>
+                <tr><td colSpan={5} className="border px-2 py-1.5 text-center">부가가치세</td><td className="border px-2 py-1.5 text-right">{won(t.vat)}</td><td className="border" /></tr>
+                <tr><td colSpan={5} className="border px-2 py-1.5 text-center font-bold">합계금액</td><td className="border px-2 py-1.5 text-right font-bold">{won(t.total)}</td><td className="border" /></tr>
+              </>}
+              {isInvoice && <>
+                <tr className="bg-yellow-200 font-bold"><td colSpan={5} className="border px-2 py-2 text-center">계약금 청구금액 ({depositPct}%)</td><td className="border px-2 py-2 text-right">{won(deposit)}</td><td className="border" /></tr>
+                <tr><td colSpan={5} className="border px-2 py-1.5 text-center font-semibold">잔금 청구금액 ({100 - depositPct}%)</td><td className="border px-2 py-1.5 text-right">{won(balance)}</td><td className="border" /></tr>
+              </>}
             </tfoot>
           </table>
 
-          {/* 비고 */}
-          {p.note && (
-            <div className="mt-4 text-sm">
-              <p className="font-medium">비고</p>
-              <p className="whitespace-pre-wrap text-muted-foreground">{p.note}</p>
-            </div>
-          )}
-
-          {/* 하단 회사 정보 */}
-          <div className="mt-8 border-t pt-3 text-center text-[11px] leading-relaxed text-muted-foreground">
-            <p className="font-semibold text-foreground">{COMPANY.name}</p>
-            <p>{COMPANY.address} · Tel {COMPANY.tel} · 사업자등록번호 {COMPANY.bizNo}</p>
-            <p>통신판매업 신고번호 {COMPANY.mailOrderNo} · 개인정보보호책임자 {COMPANY.privacyOfficer}</p>
+          {/* 참고사항 */}
+          <div className="mt-5 space-y-2 text-xs leading-relaxed">
+            <p className="font-semibold">◎ 참고사항</p>
+            {notes.map((n, i) => <p key={i} className="whitespace-pre-wrap">{i + 1}. {n}</p>)}
+            {p.note && <p className="whitespace-pre-wrap pt-1 font-medium">※ {p.note}</p>}
           </div>
+
+          <p className="mt-6 border-t pt-2 text-right text-xs font-semibold">{COMPANY.footer}</p>
         </div>
       </div>
     </div>

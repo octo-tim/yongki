@@ -22,11 +22,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     where: { id: params.id },
     include: { client: { select: { name: true, contact: true } }, creator: { select: { name: true } } },
   });
-  if (!p) return NextResponse.json({ error: "제안서 없음" }, { status: 404 });
+  if (!p) return NextResponse.json({ error: "문서 없음" }, { status: 404 });
+  const isInvoice = (p as any).docType === "INVOICE";
 
   const html = quotationHtml({
-    title: p.title, sentDate: p.sentDate, validUntil: p.validUntil, note: p.note,
-    vatApplied: p.vatApplied ?? true, currency: p.currency, productName: p.productName,
+    title: p.title, docType: (p as any).docType ?? "PROPOSAL", depositPct: (p as any).depositPct ?? 30,
+    sentDate: p.sentDate, validUntil: p.validUntil, note: p.note,
+    vatApplied: p.vatApplied ?? isInvoice, currency: p.currency, productName: p.productName,
     items: (Array.isArray(p.items) ? p.items : []) as unknown as QuoteItem[],
     clientName: p.client?.name ?? "고객", clientContact: p.client?.contact, creatorName: p.creator?.name,
   });
@@ -42,12 +44,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   try {
     await transporter.sendMail({
-      from: `"(주)비케이브로" <${user}>`,
+      from: `"코스메팩 CosmePack" <${user}>`,
       to,
-      subject: `[견적서] ${p.title}`,
+      subject: `[${isInvoice ? "인보이스" : "제안서"}] ${p.title}`,
       html,
       attachments,
     });
+    await prisma.proposal.update({ where: { id: params.id }, data: { sentTo: to, sentAt: new Date() } as any });
     return NextResponse.json({ ok: true });
   } catch (e: any) {
     return NextResponse.json({ error: `전송 실패: ${e.message}` }, { status: 500 });
