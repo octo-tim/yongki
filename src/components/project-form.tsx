@@ -129,7 +129,7 @@ export function ProjectForm({
       <Card>
         <CardHeader><CardTitle className="text-base">특이사항</CardTitle></CardHeader>
         <CardContent>
-          <Field label="제품제작 중요사항">
+          <Field label="제품제작 후가공내역 및 중요체크사항">
             <Textarea value={form.importantNote ?? ""} onChange={(e) => set("importantNote", e.target.value)} rows={3} placeholder="색상 기준, 인쇄 주의, 포장 사양 등" />
           </Field>
           <Field label="메모">

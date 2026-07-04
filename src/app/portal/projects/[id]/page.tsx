@@ -62,12 +62,12 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
         </CardContent>
       </Card>
 
-      {/* 제품제작 중요사항 */}
+      {/* 제품제작 후가공내역 및 중요체크사항 */}
       {project.importantNote && (
         <Card className="border-amber-300 bg-amber-50/60">
           <CardContent className="p-4">
             <h2 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-amber-800">
-              <AlertTriangle className="h-4 w-4" />제품제작 중요사항
+              <AlertTriangle className="h-4 w-4" />제품제작 후가공내역 및 중요체크사항
             </h2>
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-amber-900">{project.importantNote}</p>
           </CardContent>
