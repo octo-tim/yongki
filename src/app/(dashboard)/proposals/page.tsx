@@ -10,7 +10,7 @@ export default async function SalesPage() {
       orderBy: { createdAt: "desc" },
       select: {
         id: true, title: true, productName: true, amount: true, currency: true, status: true,
-        docType: true, depositPct: true, sentTo: true, sentAt: true, sourceId: true, revisionNo: true, vatApplied: true, items: true,
+        docType: true, depositPct: true, sentTo: true, sentAt: true, sourceId: true, revisionNo: true, vatApplied: true,
         sentDate: true, note: true, fileName: true, fileSize: true, createdAt: true,
         client: { select: { id: true, name: true } }, creator: { select: { name: true } },
       },
