@@ -61,3 +61,19 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   await prisma.proposal.delete({ where: { id: params.id } });
   return NextResponse.json({ ok: true });
 }
+
+// 단건 조회 (수정 팝업이 항목을 불러올 때 사용)
+export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions);
+  if (!session || (session.user as any).role === "CLIENT") return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const p = await prisma.proposal.findUnique({
+    where: { id: params.id },
+    select: {
+      id: true, title: true, docType: true, currency: true, depositPct: true, vatApplied: true,
+      items: true, note: true, revisionNo: true, sentDate: true,
+      client: { select: { id: true, name: true } },
+    } as any,
+  });
+  if (!p) return NextResponse.json({ error: "문서 없음" }, { status: 404 });
+  return NextResponse.json(p);
+}

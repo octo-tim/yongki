@@ -42,7 +42,19 @@ export function ProposalEditDialog({ proposal, clients = [] }: { proposal: Propo
   const [showHist, setShowHist] = useState(false);
 
   useEffect(() => {
-    if (open) fetch(`/api/proposals/${proposal.id}/revisions`).then((r) => r.ok ? r.json() : []).then(setRevs).catch(() => {});
+    if (!open) return;
+    fetch(`/api/proposals/${proposal.id}/revisions`).then((r) => r.ok ? r.json() : []).then(setRevs).catch(() => {});
+    // 목록 쿼리가 items를 내려주지 않으므로(속도 최적화) 팝업을 열 때 단건 조회로 항목을 불러온다
+    if (!Array.isArray(proposal.items)) {
+      fetch(`/api/proposals/${proposal.id}`).then((r) => r.ok ? r.json() : null).then((d) => {
+        if (!d) return;
+        if (Array.isArray(d.items) && d.items.length) setRows(d.items.map(toRow));
+        if (typeof d.vatApplied === "boolean") setVatApplied(d.vatApplied);
+        if (d.depositPct != null) setDepositPct(String(d.depositPct));
+        if (d.note != null) setNote(d.note ?? "");
+        if (d.sentDate) setSentDate(new Date(d.sentDate).toISOString().slice(0, 10));
+      }).catch(() => {});
+    }
   }, [open, proposal.id]);
 
   const num = (s: string) => (s === "" ? 0 : Number(s) || 0);
