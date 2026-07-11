@@ -284,7 +284,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           </Card>
 
           <Card>
-            <CardHeader><CardTitle className="text-base">고객 문의 (코스메팩 파트너센터)</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">제품제작 문의 및 답변(파트너센터)</CardTitle></CardHeader>
             <CardContent>
               <InquiryPanel projectId={p.id} clientId={p.clientId ?? undefined} inquiries={p.inquiries as any} role="STAFF" />
             </CardContent>
