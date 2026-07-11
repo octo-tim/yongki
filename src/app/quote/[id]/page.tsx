@@ -22,6 +22,34 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
   if (role === "CLIENT" && p.clientId !== (session.user as any).clientId) notFound();
 
   const isInvoice = (p as any).docType === "INVOICE";
+
+  // 계약금/중도금/잔금 인보이스: 연결 프로젝트의 판매 전체금액·기납부액 계산
+  let projectTotal = 0;
+  let projectPaid = 0;
+  const invKindForCalc = (p as any).invoiceKind as string | null;
+  if (isInvoice && (p as any).projectId && (invKindForCalc === "DEPOSIT" || invKindForCalc === "INTERIM" || invKindForCalc === "BALANCE")) {
+    const proj: any = await prisma.project.findUnique({
+      where: { id: (p as any).projectId },
+      select: {
+        quantity: true,
+        products: { orderBy: { createdAt: "asc" }, select: { quantity: true, salesPrice: true, salesCurrency: true, exchangeRate: true, salesVatRate: true } },
+        payments: { where: { side: "SALES" }, select: { type: true, amount: true, receivedAt: true } },
+      },
+    });
+    if (proj) {
+      const prod = proj.products?.[0] ?? null;
+      const qty = prod?.quantity ?? proj.quantity ?? 0;
+      let unit = 0, vatRate = 10;
+      if (prod) {
+        const sp = Number(prod.salesPrice ?? 0);
+        unit = prod.salesCurrency === "RMB" ? sp : (Number(prod.exchangeRate ?? 0) > 0 ? sp * Number(prod.exchangeRate) : sp);
+        vatRate = Number(prod.salesVatRate ?? 10);
+      }
+      projectTotal = Math.round(qty * unit * (1 + vatRate / 100));
+      // 기납부액: 입금일(receivedAt)이 기록된 판매 결제 합계
+      projectPaid = (proj.payments || []).reduce((a: number, pay: any) => a + (pay.receivedAt ? Number(pay.amount || 0) : 0), 0);
+    }
+  }
   const isSample = isInvoice && (p as any).invoiceKind === "SAMPLE";
   const items = (Array.isArray(p.items) ? p.items : []) as unknown as QuoteItem[];
   const vat = p.vatApplied ?? isInvoice;
@@ -65,6 +93,17 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
             <div className="space-y-1.5">
               <p className="border-b pb-1 text-base font-semibold">{p.client?.name ?? "-"} <span className="text-sm font-normal">貴下</span></p>
               <p>{kindKo && <span className="mr-1 rounded bg-yellow-200 px-1.5 py-0.5 text-xs font-bold">{kindKo} 청구</span>}<span className="font-semibold">{isInvoice ? "청구금액" : "제안금액"} :</span> <span className="text-base font-bold">₩{won(t.total)}</span> <span className="text-muted-foreground">{vat ? "(부가세 포함)" : "(부가세 별도)"}</span></p>
+              {projectTotal > 0 && (invKindForCalc === "DEPOSIT" || invKindForCalc === "INTERIM" || invKindForCalc === "BALANCE") && (
+                <div className="mt-1 space-y-0.5 text-sm">
+                  <p><span className="font-medium text-muted-foreground">전체금액 :</span> <span className="font-semibold">₩{won(projectTotal)}</span> <span className="text-xs text-muted-foreground">(부가세 포함)</span></p>
+                  {invKindForCalc === "BALANCE" && (
+                    <>
+                      <p><span className="font-medium text-muted-foreground">납부완료금액 :</span> <span className="font-semibold text-emerald-700">₩{won(projectPaid)}</span></p>
+                      <p><span className="font-medium text-muted-foreground">잔여 청구금액 :</span> <span className="font-bold text-rose-700">₩{won(Math.max(projectTotal - projectPaid, 0))}</span></p>
+                    </>
+                  )}
+                </div>
+              )}
               <p><span className="font-semibold">작성일자 :</span> {d(p.sentDate)} <span className="text-muted-foreground">(유효기간:30일)</span></p>
               <div className="pt-2 space-y-0.5 text-muted-foreground">
                 {greetings.map((g, i) => <p key={i}>◎ {g}</p>)}

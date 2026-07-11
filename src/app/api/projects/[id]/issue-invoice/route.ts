@@ -8,7 +8,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const session = await getServerSession(authOptions);
   if (!session || (session.user as any).role === "CLIENT") return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const project = await prisma.project.findUnique({ where: { id: params.id }, select: { id: true, productName: true, clientId: true } });
+  const project = await prisma.project.findUnique({
+    where: { id: params.id },
+    select: {
+      id: true, productName: true, productPhoto: true, quantity: true, clientId: true,
+      products: { orderBy: { createdAt: "asc" }, select: { name: true, quantity: true, salesPrice: true, salesCurrency: true, exchangeRate: true, salesVatRate: true } },
+    },
+  });
   if (!project) return NextResponse.json({ error: "프로젝트 없음" }, { status: 404 });
 
   const b = await req.json();
@@ -18,7 +24,21 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const vatApplied = b.vatApplied !== false;
   const currency = String(b.currency || "KRW");
   const note = String(b.note || "").trim() || null;
-  const items = Array.isArray(b.items) ? b.items : [];
+  let items = Array.isArray(b.items) ? b.items : [];
+  // 항목 미입력 + 샘플이 아니면, 프로젝트 제품 정보로 자동 항목 생성 (제품사진·수량·판매단가 반영)
+  if (items.length === 0 && kind !== "SAMPLE") {
+    const prod: any = (project as any).products?.[0] ?? null;
+    const qty = prod?.quantity ?? (project as any).quantity ?? 0;
+    // 판매단가 RMB 환산 (직원 화면 계산과 동일)
+    let unit = 0;
+    if (prod) {
+      const sp = Number(prod.salesPrice ?? 0);
+      unit = prod.salesCurrency === "RMB" ? sp : (Number(prod.exchangeRate ?? 0) > 0 ? sp * Number(prod.exchangeRate) : sp);
+    }
+    if (qty > 0 && unit > 0) {
+      items = [{ name: prod?.name || (project as any).productName || "", spec: "", qty, unitPrice: unit, remark: "", photo: (project as any).productPhoto || undefined }];
+    }
+  }
   if (!amount && items.length === 0) return NextResponse.json({ error: "금액 또는 항목을 입력하세요" }, { status: 400 });
 
   // 항목이 있으면 항목합, 없으면 입력 amount 사용
