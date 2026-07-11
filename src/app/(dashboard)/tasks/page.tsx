@@ -20,7 +20,7 @@ export default async function TasksPage() {
         assignee: { select: { id: true, name: true } },
         client: { select: { id: true, name: true } },
         factory: { select: { id: true, name: true } },
-        project: { select: { id: true, productName: true } },
+        project: { select: { id: true, productName: true, productPhoto: true } },
         updates: { orderBy: { progressDate: "asc" }, include: { createdBy: { select: { name: true } } } },
       },
     }),
