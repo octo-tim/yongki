@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const { content, category, requestDate, startDate, endDate, assigneeId, clientId, factoryId, projectId } = await req.json();
+  const { content, category, requestDate, startDate, endDate, assigneeId, clientId, factoryId, projectId, photos } = await req.json();
   if (!content?.trim()) return NextResponse.json({ error: "요청사항을 입력하세요." }, { status: 400 });
   if (!requestDate) return NextResponse.json({ error: "요청일을 선택하세요." }, { status: 400 });
 
@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
     data: {
       content: content.trim(),
       category: category || null,
+      photos: Array.isArray(photos) && photos.length ? JSON.stringify(photos) : null,
       requestDate: new Date(requestDate),
       startDate: startDate ? new Date(startDate) : null,
       endDate: endDate ? new Date(endDate) : null,
@@ -30,9 +31,10 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const { id, done, category, startDate, endDate, content } = await req.json();
+  const { id, done, category, startDate, endDate, content, photos } = await req.json();
   if (!id) return NextResponse.json({ error: "id 필수" }, { status: 400 });
   const data: any = {};
+  if (Array.isArray(photos)) data.photos = photos.length ? JSON.stringify(photos) : null;
   if (typeof done === "boolean") {
     data.done = done;
     data.doneAt = done ? new Date() : null;

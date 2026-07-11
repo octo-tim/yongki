@@ -15,13 +15,15 @@ type WReq = {
 };
 type Opt = { id: string; name: string };
 
-const CATEGORIES = ["제안서발송", "업체전달사항", "공장확인사항", "공장결재"];
+const CATEGORIES = ["제안서발송", "업체전달사항", "공장확인사항", "공장결재", "샘플발송", "기타"];
 const KANBAN_COLS = [...CATEGORIES, "미분류"];
 const CAT_STYLE: Record<string, string> = {
   제안서발송: "bg-violet-100 text-violet-700 border-violet-200",
   업체전달사항: "bg-blue-100 text-blue-700 border-blue-200",
   공장확인사항: "bg-amber-100 text-amber-700 border-amber-200",
   공장결재: "bg-rose-100 text-rose-700 border-rose-200",
+  샘플발송: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  기타: "bg-slate-100 text-slate-700 border-slate-200",
   미분류: "bg-muted text-muted-foreground border-border",
 };
 const CAT_DOT: Record<string, string> = {

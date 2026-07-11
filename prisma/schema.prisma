@@ -397,6 +397,7 @@ model WorkRequest {
   id          String   @id @default(cuid())
   content     String   // 요청사항
   category    String?  // 업무구분: 제안서발송/업체전달사항/공장확인사항/공장결재
+  photos      String?  // 첨부 사진 경로 JSON 배열
   requestDate DateTime // 요청일
   startDate   DateTime? // 시작일
   endDate     DateTime? // 완료일

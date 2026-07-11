@@ -11,7 +11,7 @@ import { Trash2, Plus, Building2, Factory as FactoryIcon, Package, CheckCircle2,
 
 type Update = { id: string; content: string; progressDate: any; createdBy?: { name: string } | null };
 type WReq = {
-  id: string; content: string; category?: string | null; requestDate: any; startDate?: any; endDate?: any; done?: boolean; requesterId?: string | null;
+  id: string; content: string; category?: string | null; photos?: string | null; requestDate: any; startDate?: any; endDate?: any; done?: boolean; requesterId?: string | null;
   requester?: { name: string } | null;
   assignee?: { id: string; name: string } | null;
   client?: { id: string; name: string } | null;
@@ -21,12 +21,14 @@ type WReq = {
 };
 type Opt = { id: string; name: string };
 
-const CATEGORIES = ["제안서발송", "업체전달사항", "공장확인사항", "공장결재"];
+const CATEGORIES = ["제안서발송", "업체전달사항", "공장확인사항", "공장결재", "샘플발송", "기타"];
 const CAT_STYLE: Record<string, string> = {
   제안서발송: "bg-violet-100 text-violet-700",
   업체전달사항: "bg-blue-100 text-blue-700",
   공장확인사항: "bg-amber-100 text-amber-700",
   공장결재: "bg-rose-100 text-rose-700",
+  샘플발송: "bg-emerald-100 text-emerald-700",
+  기타: "bg-slate-100 text-slate-700",
 };
 const selCls = "h-9 w-full rounded-md border border-input bg-background px-3 text-sm";
 
@@ -44,11 +46,27 @@ export function WorkRequestPanel({
   const [assigneeId, setAssigneeId] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
   const [requestDate, setRequestDate] = useState(today);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+
+  async function uploadPhotos(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    const uploaded: string[] = [];
+    for (const file of Array.from(files)) {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      if (res.ok) { const d = await res.json(); if (d.path) uploaded.push(d.path); }
+    }
+    setPhotos((prev) => [...prev, ...uploaded]);
+    setUploading(false);
+  }
 
   async function add() {
     if (!content.trim()) { setErr("업무 내용을 입력하세요."); return; }
@@ -56,11 +74,11 @@ export function WorkRequestPanel({
     setBusy(true); setErr("");
     const res = await fetch("/api/work-requests", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content, category: category || null, requestDate, startDate: startDate || null, endDate: endDate || null, assigneeId: assigneeId || null, clientId: clientId || null, factoryId: factoryId || null, projectId: projectId || null }),
+      body: JSON.stringify({ content, category: category || null, photos, requestDate, startDate: startDate || null, endDate: endDate || null, assigneeId: assigneeId || null, clientId: clientId || null, factoryId: factoryId || null, projectId: projectId || null }),
     });
     setBusy(false);
     if (!res.ok) { setErr("등록에 실패했습니다."); return; }
-    setContent(""); setCategory(""); setStartDate(""); setEndDate(""); setClientId(fixedClientId ?? ""); setFactoryId(fixedFactoryId ?? ""); setProjectId(fixedProjectId ?? ""); setAssigneeId(""); setOpen(false); router.refresh();
+    setContent(""); setPhotos([]); setCategory(""); setStartDate(""); setEndDate(""); setClientId(fixedClientId ?? ""); setFactoryId(fixedFactoryId ?? ""); setProjectId(fixedProjectId ?? ""); setAssigneeId(""); setOpen(false); router.refresh();
   }
   async function remove(id: string) {
     if (!confirm("이 업무요청을 삭제하시겠습니까?")) return;
@@ -175,6 +193,21 @@ export function WorkRequestPanel({
                   <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="업무 내용 입력..." rows={2} />
                 </div>
               </div>
+              <div>
+                <label className="mb-1 block text-xs text-muted-foreground">사진 첨부</label>
+                <div className="flex flex-wrap items-center gap-2">
+                  {photos.map((ph, i) => (
+                    <div key={i} className="relative h-16 w-16 overflow-hidden rounded border">
+                      <img src={ph} alt="" className="h-full w-full object-cover" />
+                      <button type="button" onClick={() => setPhotos((prev) => prev.filter((_, idx) => idx !== i))} className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center bg-black/50 text-[10px] text-white">×</button>
+                    </div>
+                  ))}
+                  <label className="flex h-16 w-16 cursor-pointer items-center justify-center rounded border border-dashed bg-muted/30 text-xs text-muted-foreground hover:bg-accent">
+                    {uploading ? "..." : "+ 사진"}
+                    <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => uploadPhotos(e.target.files)} />
+                  </label>
+                </div>
+              </div>
               {err && <p className="text-xs text-destructive">{err}</p>}
               <div className="flex justify-end gap-2">
                 <Button size="sm" variant="ghost" onClick={() => { setOpen(false); setErr(""); }}>취소</Button>
@@ -255,6 +288,15 @@ function RequestCard({ req, currentUserId, onRemove }: { req: WReq; currentUserI
       </div>
 
       <p className="whitespace-pre-wrap text-sm">{req.content}</p>
+      {req.photos && (() => { let arr: string[] = []; try { arr = JSON.parse(req.photos); } catch {} return arr.length > 0 ? (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {arr.map((ph, i) => (
+            <a key={i} href={ph} target="_blank" rel="noreferrer" className="block h-16 w-16 overflow-hidden rounded border hover:opacity-80">
+              <img src={ph} alt="" loading="lazy" className="h-full w-full object-cover" />
+            </a>
+          ))}
+        </div>
+      ) : null; })()}
 
       <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground">
         <span>요청일 {fmtDate(req.requestDate)}</span>
