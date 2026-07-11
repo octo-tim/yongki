@@ -29,9 +29,10 @@ import { Pencil } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function ProjectDetailPage({ params }: { params: { id: string } }) {
-  const p = await prisma.project.findUnique({
-    where: { id: params.id },
-    include: {
+  const [p, users, clients, factories, session] = await Promise.all([
+    prisma.project.findUnique({
+      where: { id: params.id },
+      include: {
       client: true, factory: true, manager: true,
       steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
       files: { orderBy: { createdAt: "desc" }, select: { id: true, fileName: true, filePath: true, fileType: true, fileSize: true, createdAt: true } },
@@ -53,14 +54,13 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       memos: { orderBy: { createdAt: "desc" }, include: { author: { select: { id: true, name: true } } } },
       logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: { select: { id: true, name: true } } } },
     },
-  });
-  if (!p) notFound();
-  const [users, clients, factories, session] = await Promise.all([
+    }),
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.factory.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     getServerSession(authOptions),
   ]);
+  if (!p) notFound();
   const uid = (session?.user as any)?.id as string | undefined;
 
   const info: [string, string][] = [
