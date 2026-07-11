@@ -64,6 +64,14 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
   const kindKo = invoiceKind === "DEPOSIT" ? "계약금" : invoiceKind === "INTERIM" ? "중도금" : invoiceKind === "BALANCE" ? "잔금" : invoiceKind === "SAMPLE" ? "샘플" : null;
   const deposit = Math.round((t.total * depositPct) / 100);
   const balance = t.total - deposit;
+  // 계약금/중도금/잔금 인보이스: 표는 전체금액 기준으로 표기하고, 하단에 계약금·잔금 청구 행 표시
+  const isSplitInvoice = isInvoice && (invoiceKind === "DEPOSIT" || invoiceKind === "INTERIM" || invoiceKind === "BALANCE") && projectTotal > 0;
+  // 전체금액 기준 공급가액/부가세 (표시는 부가세 포함 전체금액에서 역산)
+  const fullTotal = isSplitInvoice ? projectTotal : t.total;
+  const fullSupply = isSplitInvoice ? (vat ? Math.round(projectTotal / 1.1) : projectTotal) : t.supply;
+  const fullVat = isSplitInvoice ? (vat ? projectTotal - Math.round(projectTotal / 1.1) : 0) : t.vat;
+  const fullDeposit = Math.round((fullTotal * 30) / 100);
+  const fullBalance = fullTotal - fullDeposit;
   const ccy = p.currency ?? "KRW";
   const won2 = (n: number) => `${won(n)}${ccy === "KRW" ? "" : " " + ccy}`;
   const d = (v: Date | null) => (v ? new Date(v).toISOString().slice(0, 10) : "-");
@@ -92,7 +100,7 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
           <div className="mb-4 grid gap-4 sm:grid-cols-[1fr_340px]">
             <div className="space-y-1.5">
               <p className="border-b pb-1 text-base font-semibold">{p.client?.name ?? "-"} <span className="text-sm font-normal">貴下</span></p>
-              <p>{kindKo && <span className="mr-1 rounded bg-yellow-200 px-1.5 py-0.5 text-xs font-bold">{kindKo} 청구</span>}<span className="font-semibold">{isInvoice ? "청구금액" : "제안금액"} :</span> <span className="text-base font-bold">₩{won(t.total)}</span> <span className="text-muted-foreground">{vat ? "(부가세 포함)" : "(부가세 별도)"}</span></p>
+              <p>{kindKo && <span className="mr-1 rounded bg-yellow-200 px-1.5 py-0.5 text-xs font-bold">{kindKo} 청구</span>}<span className="font-semibold">{isInvoice ? "청구금액" : "제안금액"} :</span> <span className="text-base font-bold">₩{won(isSplitInvoice ? (invoiceKind === "DEPOSIT" ? fullDeposit : invoiceKind === "BALANCE" ? fullBalance : t.total) : t.total)}</span> <span className="text-muted-foreground">{vat ? "(부가세 포함)" : "(부가세 별도)"}</span></p>
               {projectTotal > 0 && (invKindForCalc === "DEPOSIT" || invKindForCalc === "INTERIM" || invKindForCalc === "BALANCE") && (
                 <div className="mt-1 space-y-0.5 text-sm">
                   <p><span className="font-medium text-muted-foreground">전체금액 :</span> <span className="font-semibold">₩{won(projectTotal)}</span> <span className="text-xs text-muted-foreground">(부가세 포함)</span></p>
@@ -155,14 +163,27 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
               ))}
             </tbody>
             <tfoot className="font-medium">
-              <tr><td colSpan={6} className="border px-2 py-1.5 text-center font-bold">합  계</td><td className="border px-2 py-1.5 text-right">{won(t.supply)}</td><td className="border" /></tr>
+              <tr><td colSpan={6} className="border px-2 py-1.5 text-center font-bold">합  계</td><td className="border px-2 py-1.5 text-right">{won(fullSupply)}</td><td className="border" /></tr>
               {vat && <>
-                <tr><td colSpan={6} className="border px-2 py-1.5 text-center">부가가치세</td><td className="border px-2 py-1.5 text-right">{won(t.vat)}</td><td className="border" /></tr>
-                <tr><td colSpan={6} className="border px-2 py-1.5 text-center font-bold">합계금액</td><td className="border px-2 py-1.5 text-right font-bold">{won(t.total)}</td><td className="border" /></tr>
+                <tr><td colSpan={6} className="border px-2 py-1.5 text-center">부가가치세</td><td className="border px-2 py-1.5 text-right">{won(fullVat)}</td><td className="border" /></tr>
+                <tr><td colSpan={6} className="border px-2 py-1.5 text-center font-bold">합계금액</td><td className="border px-2 py-1.5 text-right font-bold">{won(fullTotal)}</td><td className="border" /></tr>
               </>}
+              {/* 전체 인보이스: 계약금·잔금 참고 표시 */}
               {isInvoice && !kindKo && <>
                 <tr className="bg-yellow-200 font-bold"><td colSpan={6} className="border px-2 py-2 text-center">계약금 청구금액 ({depositPct}%)</td><td className="border px-2 py-2 text-right">{won(deposit)}</td><td className="border" /></tr>
                 <tr><td colSpan={6} className="border px-2 py-1.5 text-center font-semibold">잔금 청구금액 ({100 - depositPct}%)</td><td className="border px-2 py-1.5 text-right">{won(balance)}</td><td className="border" /></tr>
+              </>}
+              {/* 계약금/중도금/잔금 인보이스: 전체금액에서 계약금·잔금 청구액 표시, 해당 종류 강조 */}
+              {isSplitInvoice && <>
+                <tr className={invoiceKind === "DEPOSIT" ? "bg-yellow-200 font-bold" : "font-semibold"}>
+                  <td colSpan={6} className="border px-2 py-2 text-center">계약금 청구금액 (30%){invoiceKind === "DEPOSIT" && " ◀ 본 청구"}</td>
+                  <td className="border px-2 py-2 text-right">{won(fullDeposit)}</td><td className="border" /></tr>
+                <tr className={invoiceKind === "BALANCE" ? "bg-yellow-200 font-bold" : "font-semibold"}>
+                  <td colSpan={6} className="border px-2 py-2 text-center">잔금 청구금액 (70%){invoiceKind === "BALANCE" && " ◀ 본 청구"}</td>
+                  <td className="border px-2 py-2 text-right">{won(fullBalance)}</td><td className="border" /></tr>
+                {invoiceKind === "BALANCE" && projectPaid > 0 && (
+                  <tr className="text-emerald-700"><td colSpan={6} className="border px-2 py-1.5 text-center">납부완료금액</td><td className="border px-2 py-1.5 text-right">{won(projectPaid)}</td><td className="border" /></tr>
+                )}
               </>}
             </tfoot>
           </table>

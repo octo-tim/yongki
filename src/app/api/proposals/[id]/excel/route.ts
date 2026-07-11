@@ -13,7 +13,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   const p: any = await prisma.proposal.findUnique({
     where: { id: params.id },
     select: {
-      id: true, title: true, docType: true, invoiceKind: true, currency: true,
+      id: true, title: true, docType: true, invoiceKind: true, currency: true, projectId: true,
       amount: true, vatApplied: true, items: true, sentDate: true, note: true, productName: true,
       client: { select: { name: true } }, creator: { select: { name: true } },
     } as any,
@@ -105,12 +105,45 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   if (items.length === 0 && storedAmount > 0) {
     supply = vat ? Math.round(storedAmount / 1.1) : storedAmount;
   }
+  // 계약금/중도금/잔금 인보이스: 프로젝트 전체금액·기납부액 조회 (표는 전체금액 기준)
+  const isSplit = isInvoice && (p.invoiceKind === "DEPOSIT" || p.invoiceKind === "INTERIM" || p.invoiceKind === "BALANCE");
+  let projTotal = 0, projPaid = 0;
+  if (isSplit && p.projectId) {
+    const proj: any = await prisma.project.findUnique({
+      where: { id: p.projectId },
+      select: {
+        quantity: true,
+        products: { orderBy: { createdAt: "asc" }, select: { quantity: true, salesPrice: true, salesCurrency: true, exchangeRate: true, salesVatRate: true } },
+        payments: { where: { side: "SALES" }, select: { amount: true, receivedAt: true } },
+      },
+    });
+    if (proj) {
+      const prod = proj.products?.[0] ?? null;
+      const qty = prod?.quantity ?? proj.quantity ?? 0;
+      let unit = 0, vatRate = 10;
+      if (prod) { const sp = Number(prod.salesPrice ?? 0); unit = prod.salesCurrency === "RMB" ? sp : (Number(prod.exchangeRate ?? 0) > 0 ? sp * Number(prod.exchangeRate) : sp); vatRate = Number(prod.salesVatRate ?? 10); }
+      projTotal = Math.round(qty * unit * (1 + vatRate / 100));
+      projPaid = (proj.payments || []).reduce((a: number, pay: any) => a + (pay.receivedAt ? Number(pay.amount || 0) : 0), 0);
+    }
+  }
+
   const vatAmt = vat ? Math.round(supply * 0.1) : 0;
   const totalAmt = supply + vatAmt;
-  // 제안서(부가세 별도)는 합계행만, 인보이스/부가세 포함은 합계·부가세·합계금액 3행
-  const sumRows: [string, number][] = vat
-    ? [["합   계", supply], ["부가가치세", vatAmt], ["합계금액", totalAmt]]
-    : [["합   계", supply]];
+  // 표시 기준: 분할 인보이스면 전체금액 기준
+  const dispTotal = isSplit && projTotal > 0 ? projTotal : totalAmt;
+  const dispSupply = isSplit && projTotal > 0 ? (vat ? Math.round(projTotal / 1.1) : projTotal) : supply;
+  const dispVat = isSplit && projTotal > 0 ? (vat ? projTotal - Math.round(projTotal / 1.1) : 0) : vatAmt;
+  const dispDeposit = Math.round(dispTotal * 0.3);
+  const dispBalance = dispTotal - dispDeposit;
+  // 합계 행 구성
+  let sumRows: [string, number][] = vat
+    ? [["합   계", dispSupply], ["부가가치세", dispVat], ["합계금액", dispTotal]]
+    : [["합   계", dispSupply]];
+  if (isSplit && projTotal > 0) {
+    sumRows.push([`계약금 청구금액 (30%)${p.invoiceKind === "DEPOSIT" ? " ◀ 본 청구" : ""}`, dispDeposit]);
+    sumRows.push([`잔금 청구금액 (70%)${p.invoiceKind === "BALANCE" ? " ◀ 본 청구" : ""}`, dispBalance]);
+    if (p.invoiceKind === "BALANCE" && projPaid > 0) sumRows.push(["납부완료금액", projPaid]);
+  }
   sumRows.forEach(([label, val]) => {
     ws.mergeCells(`B${r}:H${r}`);
     ws.getCell(`B${r}`).value = label; ws.getCell(`B${r}`).font = bold; ws.getCell(`B${r}`).alignment = right; ws.getCell(`B${r}`).border = border;
@@ -121,7 +154,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   });
 
   // 청구금액 채우기 (상단)
-  ws.getCell("D6").value = totalAmt; ws.getCell("D6").numFmt = "#,##0"; ws.getCell("D6").font = { bold: true, size: 12 };
+  ws.getCell("D6").value = isSplit && projTotal > 0 ? (p.invoiceKind === "DEPOSIT" ? dispDeposit : p.invoiceKind === "BALANCE" ? dispBalance : dispTotal) : totalAmt; ws.getCell("D6").numFmt = "#,##0"; ws.getCell("D6").font = { bold: true, size: 12 };
   ws.getCell("F6").value = vat ? "(부가세 포함)" : "(부가세 별도)";
 
   // 참고사항
