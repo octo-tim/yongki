@@ -265,6 +265,13 @@ function RequestCard({ req, currentUserId, onRemove }: { req: WReq; currentUserI
 
   return (
     <div className={cn("group rounded-lg border p-3", req.done && "bg-muted/30")}>
+      <div className="flex gap-3">
+        {req.project?.productPhoto ? (
+          <Link href={`/projects/${req.project.id}`} className="block h-24 w-24 shrink-0 overflow-hidden rounded-lg border hover:opacity-80 sm:h-28 sm:w-28">
+            <img src={req.project.productPhoto} alt="" loading="lazy" className="h-full w-full object-cover" />
+          </Link>
+        ) : null}
+        <div className="min-w-0 flex-1">
       <div className="mb-1 flex flex-wrap items-center gap-2 text-xs">
         {/* 업무상태 */}
         <span className={cn("inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 font-semibold",
@@ -275,7 +282,6 @@ function RequestCard({ req, currentUserId, onRemove }: { req: WReq; currentUserI
         {req.category && <span className={cn("rounded-full px-2 py-0.5 font-medium", CAT_STYLE[req.category] ?? "bg-accent")}>{req.category}</span>}
         {req.client && <Link href={`/clients/${req.client.id}`} className="inline-flex items-center gap-0.5 rounded bg-accent px-1.5 py-0.5 hover:underline"><Building2 className="h-3 w-3" />{req.client.name}</Link>}
         {req.factory && <Link href={`/factories/${req.factory.id}`} className="inline-flex items-center gap-0.5 rounded bg-accent px-1.5 py-0.5 hover:underline"><FactoryIcon className="h-3 w-3" />{req.factory.name}</Link>}
-        {req.project?.productPhoto && <Link href={`/projects/${req.project.id}`} className="block h-8 w-8 shrink-0 overflow-hidden rounded border hover:opacity-80"><img src={req.project.productPhoto} alt="" loading="lazy" className="h-full w-full object-cover" /></Link>}
         {req.project && <Link href={`/projects/${req.project.id}`} className="inline-flex items-center gap-0.5 rounded bg-accent px-1.5 py-0.5 hover:underline"><Package className="h-3 w-3" />{req.project.productName}</Link>}
         {req.assignee && <span className="rounded bg-blue-100 px-1.5 py-0.5 font-medium text-blue-700">담당 {req.assignee.name}</span>}
         <div className="ml-auto flex items-center gap-2">
@@ -332,6 +338,8 @@ function RequestCard({ req, currentUserId, onRemove }: { req: WReq; currentUserI
             </div>
           </div>
         )}
+      </div>
+        </div>
       </div>
     </div>
   );
