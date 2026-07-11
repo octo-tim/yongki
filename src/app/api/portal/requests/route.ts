@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { storeUpload } from "@/lib/storage";
 
 const MAX = 25 * 1024 * 1024;
 
@@ -28,17 +29,17 @@ export async function POST(req: NextRequest) {
   if (!clientId) return NextResponse.json({ error: "업체 정보 없음" }, { status: 400 });
 
   const file = form.get("file") as File | null;
-  let fileData: { fileName: string; fileType: string; fileSize: number; data: Buffer } | null = null;
+  let fileData: { fileName: string; fileType: string; fileSize: number; stored: { storageKey?: string; data?: Buffer } } | null = null;
   if (file && file.size > 0) {
     const bytes = Buffer.from(await file.arrayBuffer());
     if (bytes.length > MAX) return NextResponse.json({ error: "파일이 너무 큽니다 (최대 25MB)" }, { status: 400 });
-    fileData = { fileName: file.name, fileType: file.type || "application/octet-stream", fileSize: bytes.length, data: bytes };
+    fileData = { fileName: file.name, fileType: file.type || "application/octet-stream", fileSize: bytes.length, stored: await storeUpload(bytes, { prefix: "portal-requests", fileName: file.name, contentType: file.type }) };
   }
 
   const saved = await prisma.clientPortalRequest.create({
     data: {
       projectId, clientId: clientId as string, content,
-      ...(fileData ? { fileName: fileData.fileName, fileType: fileData.fileType, fileSize: fileData.fileSize, data: fileData.data } : {}),
+      ...(fileData ? { fileName: fileData.fileName, fileType: fileData.fileType, fileSize: fileData.fileSize, ...fileData.stored } : {}),
     },
   });
   return NextResponse.json({ id: saved.id });

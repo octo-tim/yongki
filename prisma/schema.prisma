@@ -249,7 +249,8 @@ model ProjectFile {
   filePath   String   // 서빙 경로 (/api/files/<id>)
   fileType   String?  // mime
   fileSize   Int?     // bytes
-  data       Bytes?   // 파일 내용 (DB 저장)
+  data       Bytes?   // 파일 내용 (DB 저장, 스토리지 이관 후 제거 예정)
+  storageKey String?  // 객체 스토리지 키 (R2)
   createdAt  DateTime @default(now())
 
   @@index([projectId])
@@ -523,7 +524,8 @@ model LibraryDoc {
   fileName   String
   fileType   String?
   fileSize   Int?
-  data       Bytes
+  data       Bytes?   // (스토리지 이관 후 제거 예정)
+  storageKey String?  // 객체 스토리지 키 (R2)
   uploaderId String?
   uploader   User?    @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
   createdAt  DateTime @default(now())
@@ -556,6 +558,7 @@ model Proposal {
   fileType    String?
   fileSize    Int?
   data        Bytes?
+  storageKey  String?  // 객체 스토리지 키 (R2)
   clientId    String?
   client      Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
   creatorId   String?
@@ -599,6 +602,7 @@ model ClientPortalRequest {
   fileType   String?
   fileSize   Int?
   data       Bytes?
+  storageKey String?  // 객체 스토리지 키 (R2)
   status     String   @default("접수") // 접수/확인중/처리완료
   fileCheckedAt DateTime? // 파일 확인 시각
   fileCheckedBy String? // 파일 확인자
@@ -674,7 +678,8 @@ model StaffFileRequest {
   fileName      String
   fileType      String?
   fileSize      Int?
-  data          Bytes
+  data          Bytes?
+  storageKey    String?  // 객체 스토리지 키 (R2)
   uploaderId    String?
   uploaderName  String?
   confirmedAt   DateTime? // 고객 확인 시각

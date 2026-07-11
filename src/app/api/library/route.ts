@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { storeUpload } from "@/lib/storage";
 
 const MAX = 25 * 1024 * 1024; // 25MB
 
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
   const saved = await prisma.libraryDoc.create({
     data: {
       title: title || file.name, category, fileName: file.name,
-      fileType: file.type || "application/octet-stream", fileSize: bytes.length, data: bytes,
+      fileType: file.type || "application/octet-stream", fileSize: bytes.length, ...(await storeUpload(bytes, { prefix: "library", fileName: file.name, contentType: file.type })),
       uploaderId: (session.user as any).id,
     },
   });

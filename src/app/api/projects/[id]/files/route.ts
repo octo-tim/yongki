@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { storeUpload } from "@/lib/storage";
 
 const MAX = 25 * 1024 * 1024; // 25MB
 
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (bytes.length > MAX) return NextResponse.json({ error: "파일이 너무 큽니다 (최대 25MB)" }, { status: 400 });
 
   const saved = await prisma.projectFile.create({
-    data: { projectId: params.id, fileName: file.name, filePath: "", fileType: file.type || "application/octet-stream", fileSize: bytes.length, data: bytes },
+    data: { projectId: params.id, fileName: file.name, filePath: "", fileType: file.type || "application/octet-stream", fileSize: bytes.length, ...(await storeUpload(bytes, { prefix: "project-files", fileName: file.name, contentType: file.type })) },
   });
   await prisma.projectFile.update({ where: { id: saved.id }, data: { filePath: `/api/files/${saved.id}` } });
   await prisma.projectLog.create({
