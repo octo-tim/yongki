@@ -5,6 +5,8 @@ type Pay = { id: string; type: string; amount: any; receivedAt: string | Date | 
 const ORDER = ["DEPOSIT", "INTERIM", "BALANCE"] as const;
 const KO: Record<string, string> = { DEPOSIT: "계약금", INTERIM: "중도금", BALANCE: "잔금" };
 
+// 고객 포털용 결재 현황 — 판매(업체) 측만, 읽기 전용.
+// totalAmount(전체금액)를 받아 전체금액·결제금액·잔액을 표시한다.
 export function PortalPayments({ payments, totalAmount = 0, currency = "RMB" }: {
   payments: Pay[]; totalAmount?: number; currency?: string;
 }) {
@@ -18,6 +20,7 @@ export function PortalPayments({ payments, totalAmount = 0, currency = "RMB" }: 
 
   return (
     <div className="space-y-3">
+      {/* 요약: 전체금액 · 결제금액 · 잔액 */}
       <div className="grid grid-cols-3 gap-2">
         <div className="rounded-md border bg-muted/30 px-3 py-2 text-center">
           <p className="text-[11px] text-muted-foreground">전체금액</p>

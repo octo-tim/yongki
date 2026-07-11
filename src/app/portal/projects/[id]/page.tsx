@@ -27,7 +27,7 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
       steps: { select: { name: true, done: true, doneAt: true } },
       factory: { select: { name: true } },
       payments: { where: { side: "SALES" }, select: { id: true, type: true, amount: true, receivedAt: true, method: true } },
-      products: { orderBy: { createdAt: "asc" }, select: { quantity: true, salesPrice: true, salesCurrency: true, exchangeRate: true } },
+      products: { orderBy: { createdAt: "asc" }, select: { quantity: true, salesPrice: true, salesCurrency: true, exchangeRate: true, salesVatRate: true } },
       progressPhotos: { orderBy: { createdAt: "desc" } },
       portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
       staffFiles: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, memo: true, fileName: true, fileSize: true, confirmedAt: true, confirmedBy: true, createdAt: true } },
@@ -50,7 +50,8 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
   const salesRmb = prod ? (prod.salesCurrency === "RMB" ? Number(prod.salesPrice ?? 0) : Number(prod.salesPrice ?? 0) * Number(prod.exchangeRate ?? 0)) : 0;
   const salesConverted = !!prod && (prod.salesCurrency === "RMB" || Number(prod.exchangeRate ?? 0) > 0);
   const salesUnit = salesConverted ? salesRmb : Number(prod?.salesPrice ?? 0);
-  const paymentTotal = qty * salesUnit;
+  const portalVatRate = Number(prod?.salesVatRate ?? 10);
+  const paymentTotal = qty * salesUnit * (1 + portalVatRate / 100);
   const paymentCurrency = salesConverted ? "RMB" : (prod?.salesCurrency ?? "RMB");
 
   return (

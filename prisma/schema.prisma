@@ -472,6 +472,7 @@ model Product {
   supplyCurrency String? @default("RMB") // 구매단가 통화 (RMB/USD)
   salesCurrency  String? @default("RMB") // 판매단가 통화 (USD/RMB/KRW)
   exchangeRate   Decimal? @db.Decimal(14, 4) // 판매단가 → RMB 환율 (RMB per 1 통화)
+  salesVatRate   Decimal? @default(10) @db.Decimal(5, 2) // 판매 부가세율(%) 기본 10
   quantity    Int? // 수량
   note        String? // 비고
 

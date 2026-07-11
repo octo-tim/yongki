@@ -91,8 +91,12 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
   const salesRmb = prod ? (prod.salesCurrency === "RMB" ? Number(prod.salesPrice ?? 0) : Number(prod.salesPrice ?? 0) * Number(prod.exchangeRate ?? 0)) : 0;
   const salesConverted = !!prod && (prod.salesCurrency === "RMB" || Number(prod.exchangeRate ?? 0) > 0);
   const salesUnit = salesConverted ? salesRmb : Number(prod?.salesPrice ?? 0);
+  const salesVatRate = Number(prod?.salesVatRate ?? 10);
+  const salesTotalBase = qty * salesUnit;
   const paymentTotals = {
-    salesTotal: qty * salesUnit,
+    salesTotal: salesTotalBase * (1 + salesVatRate / 100),
+    salesVatRate,
+    salesSupply: salesTotalBase,
     salesCurrency: salesConverted ? "RMB" : (prod?.salesCurrency ?? "RMB"),
     purchaseTotal: productPurchase + extrasSum,
     purchaseCurrency: prod?.supplyCurrency ?? "RMB",

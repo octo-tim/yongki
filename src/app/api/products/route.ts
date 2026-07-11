@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
       supplyCurrency: b.supplyCurrency || "RMB",
       salesCurrency: b.salesCurrency || "RMB",
       exchangeRate: num(b.exchangeRate),
+      salesVatRate: b.salesVatRate == null || b.salesVatRate === "" ? 10 : num(b.salesVatRate),
       quantity: num(b.quantity),
       note: b.note || null,
       projectId: b.projectId || null,
