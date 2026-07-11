@@ -6,10 +6,11 @@ import { prisma } from "@/lib/prisma";
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const { name, amount } = await req.json();
+  const { name, amount, side } = await req.json();
   if (!name?.trim()) return NextResponse.json({ error: "항목명을 입력하세요." }, { status: 400 });
+  const sideVal = side === "SALES" ? "SALES" : "PURCHASE";
   const item = await prisma.costItem.create({
-    data: { projectId: params.id, name: name.trim(), amount: amount ? Number(amount) : 0 },
+    data: { projectId: params.id, name: name.trim(), amount: amount ? Number(amount) : 0, side: sideVal } as any,
   });
   return NextResponse.json(item);
 }

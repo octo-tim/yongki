@@ -87,18 +87,20 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
   const prod = p.products[0] ?? null;
   const qty = prod?.quantity ?? 0;
   const productPurchase = qty * Number(prod?.supplyPrice ?? 0);
-  const extrasSum = (p.costItems ?? []).reduce((a: number, c: any) => a + Number(c.amount ?? 0), 0);
+  const purchaseExtras = (p.costItems ?? []).filter((c: any) => (c.side ?? "PURCHASE") === "PURCHASE").reduce((a: number, c: any) => a + Number(c.amount ?? 0), 0);
+  const salesExtras = (p.costItems ?? []).filter((c: any) => c.side === "SALES").reduce((a: number, c: any) => a + Number(c.amount ?? 0), 0);
+  const extrasSum = purchaseExtras; // 구매 추가비용 합 (기존 호환)
   const salesRmb = prod ? (prod.salesCurrency === "RMB" ? Number(prod.salesPrice ?? 0) : Number(prod.salesPrice ?? 0) * Number(prod.exchangeRate ?? 0)) : 0;
   const salesConverted = !!prod && (prod.salesCurrency === "RMB" || Number(prod.exchangeRate ?? 0) > 0);
   const salesUnit = salesConverted ? salesRmb : Number(prod?.salesPrice ?? 0);
   const salesVatRate = Number(prod?.salesVatRate ?? 10);
-  const salesTotalBase = qty * salesUnit;
+  const salesTotalBase = qty * salesUnit + salesExtras; // 공급가액 = 수량×판매단가 + 판매 추가항목(후가공 등)
   const paymentTotals = {
     salesTotal: salesTotalBase * (1 + salesVatRate / 100),
     salesVatRate,
     salesSupply: salesTotalBase,
     salesCurrency: salesConverted ? "RMB" : (prod?.salesCurrency ?? "RMB"),
-    purchaseTotal: productPurchase + extrasSum,
+    purchaseTotal: productPurchase + purchaseExtras,
     purchaseCurrency: prod?.supplyCurrency ?? "RMB",
   };
 
@@ -156,8 +158,17 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           <Card>
             <CardHeader><CardTitle className="text-base">구매 추가비용 (공장 지급)</CardTitle></CardHeader>
             <CardContent>
-              <PurchaseCostPanel projectId={p.id} items={p.costItems as any}
+              <PurchaseCostPanel projectId={p.id} items={p.costItems as any} side="PURCHASE"
                 currency={prod?.supplyCurrency ?? "RMB"} productAmount={productPurchase} />
+            </CardContent>
+          </Card>
+
+          {/* 판매 추가항목 (업체 청구) */}
+          <Card>
+            <CardHeader><CardTitle className="text-base">판매 추가항목 (업체 청구 · 후가공 등)</CardTitle></CardHeader>
+            <CardContent>
+              <PurchaseCostPanel projectId={p.id} items={p.costItems as any} side="SALES"
+                currency={paymentTotals.salesCurrency} productAmount={qty * salesUnit} />
             </CardContent>
           </Card>
 
