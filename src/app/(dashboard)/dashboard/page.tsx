@@ -63,7 +63,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   // 현재 단계: status(선택한 단계)를 우선, 없으면 단계 데이터에서 계산
   const STEP_NAMES = new Set(["고객의뢰", "공장주문", "계약금입금(공장)", "파일수령(업체)", "파일전달(공장)", "중간검품", "생산완료", "창고입고", "검품", "출고", "한국도착", "고객인도"]);
   const curStep = (p: any) => (p.status && STEP_NAMES.has(p.status) ? p.status : (furthestStep(p.steps) ?? ""));
-  const atInspection = (stageProjects as any[]).filter((p) => curStep(p) === "검품");
+  const atInspection = (stageProjects as any[]).filter((p) => curStep(p) === "중간검품");
   const atProduction = (stageProjects as any[]).filter((p) => curStep(p) === "생산완료");
 
   const byProject: { project: any; steps: any[] }[] = [];
@@ -99,7 +99,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
 
       {/* 단계별 프로젝트: 검품 / 생산완료 */}
       <section className="grid gap-4 lg:grid-cols-2">
-        <StepProjectList title="검품 단계" icon={ClipboardCheck} accent="text-blue-600" rows={atInspection} />
+        <StepProjectList title="중간검품 단계" icon={ClipboardCheck} accent="text-blue-600" rows={atInspection} />
         <StepProjectList title="생산완료(제작완료) 단계" icon={PackageCheck} accent="text-emerald-600" rows={atProduction} />
       </section>
 
