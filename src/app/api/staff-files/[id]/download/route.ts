@@ -18,7 +18,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   if (!buf) return new NextResponse("Not found", { status: 404 });
   const type = f.fileType || "application/octet-stream";
   const inlineable = /^(image\/|application\/pdf|text\/)/.test(type);
-  return new NextResponse(buf, {
+  return new NextResponse(new Uint8Array(buf), {
     headers: {
       "Content-Type": type, "Content-Length": String(buf.length),
       "Content-Disposition": `${inlineable ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(f.fileName)}`,

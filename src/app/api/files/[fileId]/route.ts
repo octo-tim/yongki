@@ -19,7 +19,7 @@ export async function GET(_req: NextRequest, { params }: { params: { fileId: str
   const type = f.fileType || "application/octet-stream";
   const inlineable = /^(image\/|application\/pdf|text\/)/.test(type);
   const disp = inlineable ? "inline" : "attachment";
-  return new NextResponse(buf, {
+  return new NextResponse(new Uint8Array(buf), {
     headers: {
       "Content-Type": type,
       "Content-Length": String(buf.length),
