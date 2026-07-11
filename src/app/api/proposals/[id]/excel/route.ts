@@ -100,6 +100,11 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   });
 
   // 합계 / 부가세 / 합계금액
+  // 항목 없이 금액만 직접 입력해 발행한 경우, 저장된 amount를 청구금액으로 사용
+  const storedAmount = Number(p.amount ?? 0);
+  if (items.length === 0 && storedAmount > 0) {
+    supply = vat ? Math.round(storedAmount / 1.1) : storedAmount;
+  }
   const vatAmt = vat ? Math.round(supply * 0.1) : 0;
   const totalAmt = supply + vatAmt;
   const sumRows: [string, number][] = [["합   계", supply], ["부가가치세", vatAmt], ["합계금액", totalAmt]];

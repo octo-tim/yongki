@@ -25,7 +25,12 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
   const isSample = isInvoice && (p as any).invoiceKind === "SAMPLE";
   const items = (Array.isArray(p.items) ? p.items : []) as unknown as QuoteItem[];
   const vat = p.vatApplied ?? isInvoice;
-  const t = quoteTotals(items, vat);
+  const rawTotals = quoteTotals(items, vat);
+  // 항목 없이 금액만 직접 입력해 발행한 경우, 저장된 amount를 청구금액으로 사용
+  const storedAmount = Number((p as any).amount ?? 0);
+  const t = (items.length === 0 && storedAmount > 0)
+    ? { supply: vat ? Math.round(storedAmount / 1.1) : storedAmount, vat: vat ? storedAmount - Math.round(storedAmount / 1.1) : 0, total: storedAmount }
+    : rawTotals;
   const depositPct: number = (p as any).depositPct ?? 30;
   const invoiceKind: string | null = (p as any).invoiceKind ?? null;
   const kindKo = invoiceKind === "DEPOSIT" ? "계약금" : invoiceKind === "BALANCE" ? "잔금" : null;
