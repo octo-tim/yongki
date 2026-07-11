@@ -1,6 +1,5 @@
 import { PortalUploads } from "@/components/portal-uploads";
 import { ReplyRequests } from "@/components/reply-requests";
-import { PartnerCenterChecklist } from "@/components/partner-center-checklist";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -93,8 +92,6 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
           </CardContent>
         </Card>
       </section>
-
-      <PartnerCenterChecklist />
 
       <ReplyRequests />
 
