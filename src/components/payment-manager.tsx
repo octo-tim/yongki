@@ -28,6 +28,12 @@ export function PaymentManager({ projectId, productName, payments, totals }: {
   const find = (side: string, type: string) => payments.find((p) => p.side === side && p.type === type);
   const init: Record<string, Row> = {};
   for (const side of ["SALES", "PURCHASE"]) for (const type of ["DEPOSIT", "INTERIM", "BALANCE"]) init[`${side}_${type}`] = rowFrom(find(side, type));
+  // 판매금액(부가세 포함)이 정해졌고 판매 계약금·잔금이 비어있으면 30%/70% 자동 채움 (수동 입력값은 보호)
+  const salesTotalInit = Number(totals?.salesTotal || 0);
+  if (salesTotalInit > 0) {
+    if (!init["SALES_DEPOSIT"].amount) init["SALES_DEPOSIT"].amount = String(Math.round(salesTotalInit * 0.3));
+    if (!init["SALES_BALANCE"].amount) init["SALES_BALANCE"].amount = String(Math.round(salesTotalInit * 0.7));
+  }
   const [rows, setRows] = useState<Record<string, Row>>(init);
   const [busy, setBusy] = useState(false);
   const [savedMsg, setSavedMsg] = useState("");
