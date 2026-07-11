@@ -27,6 +27,7 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
       steps: { select: { name: true, done: true, doneAt: true } },
       factory: { select: { name: true } },
       payments: { where: { side: "SALES" }, select: { id: true, type: true, amount: true, receivedAt: true, method: true } },
+      products: { orderBy: { createdAt: "asc" }, select: { quantity: true, salesPrice: true, salesCurrency: true, exchangeRate: true } },
       progressPhotos: { orderBy: { createdAt: "desc" } },
       portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
       staffFiles: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, memo: true, fileName: true, fileSize: true, confirmedAt: true, confirmedBy: true, createdAt: true } },
@@ -43,6 +44,14 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
     for (let i = STEP_ORDER.length - 1; i >= 0; i--) if (project.steps.some((s) => s.name === STEP_ORDER[i] && s.done)) return STEP_ORDER[i];
     return STEP_ORDER[0];
   })();
+
+  const prod = (project as any).products?.[0] ?? null;
+  const qty = (project as any).quantity ?? 0;
+  const salesRmb = prod ? (prod.salesCurrency === "RMB" ? Number(prod.salesPrice ?? 0) : Number(prod.salesPrice ?? 0) * Number(prod.exchangeRate ?? 0)) : 0;
+  const salesConverted = !!prod && (prod.salesCurrency === "RMB" || Number(prod.exchangeRate ?? 0) > 0);
+  const salesUnit = salesConverted ? salesRmb : Number(prod?.salesPrice ?? 0);
+  const paymentTotal = qty * salesUnit;
+  const paymentCurrency = salesConverted ? "RMB" : (prod?.salesCurrency ?? "RMB");
 
   return (
     <div className="space-y-5">
@@ -92,7 +101,7 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
       <Card>
         <CardContent className="p-4">
           <h2 className="mb-3 text-sm font-semibold">결재관리</h2>
-          <PortalPayments payments={project.payments as any} />
+          <PortalPayments payments={project.payments as any} totalAmount={paymentTotal} currency={paymentCurrency} />
         </CardContent>
       </Card>
 
