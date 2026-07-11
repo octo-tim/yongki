@@ -1,4 +1,9 @@
+import { Suspense } from "react";
 import { ProjectSalesPanel } from "@/components/project-sales-panel";
+import {
+  CardSkeleton, ProgressPhotosSection, WorkSection, MeetingsSection, ClientRequestsSection,
+  NotesSection, MemosSection, PortalRequestsSection, InquiriesSection, StaffFilesSection, FilesSection, LogsSection,
+} from "./lazy-sections";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
@@ -8,20 +13,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StepSelect } from "@/components/step-select";
 import { StepTimeline } from "@/components/step-timeline";
-import { NotePanel } from "@/components/note-panel";
-import { MeetingPanel } from "@/components/meeting-panel";
 import { ImportantNotePanel } from "@/components/important-note-panel";
-import { ProgressPhotoGrid } from "@/components/progress-photo-grid";
-import { RequestPanel } from "@/components/request-panel";
-import { WorkRequestPanel } from "@/components/work-request-panel";
 import { PaymentManager } from "@/components/payment-manager";
 import { ProductInfoPanel } from "@/components/product-info-panel";
 import { PurchaseCostPanel } from "@/components/purchase-cost-panel";
-import { MemoPanel } from "@/components/memo-panel";
-import { FilePanel } from "@/components/file-panel";
-import { StaffFilePanel } from "@/components/staff-file-panel";
-import { PortalRequestPanel } from "@/components/portal-request-panel";
-import { InquiryPanel } from "@/components/inquiry-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
 import { fmtDate } from "@/lib/utils";
 import { Pencil } from "lucide-react";
@@ -33,27 +28,15 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
     prisma.project.findUnique({
       where: { id: params.id },
       include: {
-      client: true, factory: true, manager: true,
-      steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
-      files: { orderBy: { createdAt: "desc" }, select: { id: true, fileName: true, filePath: true, fileType: true, fileSize: true, createdAt: true } },
-      proposals: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, docType: true, invoiceKind: true, amount: true, currency: true, status: true, sentDate: true, sentTo: true } },
-      staffFiles: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, memo: true, fileName: true, fileType: true, fileSize: true, confirmedAt: true, confirmedBy: true, uploaderName: true, createdAt: true } },
-      portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
-      inquiries: {
-        orderBy: { createdAt: "desc" },
-        select: { id: true, subject: true, status: true, createdAt: true, messages: { orderBy: { createdAt: "asc" }, select: { id: true, senderType: true, senderName: true, content: true, createdAt: true } } },
+        // 핵심(즉시 표시): 기본정보 · 업체/공장/담당자 · 제품/비용/결제 · 단계 · 영업
+        client: true, factory: true, manager: true,
+        steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
+        proposals: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, docType: true, invoiceKind: true, amount: true, currency: true, status: true, sentDate: true, sentTo: true } },
+        payments: { orderBy: { receivedAt: "desc" } },
+        products: { orderBy: { createdAt: "asc" } },
+        costItems: { orderBy: { createdAt: "asc" } },
+        // 진행사진/업무/회의/요청/특이사항/메모/포털요청/문의/확인파일/첨부/로그는 지연 로딩 (lazy-sections)
       },
-      notes: { orderBy: { createdAt: "desc" }, include: { author: { select: { id: true, name: true } } } },
-      meetings: { orderBy: { meetingDate: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } }, files: true } },
-      clientRequests: { orderBy: { requestDate: "desc" }, include: { createdBy: { select: { name: true } } } },
-      progressPhotos: { orderBy: { createdAt: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } } } },
-      workRequests: { orderBy: { requestDate: "desc" }, include: { requester: { select: { name: true } }, assignee: { select: { id: true, name: true } }, client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, updates: { orderBy: { progressDate: "asc" }, include: { createdBy: { select: { name: true } } } } } },
-      payments: { orderBy: { receivedAt: "desc" } },
-      products: { orderBy: { createdAt: "asc" } },
-      costItems: { orderBy: { createdAt: "asc" } },
-      memos: { orderBy: { createdAt: "desc" }, include: { author: { select: { id: true, name: true } } } },
-      logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: { select: { id: true, name: true } } } },
-    },
     }),
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
@@ -197,48 +180,30 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             </CardContent>
           </Card>
 
-          {/* 진행사진 */}
-          <Card>
-            <CardHeader><CardTitle className="text-base">진행사진 ({p.progressPhotos.length})</CardTitle></CardHeader>
-            <CardContent>
-              <ProgressPhotoGrid photos={p.progressPhotos as any} empty="등록된 진행사진이 없습니다. (진행사진 메뉴에서 등록)" />
-            </CardContent>
-          </Card>
+          {/* 진행사진 (지연) */}
+          <Suspense fallback={<CardSkeleton title="진행사진" lines={3} />}>
+            <ProgressPhotosSection projectId={p.id} />
+          </Suspense>
 
-          {/* 3. 업무 (업무요청 통합) */}
-          <Card>
-            <CardHeader><CardTitle className="text-base">업무</CardTitle></CardHeader>
-            <CardContent>
-              <WorkRequestPanel
-                users={users} clients={clients} factories={factories}
-                projects={[{ id: p.id, name: p.productName }]}
-                fixedProjectId={p.id} requests={p.workRequests as any} currentUserId={uid} />
-            </CardContent>
-          </Card>
+          {/* 업무 (지연) */}
+          <Suspense fallback={<CardSkeleton title="업무" lines={3} />}>
+            <WorkSection projectId={p.id} productName={p.productName} users={users} clients={clients} factories={factories} uid={uid} />
+          </Suspense>
 
-          {/* 4. 회의록 */}
-          <Card>
-            <CardHeader><CardTitle className="text-base">회의록</CardTitle></CardHeader>
-            <CardContent>
-              <MeetingPanel clients={clients} factories={factories} fixedProjectId={p.id} meetings={p.meetings as any} showProject={false} />
-            </CardContent>
-          </Card>
+          {/* 회의록 (지연) */}
+          <Suspense fallback={<CardSkeleton title="회의록" lines={2} />}>
+            <MeetingsSection projectId={p.id} clients={clients} factories={factories} />
+          </Suspense>
 
-          {/* 5. 거래처 요청사항 (날짜별) */}
-          <Card>
-            <CardHeader><CardTitle className="text-base">거래처 요청사항</CardTitle></CardHeader>
-            <CardContent>
-              <RequestPanel projectId={p.id} requests={p.clientRequests as any} />
-            </CardContent>
-          </Card>
+          {/* 거래처 요청사항 (지연) */}
+          <Suspense fallback={<CardSkeleton title="거래처 요청사항" lines={2} />}>
+            <ClientRequestsSection projectId={p.id} />
+          </Suspense>
 
-          {/* 6. 특이사항 (작성자·작성일별 다중 입력) */}
-          <Card>
-            <CardHeader><CardTitle className="text-base">특이사항</CardTitle></CardHeader>
-            <CardContent>
-              <NotePanel projectId={p.id} notes={p.notes as any} />
-            </CardContent>
-          </Card>
+          {/* 특이사항 (지연) */}
+          <Suspense fallback={<CardSkeleton title="특이사항" lines={2} />}>
+            <NotesSection projectId={p.id} />
+          </Suspense>
         </div>
 
         <div className="space-y-6">
@@ -284,26 +249,17 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader><CardTitle className="text-base">메모</CardTitle></CardHeader>
-            <CardContent>
-              <MemoPanel projectId={p.id} memos={p.memos as any} />
-            </CardContent>
-          </Card>
+          <Suspense fallback={<CardSkeleton title="메모" lines={2} />}>
+            <MemosSection projectId={p.id} />
+          </Suspense>
 
-          <Card>
-            <CardHeader><CardTitle className="text-base">고객 요청사항 (파트너센터)</CardTitle></CardHeader>
-            <CardContent>
-              <PortalRequestPanel projectId={p.id} requests={p.portalRequests as any} canCreate={false} canManage />
-            </CardContent>
-          </Card>
+          <Suspense fallback={<CardSkeleton title="고객 요청사항 (파트너센터)" lines={2} />}>
+            <PortalRequestsSection projectId={p.id} />
+          </Suspense>
 
-          <Card>
-            <CardHeader><CardTitle className="text-base">제품제작 문의 및 답변 (파트너센터)</CardTitle></CardHeader>
-            <CardContent>
-              <InquiryPanel projectId={p.id} clientId={p.clientId ?? undefined} inquiries={p.inquiries as any} role="STAFF" />
-            </CardContent>
-          </Card>
+          <Suspense fallback={<CardSkeleton title="제품제작 문의 및 답변 (파트너센터)" lines={2} />}>
+            <InquiriesSection projectId={p.id} clientId={p.clientId ?? undefined} />
+          </Suspense>
 
           <Card>
             <CardHeader><CardTitle className="text-base">영업 (제안서 · 인보이스)</CardTitle></CardHeader>
@@ -312,32 +268,17 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader><CardTitle className="text-base">고객 확인요청 파일 (파트너센터)</CardTitle></CardHeader>
-            <CardContent>
-              <StaffFilePanel projectId={p.id} files={(p as any).staffFiles ?? []} />
-            </CardContent>
-          </Card>
+          <Suspense fallback={<CardSkeleton title="고객 확인요청 파일 (파트너센터)" lines={2} />}>
+            <StaffFilesSection projectId={p.id} />
+          </Suspense>
 
-          <Card>
-            <CardHeader><CardTitle className="text-base">첨부 파일</CardTitle></CardHeader>
-            <CardContent>
-              <FilePanel projectId={p.id} files={p.files as any} />
-            </CardContent>
-          </Card>
+          <Suspense fallback={<CardSkeleton title="첨부 파일" lines={2} />}>
+            <FilesSection projectId={p.id} />
+          </Suspense>
 
-          <Card>
-            <CardHeader><CardTitle className="text-base">변경 이력</CardTitle></CardHeader>
-            <CardContent className="space-y-2">
-              {p.logs.length === 0 && <p className="text-sm text-muted-foreground">이력이 없습니다.</p>}
-              {p.logs.map((l) => (
-                <div key={l.id} className="text-xs text-muted-foreground">
-                  <span className="font-medium text-foreground">{l.message}</span>
-                  <span> · {fmtDate(l.createdAt)} {l.actor?.name ? `· ${l.actor.name}` : ""}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+          <Suspense fallback={<CardSkeleton title="변경 이력" lines={3} />}>
+            <LogsSection projectId={p.id} />
+          </Suspense>
         </div>
       </div>
     </div>
