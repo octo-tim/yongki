@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toDateInput } from "@/lib/utils";
 import { STEP_ORDER } from "@/lib/steps";
+import { SearchableSelect } from "@/components/searchable-select";
 
 type Option = { id: string; name: string };
 export type ProjectFormData = {
@@ -91,16 +92,10 @@ export function ProjectForm({
           <Field label="완료예정일"><Input type="date" value={form.shipRequestDate ?? ""} onChange={(e) => set("shipRequestDate", e.target.value)} /></Field>
           <Field label="수량"><Input type="number" value={form.quantity ?? ""} onChange={(e) => set("quantity", e.target.value === "" ? null : Number(e.target.value))} /></Field>
           <Field label="판매처 (업체)">
-            <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.clientId ?? ""} onChange={(e) => set("clientId", e.target.value)}>
-              <option value="">선택 안함</option>
-              {clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
+            <SearchableSelect options={clients} value={form.clientId ?? ""} onChange={(v) => set("clientId", v)} placeholder="업체명 검색..." />
           </Field>
           <Field label="구매처 (공장)">
-            <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.factoryId ?? ""} onChange={(e) => set("factoryId", e.target.value)}>
-              <option value="">선택 안함</option>
-              {factories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
+            <SearchableSelect options={factories} value={form.factoryId ?? ""} onChange={(v) => set("factoryId", v)} placeholder="공장명 검색..." />
           </Field>
           <Field label="관리책임자">
             <select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.managerId ?? ""} onChange={(e) => set("managerId", e.target.value)}>
