@@ -19,7 +19,7 @@ export default async function PortalHome() {
     }),
     prisma.proposal.findMany({
       where: { clientId }, orderBy: { createdAt: "desc" },
-      select: { id: true, title: true, amount: true, currency: true, status: true, sentDate: true },
+      select: { id: true, title: true, amount: true, currency: true, status: true, sentDate: true, docType: true, invoiceKind: true, project: { select: { productName: true } } },
     }),
   ]);
 
@@ -32,6 +32,10 @@ export default async function PortalHome() {
     const done = p.steps.filter((s) => s.done).length;
     return Math.round((done / STEP_ORDER.length) * 100);
   }
+
+  const quotes = proposals.filter((q) => ((q as any).docType ?? "PROPOSAL") !== "INVOICE");
+  const invoices = proposals.filter((q) => (q as any).docType === "INVOICE");
+  const INV_KIND: Record<string, string> = { DEPOSIT: "계약금", BALANCE: "잔금", FULL: "전체" };
 
   return (
     <div className="space-y-5">
@@ -71,17 +75,45 @@ export default async function PortalHome() {
         ))}
       </div>
 
-      {proposals.length > 0 && (
+      {quotes.length > 0 && (
         <div className="space-y-3">
           <h2 className="text-base font-bold">받은 견적서</h2>
           <div className="divide-y rounded-lg border bg-card">
-            {proposals.map((q) => (
+            {quotes.map((q) => (
               <Link key={q.id} href={`/quote/${q.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-accent/50">
                 <FileText className="h-4 w-4 shrink-0 text-violet-600" />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{q.title}</p>
+                  <p className="truncate text-sm font-medium">
+                    {(q as any).project?.productName && <span className="text-muted-foreground">[{(q as any).project.productName}] </span>}
+                    {q.title}
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     {q.sentDate ? `견적일 ${new Date(q.sentDate).toISOString().slice(0, 10)}` : ""}
+                    {q.amount != null && ` · ${Number(q.amount).toLocaleString()} ${q.currency ?? "KRW"}`}
+                  </p>
+                </div>
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {invoices.length > 0 && (
+        <div className="space-y-3">
+          <h2 className="text-base font-bold">받은 인보이스</h2>
+          <div className="divide-y rounded-lg border bg-card">
+            {invoices.map((q) => (
+              <Link key={q.id} href={`/quote/${q.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-accent/50">
+                <FileText className="h-4 w-4 shrink-0 text-rose-600" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium">
+                    {(q as any).project?.productName && <span className="text-muted-foreground">[{(q as any).project.productName}] </span>}
+                    {q.title}
+                    {(q as any).invoiceKind && INV_KIND[(q as any).invoiceKind] && <span className="ml-1 rounded bg-rose-100 px-1.5 py-0.5 text-[11px] font-medium text-rose-700">{INV_KIND[(q as any).invoiceKind]}</span>}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {q.sentDate ? `발행일 ${new Date(q.sentDate).toISOString().slice(0, 10)}` : ""}
                     {q.amount != null && ` · ${Number(q.amount).toLocaleString()} ${q.currency ?? "KRW"}`}
                   </p>
                 </div>
