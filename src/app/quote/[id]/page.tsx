@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { notFound, redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { COMPANY, quoteTotals, PROPOSAL_GREETINGS, INVOICE_GREETINGS, PROPOSAL_NOTES, INVOICE_NOTES, type QuoteItem } from "@/lib/company";
+import { COMPANY, quoteTotals, PROPOSAL_GREETINGS, INVOICE_GREETINGS, PROPOSAL_NOTES, INVOICE_NOTES, SAMPLE_INVOICE_GREETINGS, SAMPLE_INVOICE_NOTES, type QuoteItem } from "@/lib/company";
 import { QuotationActions } from "@/components/quotation-actions";
 
 export const dynamic = "force-dynamic";
@@ -22,6 +22,7 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
   if (role === "CLIENT" && p.clientId !== (session.user as any).clientId) notFound();
 
   const isInvoice = (p as any).docType === "INVOICE";
+  const isSample = isInvoice && (p as any).invoiceKind === "SAMPLE";
   const items = (Array.isArray(p.items) ? p.items : []) as unknown as QuoteItem[];
   const vat = p.vatApplied ?? isInvoice;
   const t = quoteTotals(items, vat);
@@ -33,8 +34,8 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
   const ccy = p.currency ?? "KRW";
   const won2 = (n: number) => `${won(n)}${ccy === "KRW" ? "" : " " + ccy}`;
   const d = (v: Date | null) => (v ? new Date(v).toISOString().slice(0, 10) : "-");
-  const greetings = isInvoice ? INVOICE_GREETINGS : PROPOSAL_GREETINGS;
-  const notes = isInvoice ? INVOICE_NOTES : PROPOSAL_NOTES;
+  const greetings = isSample ? SAMPLE_INVOICE_GREETINGS : isInvoice ? INVOICE_GREETINGS : PROPOSAL_GREETINGS;
+  const notes = isSample ? SAMPLE_INVOICE_NOTES : isInvoice ? INVOICE_NOTES : PROPOSAL_NOTES;
 
   return (
     <div className="min-h-screen bg-muted/30 py-6 print:bg-white print:py-0">
@@ -47,7 +48,7 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
         <div className="rounded-lg border bg-white p-8 text-[13px] shadow-sm print:rounded-none print:border-0 print:p-4 print:shadow-none">
           {/* 헤더: 제목 + 브랜드 */}
           <div className="mb-4 flex items-start justify-between border-b-4 border-double border-foreground pb-2">
-            <h1 className="pt-2 text-2xl font-black tracking-tight">{isInvoice ? "INVOICE" : "상품공급 제안서"}</h1>
+            <h1 className="pt-2 text-2xl font-black tracking-tight">{isSample ? "SAMPLE INVOICE" : isInvoice ? "INVOICE" : "상품공급 제안서"}</h1>
             <div className="text-right">
               <p className="text-2xl font-bold tracking-tight"><span className="text-foreground">Cosme</span><span className="text-muted-foreground">Pack</span></p>
               <p className="text-sm font-semibold">코스메팩</p>

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, Receipt, Printer, X, Plus } from "lucide-react";
+import { Send, Receipt, Printer, X, Plus, FileSpreadsheet } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Doc = {
@@ -16,7 +16,7 @@ const statusColor: Record<string, string> = { 발송완료: "bg-blue-100 text-bl
 
 export function ProjectSalesPanel({ projectId, productName, docs }: { projectId: string; productName: string; docs: Doc[] }) {
   const router = useRouter();
-  const [form, setForm] = useState<null | "DEPOSIT" | "BALANCE" | "FULL">(null);
+  const [form, setForm] = useState<null | "DEPOSIT" | "BALANCE" | "FULL" | "SAMPLE">(null);
   const [amount, setAmount] = useState("");
   const [vatApplied, setVatApplied] = useState(true);
   const [note, setNote] = useState("");
@@ -24,9 +24,9 @@ export function ProjectSalesPanel({ projectId, productName, docs }: { projectId:
 
   const proposals = docs.filter((d) => (d.docType ?? "PROPOSAL") === "PROPOSAL");
   const invoices = docs.filter((d) => d.docType === "INVOICE");
-  const kindKo = (k: string | null) => (k === "DEPOSIT" ? "계약금" : k === "BALANCE" ? "잔금" : k === "FULL" ? "전체" : "");
+  const kindKo = (k: string | null) => (k === "DEPOSIT" ? "계약금" : k === "BALANCE" ? "잔금" : k === "FULL" ? "전체" : k === "SAMPLE" ? "샘플" : "");
 
-  async function issue(kind: "DEPOSIT" | "BALANCE" | "FULL") {
+  async function issue(kind: "DEPOSIT" | "BALANCE" | "FULL" | "SAMPLE") {
     const amt = Number(amount || 0);
     if (!amt) return alert("금액을 입력하세요");
     setBusy(true);
@@ -51,7 +51,8 @@ export function ProjectSalesPanel({ projectId, productName, docs }: { projectId:
                 <Link href={`/quote/${d.id}`} className="flex-1 truncate font-medium hover:underline">{d.title}</Link>
                 {d.amount != null && <span className="text-xs text-muted-foreground">{won(Number(d.amount))} {d.currency ?? "KRW"}</span>}
                 <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-medium", statusColor[d.status] ?? "bg-muted")}>{d.status}</span>
-                <Link href={`/quote/${d.id}`} className="rounded p-1 text-muted-foreground hover:bg-accent"><Printer className="h-3.5 w-3.5" /></Link>
+                <Link href={`/quote/${d.id}`} className="rounded p-1 text-muted-foreground hover:bg-accent" title="보기/인쇄"><Printer className="h-3.5 w-3.5" /></Link>
+                <a href={`/api/proposals/${d.id}/excel`} className="rounded p-1 text-emerald-600 hover:bg-accent" title="엑셀 다운로드"><FileSpreadsheet className="h-3.5 w-3.5" /></a>
               </div>
             ))}
           </div>
@@ -63,6 +64,7 @@ export function ProjectSalesPanel({ projectId, productName, docs }: { projectId:
         <div className="mb-2 flex items-center justify-between">
           <h3 className="flex items-center gap-1.5 text-sm font-semibold"><Receipt className="h-4 w-4 text-rose-600" />보낸 인보이스 ({invoices.length})</h3>
           <div className="flex gap-1.5">
+            <Button size="sm" variant="outline" onClick={() => setForm(form === "SAMPLE" ? null : "SAMPLE")}>샘플 발행</Button>
             <Button size="sm" variant="outline" onClick={() => setForm(form === "DEPOSIT" ? null : "DEPOSIT")}>계약금 발행</Button>
             <Button size="sm" variant="outline" onClick={() => setForm(form === "BALANCE" ? null : "BALANCE")}>잔금 발행</Button>
             <Button size="sm" variant="outline" onClick={() => setForm(form === "FULL" ? null : "FULL")}>전체 발행</Button>
@@ -71,7 +73,7 @@ export function ProjectSalesPanel({ projectId, productName, docs }: { projectId:
 
         {form && (
           <div className="mb-2 space-y-2 rounded-md border bg-muted/30 p-3">
-            <p className="text-xs font-medium">{productName}_{form === "DEPOSIT" ? "계약금" : form === "BALANCE" ? "잔금" : "전체"} 인보이스 발행</p>
+            <p className="text-xs font-medium">{productName}_{form === "DEPOSIT" ? "계약금" : form === "BALANCE" ? "잔금" : form === "SAMPLE" ? "샘플" : "전체"} 인보이스 발행</p>
             <div className="flex items-center gap-2">
               <Input type="number" placeholder="금액 입력" value={amount} onChange={(e) => setAmount(e.target.value)} className="h-9" />
               <label className="flex shrink-0 items-center gap-1 text-xs"><input type="checkbox" checked={vatApplied} onChange={(e) => setVatApplied(e.target.checked)} />부가세 10%</label>
@@ -88,11 +90,12 @@ export function ProjectSalesPanel({ projectId, productName, docs }: { projectId:
           <div className="divide-y rounded-md border">
             {invoices.map((d) => (
               <div key={d.id} className="flex items-center gap-2 px-3 py-2 text-sm">
-                {d.invoiceKind && <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium", d.invoiceKind === "DEPOSIT" ? "bg-yellow-100 text-yellow-800" : d.invoiceKind === "BALANCE" ? "bg-orange-100 text-orange-700" : "bg-rose-100 text-rose-700")}>{kindKo(d.invoiceKind)}</span>}
+                {d.invoiceKind && <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium", d.invoiceKind === "DEPOSIT" ? "bg-yellow-100 text-yellow-800" : d.invoiceKind === "BALANCE" ? "bg-orange-100 text-orange-700" : d.invoiceKind === "SAMPLE" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700")}>{kindKo(d.invoiceKind)}</span>}
                 <Link href={`/quote/${d.id}`} className="flex-1 truncate font-medium hover:underline">{d.title}</Link>
                 {d.amount != null && <span className="text-xs text-muted-foreground">{won(Number(d.amount))} {d.currency ?? "KRW"}</span>}
                 {d.sentTo && <span className="text-[11px] text-blue-600">발송됨</span>}
-                <Link href={`/quote/${d.id}`} className="rounded p-1 text-muted-foreground hover:bg-accent"><Printer className="h-3.5 w-3.5" /></Link>
+                <Link href={`/quote/${d.id}`} className="rounded p-1 text-muted-foreground hover:bg-accent" title="보기/인쇄"><Printer className="h-3.5 w-3.5" /></Link>
+                <a href={`/api/proposals/${d.id}/excel`} className="rounded p-1 text-emerald-600 hover:bg-accent" title="엑셀 다운로드"><FileSpreadsheet className="h-3.5 w-3.5" /></a>
               </div>
             ))}
           </div>
