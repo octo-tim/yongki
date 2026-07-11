@@ -22,7 +22,7 @@ export default async function SalesPage() {
     <div className="space-y-5 p-6">
       <div>
         <h1 className="text-2xl font-bold">영업관리</h1>
-        <p className="text-sm text-muted-foreground">제안서·인보이스를 작성하고 발송 내역을 관리합니다</p>
+        <p className="text-sm text-muted-foreground">제안서·인보이스 발행 내역을 기간별로 조회합니다</p>
       </div>
       <Card>
         <CardContent className="p-4">
