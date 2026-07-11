@@ -18,8 +18,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (!project) return NextResponse.json({ error: "프로젝트 없음" }, { status: 404 });
 
   const b = await req.json();
-  const kind = String(b.kind || "FULL"); // DEPOSIT | INTERIM | BALANCE | FULL | SAMPLE
-  const kindKo = kind === "DEPOSIT" ? "계약금" : kind === "INTERIM" ? "중도금" : kind === "BALANCE" ? "잔금" : kind === "SAMPLE" ? "샘플" : "전체";
+  const kind = String(b.kind || "FULL"); // PROPOSAL | DEPOSIT | INTERIM | BALANCE | FULL | SAMPLE
+  const isProposalDoc = kind === "PROPOSAL";
+  const kindKo = kind === "DEPOSIT" ? "계약금" : kind === "INTERIM" ? "중도금" : kind === "BALANCE" ? "잔금" : kind === "SAMPLE" ? "샘플" : isProposalDoc ? "제안서" : "전체";
   const amount = Number(b.amount || 0);
   const vatApplied = b.vatApplied !== false;
   const currency = String(b.currency || "KRW");
@@ -52,8 +53,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const inv = await prisma.proposal.create({
     data: {
       title: `${project.productName}_${kindKo}`,
-      docType: "INVOICE",
-      invoiceKind: kind,
+      docType: isProposalDoc ? "PROPOSAL" : "INVOICE",
+      invoiceKind: isProposalDoc ? null : kind,
       projectId: project.id,
       clientId: project.clientId,
       currency,
