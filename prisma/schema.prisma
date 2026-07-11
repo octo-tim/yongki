@@ -236,6 +236,7 @@ model ProjectStep {
   updatedAt DateTime  @updatedAt
 
   @@index([projectId])
+  @@index([projectId, type, order])
   @@map("project_steps")
 }
 
@@ -267,6 +268,7 @@ model ProjectMemo {
   updatedAt DateTime @updatedAt
 
   @@index([projectId])
+  @@index([projectId, createdAt])
   @@map("project_memos")
 }
 
@@ -280,6 +282,7 @@ model ProjectNote {
   createdAt DateTime @default(now())
 
   @@index([projectId])
+  @@index([projectId, createdAt])
   @@map("project_notes")
 }
 
@@ -324,6 +327,7 @@ model Payment {
 
   @@index([projectId])
   @@index([receivedAt])
+  @@index([projectId, receivedAt])
   @@map("payments")
 }
 
@@ -336,6 +340,7 @@ model CostItem {
   side      String   @default("PURCHASE") // PURCHASE(구매 추가비용) | SALES(판매 추가항목)
   createdAt DateTime @default(now())
 
+  @@index([projectId, createdAt])
   @@map("cost_items")
 }
 
@@ -418,6 +423,8 @@ model WorkRequest {
   createdAt   DateTime @default(now())
 
   @@index([requestDate])
+  @@index([projectId, requestDate])
+  @@index([assigneeId, done, requestDate])
   @@map("work_requests")
 }
 
@@ -461,6 +468,7 @@ model ProjectLog {
   createdAt DateTime @default(now())
 
   @@index([projectId])
+  @@index([projectId, createdAt])
   @@map("project_logs")
 }
 
@@ -558,6 +566,8 @@ model Proposal {
 
   @@index([clientId])
   @@index([creatorId])
+  @@index([projectId, createdAt])
+  @@index([clientId, status, createdAt])
   @@map("proposals")
   revisions   ProposalRevision[]
 
