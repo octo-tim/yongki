@@ -36,13 +36,13 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       steps: { orderBy: [{ type: "asc" }, { order: "asc" }] },
       files: { orderBy: { createdAt: "desc" }, select: { id: true, fileName: true, filePath: true, fileType: true, fileSize: true, createdAt: true } },
       proposals: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, docType: true, invoiceKind: true, amount: true, currency: true, status: true, sentDate: true, sentTo: true } },
-      staffFiles: { orderBy: { createdAt: "desc" } },
+      staffFiles: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, memo: true, fileName: true, fileType: true, fileSize: true, confirmedAt: true, confirmedBy: true, uploaderName: true, createdAt: true } },
       portalRequests: { orderBy: { createdAt: "desc" }, select: { id: true, content: true, status: true, fileName: true, fileSize: true, createdAt: true } },
       inquiries: {
         orderBy: { createdAt: "desc" },
         select: { id: true, subject: true, status: true, createdAt: true, messages: { orderBy: { createdAt: "asc" }, select: { id: true, senderType: true, senderName: true, content: true, createdAt: true } } },
       },
-      notes: { orderBy: { createdAt: "desc" }, include: { author: true } },
+      notes: { orderBy: { createdAt: "desc" }, include: { author: { select: { id: true, name: true } } } },
       meetings: { orderBy: { meetingDate: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } }, files: true } },
       clientRequests: { orderBy: { requestDate: "desc" }, include: { createdBy: { select: { name: true } } } },
       progressPhotos: { orderBy: { createdAt: "desc" }, include: { client: { select: { id: true, name: true } }, factory: { select: { id: true, name: true } }, createdBy: { select: { name: true } } } },
@@ -50,17 +50,17 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
       payments: { orderBy: { receivedAt: "desc" } },
       products: { orderBy: { createdAt: "asc" } },
       costItems: { orderBy: { createdAt: "asc" } },
-      memos: { orderBy: { createdAt: "desc" }, include: { author: true } },
-      logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: true } },
+      memos: { orderBy: { createdAt: "desc" }, include: { author: { select: { id: true, name: true } } } },
+      logs: { orderBy: { createdAt: "desc" }, take: 10, include: { actor: { select: { id: true, name: true } } } },
     },
   });
   if (!p) notFound();
-  const [users, clients, factories] = await Promise.all([
+  const [users, clients, factories, session] = await Promise.all([
     prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.factory.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    getServerSession(authOptions),
   ]);
-  const session = await getServerSession(authOptions);
   const uid = (session?.user as any)?.id as string | undefined;
 
   const info: [string, string][] = [
