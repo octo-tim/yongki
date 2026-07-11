@@ -171,7 +171,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
 
           {/* 제품제작 후가공내역 및 중요체크사항 */}
           <Card>
-            <CardHeader><CardTitle className="text-base">제품제작 후가공내역 및 중요체크사항</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">제품제작 후가공내역 및 중요체크사항 (파트너센터)</CardTitle></CardHeader>
             <CardContent>
               <ImportantNotePanel projectId={p.id} value={p.importantNote ?? null} />
             </CardContent>
