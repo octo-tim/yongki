@@ -22,7 +22,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
 
   const isInvoice = p.docType === "INVOICE";
   const isSample = isInvoice && p.invoiceKind === "SAMPLE";
-  const kindKo = p.invoiceKind === "DEPOSIT" ? "계약금" : p.invoiceKind === "BALANCE" ? "잔금" : p.invoiceKind === "SAMPLE" ? "샘플" : p.invoiceKind === "FULL" ? "전체" : "";
+  const kindKo = p.invoiceKind === "DEPOSIT" ? "계약금" : p.invoiceKind === "INTERIM" ? "중도금" : p.invoiceKind === "BALANCE" ? "잔금" : p.invoiceKind === "SAMPLE" ? "샘플" : p.invoiceKind === "FULL" ? "전체" : "";
   const docTitle = isSample ? "SAMPLE INVOICE" : isInvoice ? "INVOICE" : "상품공급 제안서";
   const items: any[] = Array.isArray(p.items) ? p.items : [];
   const vat = p.vatApplied ?? isInvoice;

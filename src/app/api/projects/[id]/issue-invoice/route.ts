@@ -12,8 +12,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (!project) return NextResponse.json({ error: "프로젝트 없음" }, { status: 404 });
 
   const b = await req.json();
-  const kind = String(b.kind || "FULL"); // DEPOSIT | BALANCE | FULL | SAMPLE
-  const kindKo = kind === "DEPOSIT" ? "계약금" : kind === "BALANCE" ? "잔금" : kind === "SAMPLE" ? "샘플" : "전체";
+  const kind = String(b.kind || "FULL"); // DEPOSIT | INTERIM | BALANCE | FULL | SAMPLE
+  const kindKo = kind === "DEPOSIT" ? "계약금" : kind === "INTERIM" ? "중도금" : kind === "BALANCE" ? "잔금" : kind === "SAMPLE" ? "샘플" : "전체";
   const amount = Number(b.amount || 0);
   const vatApplied = b.vatApplied !== false;
   const currency = String(b.currency || "KRW");
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       items: items.length ? items : undefined,
       vatApplied,
       amount: finalAmount,
-      depositPct: kind === "DEPOSIT" ? 100 : kind === "BALANCE" ? 0 : kind === "SAMPLE" ? 0 : 30,
+      depositPct: kind === "DEPOSIT" ? 100 : kind === "BALANCE" ? 0 : kind === "SAMPLE" ? 0 : kind === "INTERIM" ? 0 : 30,
       sentDate: new Date(),
       note,
       status: "발송완료",

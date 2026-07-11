@@ -165,7 +165,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           <Card>
             <CardHeader><CardTitle className="text-base">결재관리</CardTitle></CardHeader>
             <CardContent>
-              <PaymentManager projectId={p.id} payments={p.payments as any} totals={paymentTotals} />
+              <PaymentManager projectId={p.id} productName={p.productName} payments={p.payments as any} totals={paymentTotals} />
             </CardContent>
           </Card>
 

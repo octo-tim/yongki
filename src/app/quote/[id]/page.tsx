@@ -33,7 +33,7 @@ export default async function QuotePage({ params }: { params: { id: string } }) 
     : rawTotals;
   const depositPct: number = (p as any).depositPct ?? 30;
   const invoiceKind: string | null = (p as any).invoiceKind ?? null;
-  const kindKo = invoiceKind === "DEPOSIT" ? "계약금" : invoiceKind === "BALANCE" ? "잔금" : null;
+  const kindKo = invoiceKind === "DEPOSIT" ? "계약금" : invoiceKind === "INTERIM" ? "중도금" : invoiceKind === "BALANCE" ? "잔금" : invoiceKind === "SAMPLE" ? "샘플" : null;
   const deposit = Math.round((t.total * depositPct) / 100);
   const balance = t.total - deposit;
   const ccy = p.currency ?? "KRW";
