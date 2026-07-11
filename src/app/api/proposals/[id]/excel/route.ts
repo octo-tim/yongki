@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { COMPANY, SAMPLE_INVOICE_NOTES, INVOICE_NOTES } from "@/lib/company";
+import { COMPANY, SAMPLE_INVOICE_NOTES, INVOICE_NOTES, PROPOSAL_NOTES } from "@/lib/company";
 import ExcelJS from "exceljs";
 
 // 인보이스/제안서를 엑셀(.xlsx)로 다운로드 (샘플 인보이스 양식 기반)
@@ -23,7 +23,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   const isInvoice = p.docType === "INVOICE";
   const isSample = isInvoice && p.invoiceKind === "SAMPLE";
   const kindKo = p.invoiceKind === "DEPOSIT" ? "계약금" : p.invoiceKind === "BALANCE" ? "잔금" : p.invoiceKind === "SAMPLE" ? "샘플" : p.invoiceKind === "FULL" ? "전체" : "";
-  const docTitle = isSample ? "SAMPLE INVOICE" : isInvoice ? "INVOICE" : "제품 제안서";
+  const docTitle = isSample ? "SAMPLE INVOICE" : isInvoice ? "INVOICE" : "상품공급 제안서";
   const items: any[] = Array.isArray(p.items) ? p.items : [];
   const vat = p.vatApplied ?? isInvoice;
 
@@ -63,7 +63,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
 
   // 좌측: 청구/작성 정보
   ws.getCell("C4").value = `${p.client?.name ?? "-"} 貴下`; ws.getCell("C4").font = { bold: true, size: 12 };
-  ws.getCell("C6").value = "청구금액 :"; ws.getCell("C6").font = bold;
+  ws.getCell("C6").value = (isInvoice ? "청구금액 :" : "제안금액 :"); ws.getCell("C6").font = bold;
   ws.getCell("C7").value = `${isInvoice ? "작성" : "견적"}일자 :`; ws.getCell("C7").font = bold;
   ws.getCell("D7").value = p.sentDate ? new Date(p.sentDate).toISOString().slice(0, 10) : "";
   ws.getCell("E7").value = "(유효기간: 30일)";
@@ -107,7 +107,10 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   }
   const vatAmt = vat ? Math.round(supply * 0.1) : 0;
   const totalAmt = supply + vatAmt;
-  const sumRows: [string, number][] = [["합   계", supply], ["부가가치세", vatAmt], ["합계금액", totalAmt]];
+  // 제안서(부가세 별도)는 합계행만, 인보이스/부가세 포함은 합계·부가세·합계금액 3행
+  const sumRows: [string, number][] = vat
+    ? [["합   계", supply], ["부가가치세", vatAmt], ["합계금액", totalAmt]]
+    : [["합   계", supply]];
   sumRows.forEach(([label, val]) => {
     ws.mergeCells(`B${r}:H${r}`);
     ws.getCell(`B${r}`).value = label; ws.getCell(`B${r}`).font = bold; ws.getCell(`B${r}`).alignment = right; ws.getCell(`B${r}`).border = border;
@@ -124,7 +127,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   // 참고사항
   r += 1;
   ws.getCell(`C${r}`).value = "◎ 참고사항"; ws.getCell(`C${r}`).font = bold; r++;
-  const notes = isSample ? SAMPLE_INVOICE_NOTES : INVOICE_NOTES;
+  const notes = isSample ? SAMPLE_INVOICE_NOTES : isInvoice ? INVOICE_NOTES : PROPOSAL_NOTES;
   notes.forEach((nt, i) => {
     ws.mergeCells(`C${r}:K${r}`);
     ws.getCell(`C${r}`).value = `${i + 1}. ${nt}`;
