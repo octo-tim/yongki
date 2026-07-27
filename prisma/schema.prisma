@@ -621,6 +621,7 @@ model ClientInquiry {
   client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
   subject   String
   status    String   @default("답변대기") // 답변대기/답변완료
+  clientReadAt DateTime? // 고객이 답변을 확인한 시각 (이후 새 답변이 오면 다시 미확인)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

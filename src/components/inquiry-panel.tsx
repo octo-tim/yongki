@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MessageSquare, Plus, X, ChevronDown } from "lucide-react";
+import { MessageSquare, Plus, X, ChevronDown, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Msg = { id: string; senderType: string; senderName: string; content: string; createdAt: string };
-type Inquiry = { id: string; subject: string; status: string; createdAt: string; messages: Msg[] };
+type Inquiry = { id: string; subject: string; status: string; clientReadAt?: string | null; createdAt: string; messages: Msg[] };
 
 export function InquiryPanel({ projectId, clientId, inquiries, role }: {
   projectId?: string; clientId?: string; inquiries: Inquiry[]; role: "CLIENT" | "STAFF";
@@ -40,6 +40,13 @@ export function InquiryPanel({ projectId, clientId, inquiries, role }: {
     });
     if (res.ok) { setReply(""); setReplyId(null); router.refresh(); }
   }
+  async function markRead(id: string) {
+    const res = await fetch(`/api/portal/inquiries/${id}`, { method: "PATCH" });
+    if (res.ok) router.refresh();
+  }
+
+  // 답변완료 + 아직 확인 안 한 문의 (고객 화면 알림 대상)
+  const needsRead = (iq: Inquiry) => iq.status === "답변완료" && !iq.clientReadAt;
 
   return (
     <div className="space-y-3">
@@ -73,6 +80,7 @@ export function InquiryPanel({ projectId, clientId, inquiries, role }: {
               <button onClick={() => toggle(iq.id)} className="flex w-full items-center gap-2 px-3 py-2.5 text-left hover:bg-accent/50">
                 <MessageSquare className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <span className="flex-1 text-sm font-medium">{iq.subject}</span>
+                {role === "CLIENT" && needsRead(iq) && <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[11px] font-bold text-rose-700">새 답변</span>}
                 <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-medium", iq.status === "답변완료" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700")}>{iq.status}</span>
                 <ChevronDown className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform", isOpen && "rotate-180")} />
               </button>
@@ -95,9 +103,16 @@ export function InquiryPanel({ projectId, clientId, inquiries, role }: {
                       <Button size="sm" onClick={() => submitReply(iq.id)}>전송</Button>
                     </div>
                   ) : (
-                    <button onClick={() => setReplyId(iq.id)} className="pt-1 text-xs text-primary hover:underline">
-                      {role === "STAFF" ? "답변하기" : "추가 문의"}
-                    </button>
+                    <div className="flex items-center gap-3 pt-1">
+                      <button onClick={() => setReplyId(iq.id)} className="text-xs text-primary hover:underline">
+                        {role === "STAFF" ? "답변하기" : "추가 문의"}
+                      </button>
+                      {role === "CLIENT" && needsRead(iq) && (
+                        <button onClick={() => markRead(iq.id)} className="flex items-center gap-1 rounded-full border border-emerald-300 px-2.5 py-1 text-xs font-medium text-emerald-700 hover:bg-emerald-50">
+                          <CheckCircle2 className="h-3.5 w-3.5" />답변 확인함
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               )}

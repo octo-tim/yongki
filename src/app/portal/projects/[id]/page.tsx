@@ -33,7 +33,7 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
       staffFiles: { orderBy: { createdAt: "desc" }, select: { id: true, title: true, memo: true, fileName: true, fileSize: true, confirmedAt: true, confirmedBy: true, createdAt: true } },
       inquiries: {
         orderBy: { createdAt: "desc" },
-        select: { id: true, subject: true, status: true, createdAt: true, messages: { orderBy: { createdAt: "asc" }, select: { id: true, senderType: true, senderName: true, content: true, createdAt: true } } },
+        select: { id: true, subject: true, status: true, clientReadAt: true, createdAt: true, messages: { orderBy: { createdAt: "asc" }, select: { id: true, senderType: true, senderName: true, content: true, createdAt: true } } },
       },
     },
   });
@@ -49,7 +49,7 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
 
   // 고객이 확인해야 할 항목 (파트너센터 상단 알림)
   const unconfirmedFiles = ((project as any).staffFiles ?? []).filter((f: any) => !f.confirmedAt);
-  const answeredInquiries = (project.inquiries ?? []).filter((q: any) => q.status === "답변완료");
+  const answeredInquiries = (project.inquiries ?? []).filter((q: any) => q.status === "답변완료" && !q.clientReadAt);
   const needAttention = unconfirmedFiles.length > 0 || answeredInquiries.length > 0;
   const qty = (project as any).quantity ?? 0;
   const salesRmb = prod ? (prod.salesCurrency === "RMB" ? Number(prod.salesPrice ?? 0) : Number(prod.salesPrice ?? 0) * Number(prod.exchangeRate ?? 0)) : 0;
