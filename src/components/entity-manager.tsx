@@ -1,5 +1,5 @@
 "use client";
-import { useState, Fragment } from "react";
+import { useState, Fragment, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -22,8 +22,9 @@ function currentStepName(p: { status?: string | null; steps?: { name: string; do
   return "";
 }
 
-export function EntityManager({ endpoint, fields, rows, countKey, linkBase, showCode }: {
+export function EntityManager({ endpoint, fields, rows, countKey, linkBase, showCode, renderEditExtra }: {
   endpoint: string; fields: FieldDef[]; rows: Entity[]; countKey?: string; linkBase?: string; showCode?: boolean;
+  renderEditExtra?: (row: Entity) => ReactNode;
 }) {
   const router = useRouter();
   const empty = Object.fromEntries(fields.map((f) => [f.key, ""]));
@@ -81,6 +82,7 @@ export function EntityManager({ endpoint, fields, rows, countKey, linkBase, show
               <Button variant="ghost" size="sm" onClick={() => setEditId(null)}>취소</Button>
               <Button size="sm" onClick={() => save(editId)}>저장</Button>
             </div>
+            {renderEditExtra && (() => { const row = rows.find((r) => r.id === editId); return row ? <div className="mt-4 border-t pt-4">{renderEditExtra(row)}</div> : null; })()}
           </CardContent>
         </Card>
       )}
