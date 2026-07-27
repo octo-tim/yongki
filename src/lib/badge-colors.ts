@@ -21,4 +21,5 @@ export const DEFAULT_STATUS_COLOR: Record<string, string> = {
   진행중: "blue",
   출고대기: "amber",
   완료: "emerald",
+  클레임: "red",
 };

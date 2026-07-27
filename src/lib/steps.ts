@@ -18,6 +18,7 @@ export const CANON_STEPS: StepDef[] = [
   { type: "SHIPPING",   status: "출고대기", group: "출고",          name: "출고",            order: 2 },
   { type: "SHIPPING",   status: "출고대기", group: "한국도착",       name: "한국도착",         order: 3 },
   { type: "SHIPPING",   status: "완료",     group: "고객인도",       name: "고객인도",         order: 4 },
+  { type: "SHIPPING",   status: "클레임",   group: "클레임",         name: "클레임",           order: 5 },
 ];
 
 // 전체 진행 순서 (PRODUCTION 0..6 → SHIPPING 0..4)
@@ -25,7 +26,7 @@ export const STEP_ORDER: string[] = [
   "고객의뢰", "공장주문", "계약금입금(공장)",
   "파일수령(업체)", "파일전달(공장)", "제작진행중", "중간검품", "생산완료",
   "창고입고", "검품", "출고", "한국도착",
-  "고객인도",
+  "고객인도", "클레임",
 ];
 
 const STEP_STATUS: Record<string, string> = Object.fromEntries(CANON_STEPS.map((s) => [s.name, s.status]));
@@ -45,10 +46,11 @@ export const STEP_TO_PROJECT_DATE: Record<string, string> = {
 // '가장 멀리 진행된(완료된) 단계'의 그룹 기준 — 중간에 빈 단계가 있어도 실제 진척을 반영
 export function statusFromSteps(steps: { name: string; done: boolean }[]): string {
   const doneSet = new Set(steps.filter((s) => s.done).map((s) => s.name));
+  if (doneSet.has("클레임")) return "클레임"; // 완료와 별개 상태, 최우선 표시
   if (doneSet.has("고객인도")) return "완료";
   for (let i = STEP_ORDER.length - 1; i >= 0; i--) {
     const name = STEP_ORDER[i];
-    if (name === "고객인도") continue;
+    if (name === "고객인도" || name === "클레임") continue;
     if (doneSet.has(name)) return STEP_STATUS[name]; // 준비 / 진행중 / 출고대기
   }
   return "준비"; // 완료된 단계 없음

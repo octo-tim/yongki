@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { STEP_TO_PROJECT_DATE } from "@/lib/steps";
+import { STEP_TO_PROJECT_DATE, CANON_STEPS } from "@/lib/steps";
 import { recomputeProjectStatus } from "@/lib/recompute";
 
 // 단계 기록: 진행일(입력) + 로그인 담당자 자동. clear=true면 해당 단계 기록 삭제.
@@ -16,8 +16,15 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const me = await prisma.user.findUnique({ where: { id: uid }, select: { name: true } });
   const staffName = me?.name || (session.user as any).name || (session.user as any).email || "-";
 
-  const step = await prisma.projectStep.findFirst({ where: { projectId: params.id, name } });
-  if (!step) return NextResponse.json({ error: "단계 없음" }, { status: 404 });
+  let step = await prisma.projectStep.findFirst({ where: { projectId: params.id, name } });
+  if (!step) {
+    // 기존 프로젝트에 없는 신규 단계(예: 클레임)면 정의를 참고해 자동 생성
+    const def = CANON_STEPS.find((d) => d.name === name);
+    if (!def) return NextResponse.json({ error: "단계 없음" }, { status: 404 });
+    step = await prisma.projectStep.create({
+      data: { projectId: params.id, type: def.type, group: def.group, name: def.name, order: def.order },
+    });
+  }
 
   const data = clear
     ? { done: false, doneAt: null, staff: null }
