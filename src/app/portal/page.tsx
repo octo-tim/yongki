@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { STEP_ORDER } from "@/lib/steps";
 import { Card, CardContent } from "@/components/ui/card";
-import { Package, ChevronRight, FileText } from "lucide-react";
+import { Package, ChevronRight, FileText, ExternalLink, Globe } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -123,6 +123,19 @@ export default async function PortalHome() {
           </div>
         </div>
       )}
+
+      {/* 회사 홈페이지 바로가기 */}
+      <a href="https://cosmepack.co.kr/" target="_blank" rel="noopener noreferrer"
+        className="flex items-center gap-4 rounded-lg border bg-gradient-to-r from-violet-50 to-indigo-50 px-5 py-4 transition-colors hover:from-violet-100 hover:to-indigo-100">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet-600 text-white">
+          <Globe className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-bold text-violet-900">CosmePack 홈페이지 바로가기</p>
+          <p className="truncate text-xs text-violet-700/80">제품·서비스 소개 및 문의 — cosmepack.co.kr</p>
+        </div>
+        <ExternalLink className="h-4 w-4 shrink-0 text-violet-500" />
+      </a>
     </div>
   );
 }
