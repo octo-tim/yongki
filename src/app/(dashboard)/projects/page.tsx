@@ -17,7 +17,7 @@ const TOTAL_STEPS = STEP_ORDER.length;
 type P = Awaited<ReturnType<typeof getProjects>>[number];
 async function getProjects(where: Prisma.ProjectWhereInput) {
   return prisma.project.findMany({
-    where, orderBy: { orderDate: "desc" },
+    where, orderBy: [{ shipRequestDate: { sort: "asc", nulls: "last" } }, { orderDate: "desc" }],
     select: {
       id: true, status: true, orderNo: true, productName: true, productPhoto: true,
       quantity: true, shipRequestDate: true,
