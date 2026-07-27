@@ -5,7 +5,7 @@ import { SalesManager } from "@/components/sales-manager";
 export const dynamic = "force-dynamic";
 
 export default async function SalesPage() {
-  const [proposals, clients] = await Promise.all([
+  const [proposals, clients, projects] = await Promise.all([
     prisma.proposal.findMany({
       orderBy: { createdAt: "desc" },
       select: {
@@ -16,6 +16,10 @@ export default async function SalesPage() {
       },
     }),
     prisma.client.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.project.findMany({
+      orderBy: { orderDate: "desc" },
+      select: { id: true, productName: true, orderNo: true, client: { select: { name: true } } },
+    }),
   ]);
 
   return (
@@ -26,7 +30,7 @@ export default async function SalesPage() {
       </div>
       <Card>
         <CardContent className="p-4">
-          <SalesManager proposals={proposals as any} clients={clients} />
+          <SalesManager proposals={proposals as any} clients={clients} projects={projects as any} />
         </CardContent>
       </Card>
     </div>
