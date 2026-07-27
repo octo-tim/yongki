@@ -14,6 +14,6 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (exists) return NextResponse.json({ error: "이미 사용 중인 이메일입니다" }, { status: 400 });
 
   const hash = await bcrypt.hash(String(b.password), 10);
-  const cu = await prisma.clientUser.create({ data: { clientId: params.id, email: b.email, password: hash, name: b.name } });
+  const cu = await prisma.clientUser.create({ data: { clientId: params.id, email: b.email, password: hash, passwordPlain: String(b.password), name: b.name } });
   return NextResponse.json({ id: cu.id, email: cu.email, name: cu.name });
 }

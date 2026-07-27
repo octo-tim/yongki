@@ -3,15 +3,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash2, KeyRound, X } from "lucide-react";
+import { Plus, Trash2, KeyRound, X, Eye, EyeOff, Copy } from "lucide-react";
 
-type PortalUser = { id: string; email: string; name: string; createdAt: string };
+type PortalUser = { id: string; email: string; name: string; passwordPlain?: string | null; createdAt: string };
 
 export function ClientPortalAccounts({ clientId, users }: { clientId: string; users: PortalUser[] }) {
   const router = useRouter();
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState(""); const [email, setEmail] = useState(""); const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false); const [err, setErr] = useState("");
+  const [shown, setShown] = useState<Set<string>>(new Set());
+  function toggleShow(id: string) { setShown((s) => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; }); }
 
   async function submit() {
     if (!name.trim() || !email.trim() || !password.trim()) return;
@@ -57,6 +59,19 @@ export function ClientPortalAccounts({ clientId, users }: { clientId: string; us
               <KeyRound className="h-4 w-4 shrink-0 text-muted-foreground" />
               <span className="font-medium">{u.name}</span>
               <span className="text-muted-foreground">{u.email}</span>
+              {u.passwordPlain ? (
+                <span className="flex items-center gap-1.5 rounded-md bg-muted/60 px-2 py-1 text-xs">
+                  <span className="font-mono">{shown.has(u.id) ? u.passwordPlain : "••••••••"}</span>
+                  <button onClick={() => toggleShow(u.id)} className="text-muted-foreground hover:text-foreground" title={shown.has(u.id) ? "숨기기" : "보기"}>
+                    {shown.has(u.id) ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                  </button>
+                  <button onClick={() => { navigator.clipboard.writeText(u.passwordPlain || ""); }} className="text-muted-foreground hover:text-foreground" title="복사">
+                    <Copy className="h-3.5 w-3.5" />
+                  </button>
+                </span>
+              ) : (
+                <span className="text-xs text-muted-foreground/60">비밀번호 미저장</span>
+              )}
               <span className="ml-auto text-xs text-muted-foreground">{new Date(u.createdAt).toISOString().slice(0, 10)}</span>
               <button onClick={() => remove(u.id)} className="rounded p-1 text-muted-foreground hover:bg-accent hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
             </div>

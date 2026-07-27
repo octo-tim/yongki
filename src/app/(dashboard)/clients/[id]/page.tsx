@@ -43,7 +43,7 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
       where: { clientId: client.id }, orderBy: { createdAt: "desc" },
       select: { id: true, title: true, productName: true, amount: true, currency: true, status: true, sentDate: true, note: true, fileName: true, fileSize: true, createdAt: true, client: { select: { id: true, name: true } }, creator: { select: { name: true } } },
     }),
-    prisma.clientUser.findMany({ where: { clientId: client.id }, orderBy: { createdAt: "desc" }, select: { id: true, email: true, name: true, createdAt: true } }),
+    prisma.clientUser.findMany({ where: { clientId: client.id }, orderBy: { createdAt: "desc" }, select: { id: true, email: true, name: true, passwordPlain: true, createdAt: true } }),
   ]);
 
   return (
