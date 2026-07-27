@@ -66,7 +66,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
   }
   const allBuckets = STEP_BUCKETS.filter((b) => (groups.get(b)?.length ?? 0) > 0 || b === "클레임");
   const selected = searchParams.step && allBuckets.includes(searchParams.step) ? searchParams.step : null;
-  const list = selected ? groups.get(selected)! : projects;
+  const list = selected ? (groups.get(selected) ?? []) : projects;
 
   const hrefFor = (step: string | null, viewMode: string) => {
     const sp = new URLSearchParams();
@@ -140,7 +140,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
             <Link key={b} href={hrefFor(b, view)}
               className={cn("rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
                 selected === b ? "border-foreground bg-foreground text-background" : "bg-background hover:bg-accent")}>
-              {b} <span className="ml-0.5 opacity-60">{groups.get(b)!.length}</span>
+              {b} <span className="ml-0.5 opacity-60">{groups.get(b)?.length ?? 0}</span>
             </Link>
           ))}
         </div>
