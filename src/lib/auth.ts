@@ -34,7 +34,10 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
         const cu = await prisma.clientUser.findUnique({ where: { email: credentials.email }, include: { client: { select: { id: true, name: true } } } });
         if (!cu) return null;
-        const ok = await bcrypt.compare(credentials.password, cu.password);
+        // 평문 비밀번호 우선 비교, 없으면 기존 해시(bcrypt)로 폴백
+        let ok = false;
+        if ((cu as any).passwordPlain) ok = credentials.password === (cu as any).passwordPlain;
+        else if (cu.password) ok = await bcrypt.compare(credentials.password, cu.password);
         if (!ok) return null;
         return { id: cu.id, email: cu.email, name: cu.name, role: "CLIENT", clientId: cu.clientId, clientName: cu.client.name } as any;
       },
