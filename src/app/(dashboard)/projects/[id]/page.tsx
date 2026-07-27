@@ -18,6 +18,7 @@ import { PaymentManager } from "@/components/payment-manager";
 import { ProductInfoPanel } from "@/components/product-info-panel";
 import { PurchaseCostPanel } from "@/components/purchase-cost-panel";
 import { DeleteProjectButton } from "@/components/delete-project-button";
+import { DuplicateProjectButton } from "@/components/duplicate-project-button";
 import { fmtDate } from "@/lib/utils";
 import { Pencil } from "lucide-react";
 
@@ -100,6 +101,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
           <h1 className="text-2xl font-bold">{p.productName}</h1>
         </div>
         <div className="flex gap-2">
+          <DuplicateProjectButton projectId={p.id} />
           <Button asChild variant="outline"><Link href={`/projects/${p.id}/edit`}><Pencil className="h-4 w-4" /> 수정</Link></Button>
           <DeleteProjectButton projectId={p.id} />
         </div>
