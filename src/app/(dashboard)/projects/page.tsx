@@ -64,7 +64,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
     const arr = groups.get(key);
     if (arr) arr.push(p); else groups.set(key, [p]);
   }
-  const allBuckets = STEP_BUCKETS.filter((b) => (groups.get(b)?.length ?? 0) > 0);
+  const allBuckets = STEP_BUCKETS.filter((b) => (groups.get(b)?.length ?? 0) > 0 || b === "클레임");
   const selected = searchParams.step && allBuckets.includes(searchParams.step) ? searchParams.step : null;
   const list = selected ? groups.get(selected)! : projects;
 
