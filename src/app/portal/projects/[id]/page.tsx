@@ -11,7 +11,7 @@ import { PortalFileConfirm } from "@/components/portal-file-confirm";
 import { PortalPayments } from "@/components/portal-payments";
 import { PortalProgressPhotos } from "@/components/portal-progress-photos";
 import { InquiryPanel } from "@/components/inquiry-panel";
-import { ArrowLeft, Package, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Package, AlertTriangle, Bell, FileCheck, MessageSquare, ChevronRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +46,11 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
   })();
 
   const prod = (project as any).products?.[0] ?? null;
+
+  // 고객이 확인해야 할 항목 (파트너센터 상단 알림)
+  const unconfirmedFiles = ((project as any).staffFiles ?? []).filter((f: any) => !f.confirmedAt);
+  const answeredInquiries = (project.inquiries ?? []).filter((q: any) => q.status === "답변완료");
+  const needAttention = unconfirmedFiles.length > 0 || answeredInquiries.length > 0;
   const qty = (project as any).quantity ?? 0;
   const salesRmb = prod ? (prod.salesCurrency === "RMB" ? Number(prod.salesPrice ?? 0) : Number(prod.salesPrice ?? 0) * Number(prod.exchangeRate ?? 0)) : 0;
   const salesConverted = !!prod && (prod.salesCurrency === "RMB" || Number(prod.exchangeRate ?? 0) > 0);
@@ -75,6 +80,37 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
           </div>
         </CardContent>
       </Card>
+
+      {/* 확인 필요 알림 (미확인 파일 / 답변 온 문의) */}
+      {needAttention && (
+        <div className="space-y-2 rounded-xl border-2 border-rose-300 bg-rose-50 p-4">
+          <h2 className="flex items-center gap-1.5 text-sm font-bold text-rose-800">
+            <Bell className="h-4 w-4" />확인이 필요한 항목이 있습니다
+          </h2>
+          <div className="space-y-2">
+            {unconfirmedFiles.length > 0 && (
+              <a href="#staff-files" className="flex items-center gap-3 rounded-lg border border-rose-200 bg-white px-4 py-3 transition-colors hover:bg-rose-100/50">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600"><FileCheck className="h-4 w-4" /></div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-rose-900">확인요청 파일 {unconfirmedFiles.length}건</p>
+                  <p className="text-xs text-rose-700/80">확인이 필요한 파일이 있습니다. 눌러서 확인해 주세요.</p>
+                </div>
+                <ChevronRight className="h-4 w-4 shrink-0 text-rose-400" />
+              </a>
+            )}
+            {answeredInquiries.length > 0 && (
+              <a href="#inquiries" className="flex items-center gap-3 rounded-lg border border-rose-200 bg-white px-4 py-3 transition-colors hover:bg-rose-100/50">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600"><MessageSquare className="h-4 w-4" /></div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-rose-900">답변 완료된 문의 {answeredInquiries.length}건</p>
+                  <p className="text-xs text-rose-700/80">문의에 답변이 등록되었습니다. 눌러서 확인해 주세요.</p>
+                </div>
+                <ChevronRight className="h-4 w-4 shrink-0 text-rose-400" />
+              </a>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* 제품제작 후가공내역 및 중요체크사항 — 항상 표시 */}
       <Card className="border-amber-300 bg-amber-50/60">
@@ -115,7 +151,7 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
       </Card>
 
       {/* 요청 및 파일 올리기 */}
-      <Card>
+      <Card id="staff-files" className="scroll-mt-4">
         <CardContent className="p-4">
           <h2 className="mb-3 text-sm font-semibold">고객 확인요청 파일</h2>
           <PortalFileConfirm files={(project as any).staffFiles ?? []} />
@@ -130,7 +166,7 @@ export default async function PortalProjectDetail({ params }: { params: { id: st
       </Card>
 
       {/* 문의 및 답변 */}
-      <Card>
+      <Card id="inquiries" className="scroll-mt-4">
         <CardContent className="p-4">
           <h2 className="mb-3 text-sm font-semibold">제품제작 문의 및 답변</h2>
           <InquiryPanel projectId={project.id} clientId={clientId} inquiries={project.inquiries as any} role="CLIENT" />
