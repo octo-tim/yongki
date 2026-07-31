@@ -57,7 +57,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
       include: { project: { select: { id: true, productName: true, status: true } } },
       orderBy: [{ projectId: "asc" }, { type: "asc" }, { order: "asc" }],
     }),
-    prisma.project.findMany({ orderBy: { shipRequestDate: "asc" }, select: { ...stepSelect, status: true, steps: { select: { name: true, done: true } } } }),
+    prisma.project.findMany({ orderBy: { shipRequestDate: "asc" }, select: { ...stepSelect, status: true, steps: { select: { name: true, done: true, doneAt: true } } } }),
   ]);
 
   // 현재 단계: status(선택한 단계)를 우선, 없으면 단계 데이터에서 계산
@@ -99,7 +99,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
 
       {/* 단계별 프로젝트: 검품 / 생산완료 */}
       <section className="grid gap-4 lg:grid-cols-2">
-        <StepProjectList title="중간검품 단계" icon={ClipboardCheck} accent="text-blue-600" rows={atInspection} />
+        <StepProjectList title="중간검품 단계" icon={ClipboardCheck} accent="text-blue-600" rows={atInspection} stepDateName="중간검품" stepDateLabel="중간검품일" />
         <StepProjectList title="생산완료(제작완료) 단계" icon={PackageCheck} accent="text-emerald-600" rows={atProduction} />
       </section>
 
@@ -148,7 +148,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   );
 }
 
-function StepProjectList({ title, icon: Icon, accent, rows }: { title: string; icon: any; accent: string; rows: any[] }) {
+function StepProjectList({ title, icon: Icon, accent, rows, stepDateName, stepDateLabel }: { title: string; icon: any; accent: string; rows: any[]; stepDateName?: string; stepDateLabel?: string }) {
   return (
     <Card>
       <CardContent className="p-4">
@@ -168,7 +168,13 @@ function StepProjectList({ title, icon: Icon, accent, rows }: { title: string; i
                   <div className="truncate text-sm font-medium group-hover:text-primary">{p.productName}</div>
                   <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground">
                     {p.client?.name && <span className="inline-flex items-center gap-0.5"><Building2 className="h-3 w-3" />{p.client.name}</span>}
-                    {p.shipRequestDate && <span className="inline-flex items-center gap-0.5"><CalendarDays className="h-3 w-3" />완료예정 {fmtDate(p.shipRequestDate)}</span>}
+                    {(() => {
+                      if (stepDateName) {
+                        const d = (p.steps ?? []).find((s: any) => s.name === stepDateName)?.doneAt;
+                        return d ? <span className="inline-flex items-center gap-0.5"><CalendarDays className="h-3 w-3" />{stepDateLabel ?? stepDateName} {fmtDate(d)}</span> : null;
+                      }
+                      return p.shipRequestDate ? <span className="inline-flex items-center gap-0.5"><CalendarDays className="h-3 w-3" />완료예정 {fmtDate(p.shipRequestDate)}</span> : null;
+                    })()}
                     {p.manager?.name && <span className="inline-flex items-center gap-0.5"><User className="h-3 w-3" />{p.manager.name}</span>}
                   </div>
                 </div>
