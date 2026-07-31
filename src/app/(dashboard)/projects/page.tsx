@@ -68,6 +68,16 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
   const selected = searchParams.step && allBuckets.includes(searchParams.step) ? searchParams.step : null;
   const list = selected ? (groups.get(selected) ?? []) : projects;
 
+  // 전체·고객인도 탭은 완료예정일 최근순(내림차순)으로 표시 (그 외 탭은 기본 오름차순 유지)
+  const descByShip = selected === null || selected === "고객인도";
+  const sortedList = descByShip
+    ? [...list].sort((a, b) => {
+        const ta = a.shipRequestDate ? new Date(a.shipRequestDate).getTime() : -Infinity;
+        const tb = b.shipRequestDate ? new Date(b.shipRequestDate).getTime() : -Infinity;
+        return tb - ta; // 최근(먼 미래)이 위로
+      })
+    : list;
+
   const hrefFor = (step: string | null, viewMode: string) => {
     const sp = new URLSearchParams();
     if (q) sp.set("q", q);
@@ -155,7 +165,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
       ) : view === "tile" ? (
         /* 타일형 */
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {list.map((p) => {
+          {sortedList.map((p) => {
             const { doneCount, pct, cur, st, isDone } = calc(p);
             return (
               <Link key={p.id} href={`/projects/${p.id}`} className="group block">
@@ -217,7 +227,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { q
                 </tr>
               </thead>
               <tbody>
-                {list.map((p) => {
+                {sortedList.map((p) => {
                   return (
                     <tr key={p.id} className="group border-b last:border-0 transition-colors hover:bg-accent/40">
                       <td className="px-3 py-2.5">
